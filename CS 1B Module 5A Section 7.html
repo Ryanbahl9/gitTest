@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5a_7.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5A Section 7</title>
+<link href="./CS 1B Module 5A Section 7_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+    <h1>Section 7&nbsp; - The GUI Listing</h1>
+    <h2>5A.7.1 Trying It Out</h2>
+    <p>Here is the entire GUI listing.&nbsp; You can create a project, add a class   named "Transporter", and into that class .java file, you can paste the   following.&nbsp; When you have done that, run the application to see what   happens.</p>
+
+<pre>import javax.swing.*;
+import java.awt.*;
+   
+public class Transporter 
+{
+   public static void main(String[] args)
+   {
+      // establish main frame in which program will run
+      JFrame frmMyWindow = new JFrame("Transporter Room");
+      frmMyWindow.setSize(300, 200);
+      frmMyWindow.setLocationRelativeTo(null);
+      frmMyWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      
+      // set up layout which will control placement of buttons, etc.
+      FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 5, 20);   
+      frmMyWindow.setLayout(layout);
+      
+      // 3 controls: a label, a text field and a button
+      JLabel lblMyLabel = new JLabel("Friend's Name: ");
+      JTextField txtMyTextArea = new JTextField(10);
+      JButton btnMyButton = new JButton("Press Here to See Friend");
+
+      // place your 3 controls into frame
+      frmMyWindow.add(lblMyLabel);
+      frmMyWindow.add(txtMyTextArea);
+      frmMyWindow.add(btnMyButton);
+
+      // show everything to the user
+      frmMyWindow.setVisible(true);
+   }
+}
+</pre>
+    
+    <p>Try it out.</p>
+    <h2>5A.7.2 Expectations</h2>
+    <p>So what happened when you entered your friend's name and pushed the button?</p>
+    <p>It might not have been as spectacular as you expected, but remember, this is just the beginning.&nbsp;We have to learn a little more GUI programming before we can   move your friend all the way across the galaxy to see you.</p>
+    <h2>5A.7.3 Easy Images</h2>
+    <p>It will be helpful for us to make a <strong>JLabel</strong> out of a <strong>.jpg</strong> or <strong>.gif </strong>image. It's very easy. You create an <strong>Icon</strong> object from an image file, and then instantiate a <strong>JLabel</strong> using that <strong>Icon</strong>. Here is a short example:</p>
+ 
+ <pre>    public static void main(String[] args)
+   {
+      // establish main frame in which program will run
+      JFrame frmMyWindow = new JFrame("A Surfer Dude Label");
+      frmMyWindow.setSize(400, 300);
+      frmMyWindow.setLocationRelativeTo(null);
+      frmMyWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      
+      // set up layout which will control placement of buttons, etc.
+      FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 5, 20);   
+      frmMyWindow.setLayout(layout);
+     
+     <strong> 
+      // assumes "surfer_dude.jpg" is stored under java project folder
+      // (Often named "Foothill"), in a subfolder named "images".  
+      // Hint:  create an "images" folder under in your project directory, 
+      //  then copy "surfer_dude.jpg" there.
+      
+      Icon myIcon = new ImageIcon("images/surfer_dude.jpg");
+      JLabel myLabel = new JLabel(myIcon);
+      frmMyWindow.add(myLabel);</strong>
+
+
+      // show everything to the user
+      frmMyWindow.setVisible(true);
+   }
+ </pre>
+ <div class="picCenter"><img src="./CS 1B Module 5A Section 7_files/pic_1b5_5.JPG" width="500" height="427" alt="surfer dude"></div>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0089)https://www.fgamedia.org/faculty/loceff/cs_courses/common/LIFE/cs_1and2B_bool_func_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1and2B Module Bool Section 3</title>
+<link href="./CS 1and2B Module Bool Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section SSD - The Seven Segment Display</h1>
+
+	<h2>SSD.1 The Seven Segment Display</h2>
+	<p>Let's look at <em>seven</em> very special boolean functions which, together, are used throughout computing to display numeric digits on LEDs: these are the seven elements of the <em><strong>seven segment display</strong></em>.</p>
+    <div class="picCenter"><img src="./CS 1and2B Module Bool Section 3_files/seven_seg_display.JPG" width="272" height="251" alt="seven"></div>
+	<p>As you can see, there are actually 16 common patterns plus decimal point. However, we'll focus mostly on the first 10, digits <strong>0 - 9</strong>.</p>
+	<p>A <em><strong>seven segment display</strong></em> consists of seven separate units, or <em><strong>segments</strong></em>, which are usually named <strong>a</strong>, <strong>b</strong>, <strong>c</strong>, <strong>d</strong>, <strong>e</strong>, <strong>f</strong> and <strong>g</strong>. There is also a decimal point, but let's ignore that for this lecture.</p>
+    <div class="picCenter"><img src="./CS 1and2B Module Bool Section 3_files/seven_seg_display2.JPG" width="243" height="245" alt="sevenseg2"></div>
+	<p>Can we express each of these <em><strong>seven segments</strong></em> in terms of boolean functions? Yes. First, they are either on or off (<strong>true</strong> or <strong>false</strong>), so the output is consistent with a boolean function. Second, the inputs are non-negative integers, again, consistent with boolean functions. What is the range of input ints? We only need 0 - 9, but even for that, four input bits are required, meaning that we can define the outputs for inputs 10 - 15 however we wish.</p>
+	<p>There are two common choices. First, we might define the output for 10-15  all so that they display the letter "<strong>E</strong>" as in "<strong>E</strong>rror". Or, we may choose to display them as their hexadecimal equivalents: <strong>A</strong>, <strong>b</strong>, <strong>C</strong>, <strong>d</strong>, <strong>E</strong>, <strong>F</strong>.  (Why do we use lower case for <strong>b</strong> and <strong>d</strong>?)</p>
+	<p>Let's look at the table that represents just one of these seven segments: the horizontal segment <strong>a</strong> along the top. When the input is <strong>0</strong>, we want a to light up. <strong>So segA[0] = true</strong>. When the input is <strong>1</strong>, we don't want a to light up. So <strong>segA[1] = false</strong>. Continuing in this manner we get the full truth table. I'm going with the alternative in which we express the letters <strong>A</strong>, <strong>b</strong>, <strong>C</strong>, <strong>d</strong>, <strong>E</strong>, <strong>F</strong> for inputs 10 - 16.</p>
+	<div class="narrowTable">
+			
+					&gt;
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+			<caption>
+			The "a" bit (in 7-segment display)
+			 </caption>
+				<tbody><tr>
+					<th scope="col">input</th>
+					<th scope="col">a</th>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>T</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>F</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>T</td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td>T</td>
+				</tr>
+				<tr>
+					<td>4</td><td>F</td>
+				</tr>
+				<tr>
+					<td>5</td>
+					<td>T</td>
+				</tr>
+				<tr>
+					<td>6</td>
+					<td>T</td>
+				</tr>
+				<tr>
+					<td>7</td>
+					<td>T</td>
+				</tr>
+				<tr>
+					<td>8</td>
+					<td>T</td>
+				</tr>
+				<tr>
+					<td>9</td>
+					<td>T</td>
+				</tr>
+				<tr>
+					<td>10</td>
+					<td>T</td>
+				</tr>
+ 				<tr>
+					<td>11</td>
+					<td>F</td>
+				</tr>
+				<tr>
+					<td>12</td>
+					<td>T</td>
+				</tr>
+				<tr>
+					<td>13</td>
+					<td>F</td>
+				</tr>
+				<tr>
+					<td>14</td>
+					<td>T</td>
+				</tr>
+				<tr>
+					<td>15</td>
+					<td>T</td>
+				</tr>
+			</tbody></table>
+		</div>
+		<p>I'll let you look up the tables for the remaining six segments in your upcoming <span class="sectionOrAssignmentTitle">lab</span>.</p>
+  </div>
+	
+  </div>
+<!-- end .container -->
+
+
+</body></html>

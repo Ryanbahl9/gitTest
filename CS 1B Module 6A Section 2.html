@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_6a_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 6A Section 2</title>
+<link href="./CS 1B Module 6A Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 2 - Swing Applets</h1>
+	<h2> 6A.2.1 JApplets</h2>
+	<p> Usually, programmers choose to work with the <strong>Swing</strong> components <strong>JButton,   JTextArea</strong>, etc. because they are lightweight and have more functionality   than the older <strong>AWT</strong> components.&nbsp; That's why we use <strong>Swing</strong> components   in these courses.&nbsp; It is also why we will use <strong>JApplets</strong> instead of <strong> Applets</strong>.</p>
+	<p><strong>JApplets</strong> are used in very much the same way as <strong>Applets</strong>.&nbsp;   In fact, now that you know about inheritance, I can tell you that <strong>JApplets</strong> are derived from <strong>Applets</strong>, and therefore inherit all of their public   behavior and methods. Therefore, the <strong>init() </strong>and<strong> paint()</strong> methods   are still there for us.</p>
+	<p>Here is a reproduction of the first <strong>Swing</strong> GUI that we did the first week --   the 'brain dead" Transporter.&nbsp; I've added a <strong>drawString()</strong> to it to   help demonstrate how to combine <strong>JComponents</strong> with the <strong> Graphics</strong> instance methods like <strong>drawString().</strong></p>
+
+<pre>import java.awt.*;
+import javax.swing.*;
+import java.awt.Graphics;
+
+public class Foothill extends JApplet
+{
+   JLabel lblMyLabel;
+   JTextField txtMyTextArea;
+   JButton btnMyButton;
+   
+   public void init()
+   {
+      // control the size of the applet
+      setSize(300, 200);
+      // set up layout which will control placement of buttons, etc.
+      FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 5, 20);  
+      setLayout(layout);
+
+      // 3 controls: a label, a text field and a button
+      lblMyLabel = new JLabel("Friend's Name: ");
+      txtMyTextArea = new JTextField(10);
+      btnMyButton = new JButton("Press Here to See Friend");
+      
+      // place your 3 controls onto applet
+      add(lblMyLabel);
+      add(txtMyTextArea);
+      add(btnMyButton);
+   }
+   public void paint(Graphics g)
+   {
+      paintComponents(g);
+      g.drawString("(An applet version of Transporter)", 40, 180);
+   }
+}
+</pre>
+
+	<p>It yields this:</p>
+	<div class="picCenter"><img src="./CS 1B Module 6A Section 2_files/pic_1b6_3.jpg" alt="GUI shot" width="307" height="276" border="0"></div>
+	<p>Because there are no event handlers, there is no behavior.&nbsp; However   notice that if you cover and then reveal this applet window with something on   your desktop, the <strong>JComponents</strong> and <strong>drawString()</strong> text are redrawn.&nbsp; This is   something you cannot take for granted with <strong>JApplets</strong>, and the secret is inside   our <strong>paint()</strong> method:</p>
+<pre>   public void paint(Graphics g)
+   {
+      paintComponents(g);
+      g.drawString("(An applet version of Transporter)", 40, 180);  
+   }
+</pre>
+	
+	<p>You see that there is a new, mysterious, call to <strong>paintComponents(</strong>).&nbsp;   This is needed in <strong>JApplets</strong>.&nbsp; It does what <strong>drawString()</strong> does - replaces the   beautiful window as it was when we created it.</p>
+	<p>If you experiment with this and change the order of the two lines in the <strong>paint() </strong>method, what happens?&nbsp; Why?</p>
+	<p>Incidentally, you do not call your <strong>paint</strong>() method directly. This is   done for you as needed. But what if you want to <u>force</u> a refresh? Your user   has changed a value on some electrical simulator applet and you want to redraw   the circuit even though there has been no damage to the window. This is easy.   There is a method called <strong>repaint</strong>() that you use to ask Java to call <strong> paint</strong>() for you.&nbsp;&nbsp; You can issue <strong>repaint()</strong> from any method, even a   constructor or <strong>init()</strong>.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

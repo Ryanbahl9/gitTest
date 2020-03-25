@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5b_5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5B Section 5</title>
+<link href="./CS 1B Module 5B Section 5_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 5 - RPN As Multi-File Project</h1>
+	<h2>5B.5.1 Adding the Stack Class</h2>
+	<p>To keep our source files manageable, let's place our <strong>MyStack</strong> class into this   GUI program as a separate .java file.&nbsp; We learned about this last week:</p>
+	<ul>
+		<li>In the Package Explorer at the left of your Eclipse IDE, right-click on <strong>RPN Calculator </strong>and select <strong>New → Class.</strong></li>
+		<li>When you are given a dialog box,&nbsp; give the class the name <strong>MyStack, </strong> and uncheck the <strong>public static void main()</strong> box.</li>
+		<li>You will now have two <strong>.java</strong> files under your <strong>RPN Calculator</strong> project:&nbsp; <strong>RPN.java </strong>and<strong> MyStack.java</strong>. </li>
+		<li>Copy the entire <strong>MyStack</strong> source from the <strong>MyStack.java</strong> file of your   	console project we did in a previous week, and paste it into the <strong>MyStack.java</strong> file.&nbsp; You will use that class as is, with no modifications.</li>
+	</ul>
+	<p> <img src="./CS 1B Module 5B Section 5_files/pic_1b5_4.jpg" alt="IDE shot" width="181" height="73" border="2" align="right">When   you are done, There should be two .java files in your <strong>RPN Calculato</strong>r   project, <strong>RPN.java</strong> and <strong>MyStack.java</strong>.&nbsp; (There may also be   .class files from your earlier compilations.)</p>
+	<h2 style="TEXT-ALIGN: left">5B.5.2 Test Your Changes</h2>
+	<p style="TEXT-ALIGN: left">The previous steps should have resulted in the <strong> MyStack</strong> class becoming part of your application.&nbsp; We haven't written any new   source to use it yet, but it is very important to make sure that we have not   damaged anything in the process.&nbsp; So, save and clean these files and make sure   that there are no new errors introduced.&nbsp; If you run it, you should see the same   "brain-dead" window appear.&nbsp; If so, you can go on the  final phase of writing   the event handlers.</p>
+	<h2 style="TEXT-ALIGN: left">5B.5.3 Controlling the JTextArea Field</h2>
+	<p>Previously, we designed an event handler for the   button click in our Transporter applications.&nbsp; In&nbsp; it, we read the   value of the <strong>JTextField</strong> <strong>txtMyTextArea</strong> by using the<strong> getText()</strong> method:		
+	</p>
+	<pre>   // event handler for JButton
+   public void actionPerformed(ActionEvent e)
+   {
+      String strFriendName;
+      strFriendName = txtMyTextArea.getText();
+		 ...
+</pre>
+
+		<p style="text-align: left">We can do many other things with a <strong>JTextField</strong>, among   them:</p>
+	<ul>
+		<li> Write to the field with <strong>setText()</strong>		</li>
+		<li> Place the mouse cursor into the text field with   	<strong>requestFocus()</strong> </li>
+	</ul>
+	<p style="text-align: left">We will be using both of these methods in our   calculator</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

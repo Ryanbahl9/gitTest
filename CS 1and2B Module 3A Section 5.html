@@ -1,0 +1,621 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0082)https://www.fgamedia.org/faculty/loceff/cs_courses/common/LIFE/cs_1and2B_3a_5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1and2B Module 3A Section 5</title>
+<link href="./CS 1and2B Module 3A Section 5_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 5 - Cellular Automata</h1>
+  	<h2>3A.5.1 1D Cellular Automata</h2>
+	<p><em><strong><font color="#006699">Life</font></strong></em> is an example of a <em><strong>2D CA</strong></em> (<strong>Two-Dimensional </strong> <strong>C</strong>ellular <strong>A</strong>utomaton)   because it uses input and output on a 2D grid.&nbsp;   However, we can get all the adrenaline-pumping,   heart-pounding action of <font color="#006699"><strong><em>l</em></strong><em><strong>ife</strong></em></font> with a   fraction of the complexity by implementing a <em><strong>1D CA</strong></em> (<strong>One</strong> <strong>D</strong>imensional <strong>C</strong>ellular <strong>A</strong>utomaton). This   suits our lesson plan because we have been covering <em><strong>one   dimensional arrays</strong></em>.&nbsp; Not only that, but we can display   our <em><strong>1D arrays</strong></em> a-row-at-a-time, stacking them up, so to speak,   so as to build up a <em><strong>2D pattern</strong></em>.</p>
+	<p>In one dimension, each generation exists as a linear <em><strong>row</strong></em> of <em><strong>cells</strong></em>, each <em><strong>cell</strong></em> being either <strong>on</strong> (<em><strong>alive</strong></em> or <strong>1</strong>) or <strong>off</strong> (<em><strong>dead</strong></em> or <strong>0</strong>).&nbsp; (Since we are not really going to emulate <font color="#006699"><em><strong>life</strong></em></font>, we will use <em><strong>on</strong></em> or <strong>1</strong> rather than <em><strong>alive</strong></em>,   and <em><strong>off</strong></em> or <strong>0</strong> rather than <em><strong>dead</strong></em>.)&nbsp; In a   console application, we can also represent the <em><strong>row</strong></em> as a <em><strong>1D array</strong></em> of <em><strong>characters,</strong></em> or a <strong>string</strong>, with a <strong></strong>blank, <strong class="codeInLine">' '</strong> for <strong>0</strong> and an <strong>asterisk, <span class="codeInLine">'*'</span>,</strong> for <strong>1</strong>.&nbsp; So in our pictures and   discussion, I will use <font color="#000080" class="codeInLine"><em>' '</em></font> and<font color="#000080" class="codeInLine"> <em>'*'</em></font> interchangeably with <font color="#000080"><strong><em>off</em></strong> and <strong><em>on</em></strong></font> or <font color="#000080"><em><strong>0</strong></em> and <strong> <em>1</em></strong></font>, respectively.</p>
+	<p>Here are three random (and   unrelated)   <em><strong>generations</strong></em> for a possible <em><strong>1D CA</strong></em>:</p>
+<pre>   "**  *   ** ***  ***   ***   **  **  * * * ******     **"
+
+   "                          *                            "
+
+   " ******  ******  ****** * * * * ** **      ***      *  "
+</pre>
+
+	<p>Any of these three <em><strong>generations</strong></em> might be a <em><strong>seed</strong></em> for a <em><strong>1D CA</strong></em> or they might arise as a result of <em><strong>applying</strong></em> a <em><strong>rule</strong></em> to a <em><strong>previous generation</strong></em> of some <em><strong>1D CA</strong></em>.&nbsp; As usual, all of the <em><strong>cells</strong></em> update their state depending on the   states of their <em><strong>neighbors</strong></em>. The state of a particular <em><strong>cell</strong></em> in the <em><strong>current generation</strong></em> is determined by the <em><strong>states</strong></em> of  </p>
+	<p>
+    </p><ul>
+    <li>the <strong><em>cell</em></strong>, <strong><em>itself</em></strong>,&nbsp; </li>
+    <li>its <em><strong>left neighbor</strong></em>, and </li>
+    <li>its <em><strong>right   neighbor</strong></em>,</li>
+    </ul>
+	<p></p>
+	<p>all three values read from the <em><strong>previous   generation</strong></em>.  For example, let's say that the cell (named <font color="#FF0000"><strong>Bob</strong></font>) is <u><strong>on</strong></u>.&nbsp; To <font color="#FF0000"><strong>Bob's</strong></font> left, <font color="#008000"><strong>Frank</strong></font> is also <em><strong>on</strong></em>,   and to <font color="#FF0000"><strong>Bob's</strong></font> right, <font color="#0000FF"><strong>Shelly</strong></font> is <em><strong>off</strong></em>.&nbsp; Then we need to   know what <font color="#FF0000"><strong>Bob</strong></font> will be in the next generation. Of course,   this depends on the <em><strong>rule</strong></em> we are using.&nbsp; </p>
+	<div align="center">
+		<table cellpadding="2" cellspacing="2" bgcolor="#888888">
+			<tbody><tr>
+				<td align="center" bgcolor="#000000"><strong><font color="#008000">Frank (On)</font></strong></td>
+				<td align="center" bgcolor="#000000"><strong><font color="#FF0000">Bob (On)</font></strong></td>
+				<td align="center" bgcolor="#FFFFFF"><strong><font color="#0000FF">Shelly (Off)</font></strong></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td align="center" bgcolor="#CCFF99"><font color="#FF0000"><strong>Bob?</strong></font></td>
+				<td>&nbsp;</td>
+			</tr>
+		</tbody></table>
+	</div>
+	<p></p>
+	<p>But let's say that we happen to be using a <em><strong>rule</strong></em> that   tells <font color="#FF0000"><strong>Bob</strong></font> to turn-<strong>Off</strong> in response to this.&nbsp; We can   represent this as follows:</p>
+	<div align="center">
+		<table cellpadding="2" cellspacing="2" bgcolor="#888888">
+			<tbody><tr>
+				<td align="center" bgcolor="#000000"><strong><font color="#008000">On</font></strong></td>
+				<td align="center" bgcolor="#000000"><strong><font color="#FF0000">On</font></strong></td>
+				<td align="center" bgcolor="#FFFFFF"><strong><font color="#0000FF">Off</font></strong></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td align="center" bgcolor="#FFFFFF"><strong><font color="#FF0000">Off</font></strong></td>
+				<td>&nbsp;</td>
+			</tr>
+		</tbody></table>
+	</div>
+	<p>&nbsp;Or, in terms of <strong>1</strong>s and <strong>0</strong>s:</p>
+	<div align="center">
+		<table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+			<tbody><tr>
+				<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+				<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+				<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+				<td>&nbsp;</td>
+			</tr>
+		</tbody></table>
+	</div>
+	<p>And if we were using  <em><strong>blanks</strong></em> and <em><strong>asterisks</strong></em>, we could represent it as:</p>
+	<div align="center">
+		<table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+			<tbody><tr>
+				<td align="center" bgcolor="#FFFFFF"><strong>*</strong></td>
+				<td align="center" bgcolor="#FFFFFF"><strong>*</strong></td>
+				<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF">&nbsp;&nbsp;</font></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td align="center" bgcolor="#FFFFFF"><strong>&nbsp;</strong></td>
+				<td>&nbsp;</td>
+			</tr>
+		</tbody></table>
+	</div>
+	<p>Now, <font color="#FF0000"><strong>Bob's</strong></font> [<font color="#008000">on</font>-<font color="#FF0000">on</font>-<font color="#0000FF">off</font>]   environment from the <em><strong>previous generation</strong></em> is just one of   eight possible <em><strong>states</strong></em> in which <font color="#FF0000">Bob</font> might   find himself.&nbsp; In order to have a complete <em><strong>rule-set</strong></em> for   our <strong>CA</strong>, we'd need to know the outcomes for <em><strong>all eight</strong></em> possibilities.&nbsp; After selecting seven other <em><strong>rules</strong></em> to go along   with the one above, we would have a<em><strong> complete rule-set</strong></em> for this particular  <em><strong>CA</strong></em>. It can be shown in a table as follows   (we'll use <strong>1</strong>s and <strong>0</strong>s):</p>
+	<div align="center">
+		<table cellpadding="7" cellspacing="2" bgcolor="#888888">
+			<tbody><tr>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+			</tr>
+		</tbody></table>
+	</div>
+	<p>Now we have the<em><strong> complete rule for this particular 1D   automaton</strong></em>.&nbsp; For example, what if, in a given   generation, <font color="#FF0000"><strong>Bob's</strong></font> environment is described by <font color="#008000">off</font>-<font color="#FF0000">on</font>-<font color="#0000FF">on</font> (<span class="codeInLine">" **"</span> or <strong>0<font color="#FF0000">1</font>1</strong>).&nbsp; What is <strong> <font color="#FF0000">Bob</font></strong> in the next generation?&nbsp;   Look up and find <strong>0<font color="#FF0000">1</font>1</strong> in the top row of the   <em><strong>rule table</strong></em>.&nbsp; It is the<em><strong> fifth triplet</strong></em> from the   <em><strong>left</strong></em>, and we see, by looking at the result directly below that <em><strong>triplet</strong></em>, the output for <font color="#FF0000"><strong>Bob</strong></font> is <font color="#FF0000"><strong>1</strong></font> or <span class="codeInLine">"*"</span>.</p>
+	<p>Remember, I have chosen only one <em><strong>rule</strong></em>, somewhat at random, by picking <em><strong>outputs</strong></em> for each of the eight possible combinations of <em><strong>inputs</strong></em>.</p>
+	<p>Notice that the <em><strong>triplet</strong></em> at the far right of this table tells us how to   respond if the <em><strong>input</strong></em> is <strong>000</strong>.&nbsp; Looking immediately left in that same   table, we see the rule's <em><strong>output</strong></em> for the   <em><strong>input triplet</strong></em> <strong>001</strong>.&nbsp; Left a little more gives the rule's response to   an input of <strong>010,</strong> and so on, until we get to the <em><strong>far left</strong></em> where we have the   <em><strong>rule's output</strong></em> for <strong>111</strong>.&nbsp; If we agree that we will <em>always</em> use this   arrangement when describing a <em><strong>rule</strong></em>, <em>we don't even need   the top rows</em>.&nbsp; All we need are numbers at the bottom.&nbsp;   So, the above <em><strong>rule</strong></em> can be described more succinctly as follows:</p>
+	<pre align="center">&nbsp;                             0 0 0 1 1 1 1 0</pre>
+	<p>Here, the <strong>0</strong> at the far right is assumed to be the output   of <strong>000</strong>.&nbsp; The <strong>1</strong> to its left is assumed to be the   output of<strong> 001</strong>.&nbsp; Continuing, we get to the   leftmost <strong>0</strong> which is, by agreement, the output  for the   inputs <strong>111</strong>.&nbsp; This is a pretty simple way to   express the <em><strong>rule</strong></em>.</p>
+	<p><em>But wait.</em> If you order now, you can get an even   more concise notation.&nbsp; We see that every rule-set will   always be <em><strong>eight bits</strong></em><strong><em></em></strong> (can you tell me why?). Since each <em><strong>bit</strong></em> is either <strong>0</strong> or <strong>1</strong>, the   above <em><strong>rule</strong></em>, if interpreted as a <em><strong>binary number</strong></em>, can be   converted to its <em><strong>decimal</strong></em> equivalent.&nbsp; What is that?&nbsp;   <strong>00011110</strong> is ... drum roll please... the <em><strong>number 30</strong></em>.&nbsp; We   have just shown that if someone tells us they are using <em><strong>rule-set</strong></em> <em><strong>#30</strong></em> then we know exactly how our <strong>CA</strong> will evolve.&nbsp;   But what if they tell us they are using, say, rule-set <em><strong>#182</strong></em>?&nbsp; Just   convert the number <em><strong>182</strong></em> to binary and build the   table.</p>
+	<pre align="center">&nbsp;                         182 = 1 0 1 1 0 1 1 0</pre>
+	<p>So, the rule will be:</p>
+	<div align="center">
+		<table cellpadding="7" cellspacing="2" bgcolor="#888888">
+			<tbody><tr>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#000000"><font color="#808080"><strong>1</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+				<td><table cellpadding="2" cellspacing="2" width="50" bgcolor="#888888">
+					<tbody><tr>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center"><font color="#FFFF00"> <strong>↓</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#808080"> <strong>0</strong></font></td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody></table></td>
+			</tr>
+		</tbody></table>
+	</div>
+	<p>This means that we can completely describe   all possible <em><strong>1D cellular automata</strong></em>.&nbsp; <strong><em>Every automaton is   completely determined by a number between 0 and 255.</em></strong>&nbsp; That number   gives the <em><strong>rule-set</strong></em> for propagating each <em><strong>cell</strong></em> to its new value in the <em><strong>next   generation</strong></em>.&nbsp; This efficient codification for the <strong>256</strong> possible <em><strong>1-D cellular   automata</strong></em> was initially devised by <em><strong>Melanie Mitchell</strong></em>, one of the most active   contributors to the fields of cellular automata and <em><strong>genetic algorithms</strong></em> in recent   years.</p>
+	<p><strong>Qualification:</strong>&nbsp; In fact, we have been dealing with a   special type of <em><strong>1D CA</strong></em>.&nbsp; Our<em> <strong>CA</strong></em>s are <em><strong>1D</strong></em> <em>and</em> have the following two additional constraints:</p>
+	<ol>
+		<li>Each cell only has <em><strong>two possible states</strong></em>, 1 or 0 (on   	or off), and</li>
+		<li>Each cell's state is determined only by <strong>it and its   	two closest neighbors</strong>.</li>
+	</ol>
+	<p>It is for these kinds of <em><strong>CA</strong></em>, only, that we can assert that   a single number from <strong>0</strong> to <strong>255</strong> completely describes the <em><strong>CA</strong></em>.&nbsp; In general <em><strong>CA theory</strong></em>, there can be more than two states,   and a cell can be affected directly by its more distant   neighbors, not just the ones to its immediate left and right.&nbsp; But we are not   considering these more general entities.</p>
+	<h2>3A.5.2 Rule 30</h2>
+	<p>If we start out with the <em><strong>seed</strong></em> pattern:&nbsp; <span class="codeInLine">0001000</span> and   apply <em><strong>rule #30</strong></em> to it, we will get <span class="codeInLine">0011100</span>&nbsp;   (check it yourself — don't take my word for it). Apply <em> <strong>rule #30</strong></em> again and you'll get <span class="codeInLine">0110010</span>.&nbsp; Do it again and you get   <span class="codeInLine">1101111</span>.&nbsp; If we print out each <em><strong>generation</strong></em> below the   previous one, using <em><strong>black</strong></em> and <em><strong>white</strong></em> squares rather than <strong>0</strong>s   and <strong>1</strong>s, we will get this pattern:</p>
+	<div class="figure">
+		<div align="center">
+			<div align="center">
+				<table border="1" cellpadding="1" cellspacing="0" width="140" bgcolor="#C0C0C0">
+					<tbody><tr>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+					</tr>
+					<tr>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+					</tr>
+					<tr>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+					</tr>
+					<tr>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#FFFFFF"><font color="#FFFFFF"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+						<td align="center" bgcolor="#000000"><font color="#000000"> <strong>0</strong></font></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+		<div class="caption"> &nbsp;
+			<p>Now, let's assume that our <em><strong>1D seed pattern</strong></em> is as long as we wish, so that it   		is <em><strong>left-padded</strong></em> and <em><strong>right-padded</strong></em> with <em><strong>0</strong></em>s (or <em><strong>white</strong></em>, <strong>off   		cells</strong>).&nbsp; Then we can continue applying <em><strong>rule #30</strong></em> many times.&nbsp; Here is what we get if we apply   		it 200 times:</p>
+			<p align="center"> <img src="./CS 1and2B Module 3A Section 5_files/pic_1and2b3_6.png" alt="picture several gens of rule 30" width="401" height="201" border="0"></p>
+			<p>Notice that it   		has some regularity (on the left) and some   		randomness (in the center).&nbsp; In fact, this is a   		somewhat famous <em><strong>rule</strong></em> because it is used to generate   		<strong>pseudo-random numbers</strong> in computers by taking  the   		<em><strong>states</strong></em> of the <em><strong>center cell</strong></em> only (i.e., the changes   		from <em><strong>on</strong></em> to <em><strong>off</strong></em> and back as we start at the <em><strong>top</strong></em> of   		the triangle and <em><strong>move down</strong></em> a thin <em><strong>vertical path</strong></em>).&nbsp; I have heard   		that this is what several <em><strong>compilers</strong></em>, including   		<span class="windows">Microsoft's C++</span> and <span class="mac">Eclipse's Java</span>, use for the <strong>rand()</strong> and <strong>random() </strong>functions.</p>
+		</div>
+	</div>
+	<p>Gosh, we have a <em><strong>seed</strong></em> <strong>string</strong>, <font color="#800080" class="codeInLine">"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   "</font> and a <font color="#800080"><em><strong>rule #30</strong></em></font>.&nbsp; From these two things, we can manually create new   <strong>strings</strong>.&nbsp; Not only that, we can output each <strong>string</strong> to the screen on its own   line.&nbsp; (This should result in our own personal <em><strong>rule #30 </strong></em>image   for this <em><strong>seed </strong></em><strong>string</strong>). Can we write a program that asks for a rule from <strong>0 - 255 </strong>and then   produces an image?</p>
+<pre>Enter Rule (0 - 255): 30
+   start
+                                       *
+                                      ***
+                                     **  *
+                                    ** ****
+                                   **  *   *
+                                  ** **** ***
+                                 **  *    *  *
+                                ** ****  ******
+                               **  *   ***     *
+                              ** **** **  *   ***
+                             **  *    * **** **  *
+                            ** ****  ** *    * ****
+                           **  *   ***  **  ** *   *
+                          ** **** **  *** ***  ** ***
+                         **  *    * ***   *  ***  *  *
+                        ** ****  ** *  * *****  *******
+                       **  *   ***  **** *    ***      *
+                      ** **** **  ***    **  **  *    ***
+                     **  *    * ***  *  ** *** ****  **  *
+                    ** ****  ** *  ******  *   *   *** ****
+                   **  *   ***  ****     **** *** **   *   *
+                  ** **** **  ***   *   **    *   * * *** ***
+                 **  *    * ***  * *** ** *  *** ** * *   *  *
+                ** ****  ** *  *** *   *  ****   *  * ** ******
+               **  *   ***  ****   ** *****   * ***** *  *     *
+              ** **** **  ***   * **  *    * ** *     *****   ***
+             **  *    * ***  * ** * ****  ** *  **   **    * **  *
+            ** ****  ** *  *** *  * *   ***  **** * ** *  ** * ****
+           **  *   ***  ****   **** ** **  ***    * *  ****  * *   *
+          ** **** **  ***   * **    *  * ***  *  ** ****   *** ** ***
+         **  *    * ***  * ** * *  ***** *  ******  *   * **   *  *  *
+        ** ****  ** *  *** *  * ****     ****     **** ** * * *********
+       **  *   ***  ****   **** *   *   **   *   **    *  * * *        *
+      ** **** **  ***   * **    ** *** ** * *** ** *  ***** * **      ***
+     **  *    * ***  * ** * *  **  *   *  * *   *  ****     * * *    **  *
+    ** ****  ** *  *** *  * **** **** ***** ** *****   *   ** * **  ** ****
+   **  *   ***  ****   **** *    *    *     *  *    * *** **  * * ***  *   *
+  ** **** **  ***   * **    **  ***  ***   ******  ** *   * *** * *  **** ***
+ **  *    * ***  * ** * *  ** ***  ***  * **     ***  ** ** *   * ****    *  *
+** ****  ** *  *** *  * ****  *  ***  *** * *   **  ***  *  ** ** *   *  ******
+*  *   ***  ****   **** *   ******  ***   * ** ** ***  ******  *  ** *****
+ **** **  ***   * **    ** **     ***  * ** *  *  *  ***     ******  *    *   *
+ *    * ***  * ** * *  **  * *   **  *** *  **********  *   **     ****  *** **
+***  ** *  *** *  * **** *** ** ** ***   ****         **** ** *   **   ***   *
+   ***  ****   **** *    *   *  *  *  * **   *       **    *  ** ** * **  * **
+* **  ***   * **    **  *** *********** * * ***     ** *  *****  *  * * *** *
+  * ***  * ** * *  ** ***   *           * * *  *   **  ****    ****** * *   ***
+ ** *  *** *  * ****  *  * ***         ** * ***** ** ***   *  **      * ** **
+**  ****   **** *   ****** *  *       **  * *     *  *  * ***** *    ** *  * *
+  ***   * **    ** **      *****     ** *** **   ******** *     **  **  **** *
+
+   end
+</pre>
+<div class="important"> IMPORTANT
+	<p> Because of console limitations, I have truncated the <em><strong>display to 79 characters width</strong></em> (just as you will do if you write the program). The last few <em><strong>generations</strong></em> are only partly displayed — we only see the "center core" of the actual <em><strong>generations</strong></em> which, if fully displayed, would continue to show the angled slopes left and right.</p>
+</div>
+<p> You have to squint a little to see the various sized upside-down triangles, but   this is, indeed, the same result as shown in the prettier images, above.&nbsp;   Look at the first three <em><strong>generations</strong></em>, for instance, and compare that with the   first graphic in this section. </p>
+	<p> This output results from a program that allows the user to enter any <em><strong>rule</strong></em>,    then applies that <em><strong>rule</strong></em> to a <em><strong>seed</strong></em> consisting of a <em><strong>single asterisk (on) floating in a   sea of blank (off) cells</strong></em>.&nbsp; A different program might allow the user to choose a   <em><strong>seed</strong></em>, but that requires more work from the user.</p>
+	<p> Let's run the program again, this time applying <strong><em>rule</em> 124</strong> to the same <em><strong>seed</strong></em>:</p>
+
+<pre>'
+Enter Rule (0 - 255): 124
+   start
+                                       *
+                                       **
+                                       ***
+                                       * **
+                                       *****
+                                       *   **
+                                       **  ***
+                                       *** * **
+                                       * *******
+                                       ***     **
+                                       * **    ***
+                                       *****   * **
+                                       *   **  *****
+                                       **  *** *   **
+                                       *** * ****  ***
+                                       * *****  ** * **
+                                       ***   ** ********
+                                       * **  ****      **
+                                       ***** *  **     ***
+                                       *   **** ***    * **
+                                       **  *  *** **   *****
+                                       *** ** * *****  *   **
+                                       * ********   ** **  ***
+                                       ***      **  ****** * **
+                                       * **     *** *    *******
+                                       *****    * ****   *     **
+                                       *   **   ***  **  **    ***
+                                       **  ***  * ** *** ***   * **
+                                       *** * ** ****** *** **  *****
+                                       * ********    *** ***** *   **
+                                       ***      **   * ***   ****  ***
+                                       * **     ***  *** **  *  ** * **
+                                       *****    * ** * ***** ** ********
+                                       *   **   ********   ******      **
+                                       **  ***  *      **  *    **     ***
+                                       *** * ** **     *** **   ***    * **
+                                       * **********    * *****  * **   *****
+                                       ***        **   ***   ** *****  *   **
+                                       * **       ***  * **  ****   ** **  ***
+                                       *****      * ** ***** *  **  ****** * **
+                                       *   **     ******   **** *** *    ******
+                                       **  ***    *    **  *  *** ****   *
+                                       *** * **   **   *** ** * ***  **  **
+                                       * *******  ***  * ******** ** *** ***
+                                       ***     ** * ** ***      ****** *** **
+                                       * **    ********* **     *    *** *****
+                                       *****   *       *****    **   * ***   **
+                                       *   **  **      *   **   ***  *** **  *
+                                       **  *** ***     **  ***  * ** * ***** **
+                                       *** * *** **    *** * ** ********   ****
+                                       * ***** *****   * ********      **  *
+                                       ***   ***   **  ***      **     *** **
+                                       * **  * **  *** * **     ***    * *****
+                                       ***** ***** * *******    * **   ***   **
+                                       *   ***   *****     **   *****  * **  **
+                                       **  * **  *   **    ***  *   ** ***** *
+                                       *** ***** **  ***   * ** **  ****   ****
+                                       * ***   ***** * **  ******** *  **  *  *
+                                       *** **  *   ******* *      **** *** ** *
+                                       * ***** **  *     ****     *  *** ******
+                                       ***   ***** **    *  **    ** * ***
+                                       * **  *   *****   ** ***   ****** **
+                                       ***** **  *   **  **** **  *    *****
+                                       *   ***** **  *** *  ***** **   *   **
+                                       **  *   ***** * **** *   *****  **  ***
+                                       *** **  *   *****  ****  *   ** *** * **
+                                       * ***** **  *   ** *  ** **  **** ******
+                                       ***   ***** **  ***** ****** *  ***
+                                       * **  *   ***** *   ***    **** * **
+                                       ***** **  *   ****  * **   *  *******
+                                       *   ***** **  *  ** *****  ** *     **
+                                       **  *   ***** ** ****   ** *****    ***
+                                       *** **  *   ******  **  ****   **   * **
+                                       * ***** **  *    ** *** *  **  ***  ****
+                                       ***   ***** **   **** **** *** * ** *
+                                       * **  *   *****  *  ***  *** *********
+                                       ***** **  *   ** ** * ** * ***       **
+
+   end
+Press any key to continue . . .
+</pre>
+
+	<p> It seems that someone has written a program that works.&nbsp;  Let's see how much of a challenge this actually is.&nbsp; While it's relatively easy from a programming standpoint, you may have found   that the one tricky part was — or is — understanding the meaning of a rule as a <em>single number</em>.&nbsp; Some of you will get this on the first "read" and have it down   already, while others   will need to reread the above development to really see how we get a complete   <em><strong>rule-set</strong></em> from a <em><strong>single 8-bit number</strong></em>.&nbsp; Do that first, before going on to the   next sections which propose an<em><strong> OOP implementation</strong></em> of this <em><strong>1D CA</strong></em>.</p>
+	<h2> 3A.5.3  Some Perspective</h2>
+	<p> What we are going to do next has all the characteristics of <em><strong>CA programming</strong></em>.&nbsp;   The brain connections you are about to cultivate will work very well for much   more complicated systems because they all use the same basic ideas that we are   learning here, i.e., applying a discrete rule set to the elements of an <em><strong>array</strong></em>.</p>
+	<p>I like to give some perspective every now and then, because sometimes these   topics can seem a little abstract.&nbsp; Is there any use for the techniques we   are about to apply?&nbsp; Yes. The skills developed in this <span class="sectionOrAssignmentTitle">Module</span> and the   associated <span class="sectionOrAssignmentTitle">Programming Assignment</span> are used in areas such as computer animation, image processing, pattern recognition, artificial   intelligence, biological systems theory, environmental systems theory, chaos,   fractals, genetic algorithms, econometrics, epidemiology modeling (i.e.,   health/illness epidemics), computer games, multi-robot autonomous control   theory, film and television special effects and fluid dynamics.&nbsp; </p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

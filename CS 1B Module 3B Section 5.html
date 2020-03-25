@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_3b_5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 3B Section 5</title>
+<link href="./CS 1B Module 3B Section 5_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+	<h1>Section 5 - Multi-File Projects</h1>
+	<h2>3B.5.1 Creating a New File for Your MyStack Class</h2>
+	<p>We have been writing our programs in a single source file up to this point.   As projects contain more classes, this makes the files hard to navigate and   organize.&nbsp; The standard practice for Java programs is to create a separate .java   file for every principal class of the program.</p>
+	<p>This is a simple matter.&nbsp; In our <strong>MyStack</strong> example we would create a new   file, <strong>MyStack.java</strong>,<strong> </strong>and place the source for the <strong>MyStack</strong> class   into that file, making certain to declare that class as public.&nbsp; In Eclipse, you   actually declare a new class, give it the name <strong>MyStack</strong>, and it automatically   generates the <strong>MyStack.java</strong> file for you.&nbsp; The details are next.</p>
+	<h2>3B.5.2 The MyStack Class And Its .java File</h2>
+	<p>Make sure that you have created a project like the one in the last section,   and get the bugs out so we start clean.&nbsp; Now, we will break the one file (which   was <strong>Foothill.java</strong> in my case because the main class was named <strong>Foothill</strong>)   into two:</p>
+	<ul>
+		<li><strong>Foothill.java</strong> (will contain the main <strong>Foothill</strong> class,   	declared <strong>public</strong>) </li>
+		<li><strong>MyStack.java </strong>(will contain the class <strong>MyStack</strong>, declared <strong> public</strong>) </li>
+	</ul>
+	<p>In the Package Explorer at the left of your Eclipse IDE, right-click on <strong> Foothill </strong>and select <strong>New -&gt; Class </strong></p>
+	<div class="picCenter"><img src="./CS 1B Module 3B Section 5_files/pic_1b3_2.jpg" alt="IDE shot" width="577" height="184" border="2"></div>
+	<p>When you are given a dialog box,&nbsp; give the class the name <strong>MyStack,</strong> and uncheck the<strong> public static void main() </strong>box:</p>
+	<div class="picCenter"><img src="./CS 1B Module 3B Section 5_files/pic_1b3_3.jpg" alt="IDE shot" width="247" height="132" border="2">&nbsp;&nbsp; → &nbsp;&nbsp; <img src="./CS 1B Module 3B Section 5_files/pic_1b3_4.jpg" alt="IDE shot" width="205" height="135" border="2"></div>
+<p>You will now have two <strong>.java</strong> files under your <strong>Foothill</strong> project:&nbsp; <strong>Foothill.java </strong>and<strong> MyStack.java</strong>.&nbsp; You will probably also have   both files open in your center window.&nbsp; You can switch back and forth   between the two files by clicking on the tabs at the top.</p>
+<div class="picCenter"><img src="./CS 1B Module 3B Section 5_files/pic_1b3_5.jpg" alt="IDE shot" width="513" height="168" border="2">&nbsp; </div>
+	<h2>3B.5.3 Separating the Source Code</h2>
+	<p>Now you should copy (cut) the entire <strong>MyStack</strong> source out of the <strong>Foothill.java</strong> file, and paste it into the <strong>MyStack.java</strong> file.&nbsp; It's okay if you   replace/overwrite the blank <strong>MyStack</strong> class that Eclipse gave you when it created   this file. You already have the class header.&nbsp; </p>
+	<p>When you are done, make sure:</p>
+	<ul>
+		<li>The <strong>Foothill.java</strong> has only the <strong>Foothill</strong> class definition.&nbsp; The <strong>MyStack</strong> class definition is gone.</li>
+		<li>The <strong>MyStack.java</strong> class has only the <strong>MyStack</strong> class definition.&nbsp;   	Be sure you   	did not accidentally copy the <strong>Foothill</strong> class.</li>
+		<li>You have added the keyword <strong>public</strong> in front of the <strong>MyStack</strong> class.</li>
+	</ul>
+	<p>Here are the two files:</p>
+	<h5>File Foothill.java</h5>
+
+<pre>// ------------- Class Foothill -------------- 
+public class Foothill
+{ 
+   // -------  main --------------
+   public static void main(String[] args)
+   {    
+      MyStack stk1 = new MyStack();
+      MyStack stk2 = new MyStack();
+      int k;
+      double result;
+      final double STACK_EMPTY = Double.MIN_VALUE;
+   
+      // Test the Stack - there should be nothing on it -----
+      if ( !stk1.testStack(1) )
+         System.out.println("empty stack; cannot pop");
+   
+      // push too much intentionally
+      for (k = 0; k &lt; 11; k++)
+         if ( ! stk1.push( k * 1.1 ) )
+            System.out.println("stack stk1 full; cannot push");
+   
+      for (k = 0; k &lt; 5; k++)
+         if ( ! stk2.push( k * 9 ) )
+            System.out.println("stack stk2 full; cannot push");
+   
+      // pop too much intentionally 
+      System.out.println("\n--------- First Stack ---------");
+      for (k = 0; k &lt; 11; k++)
+         if ( stk1.testStack(1) )
+            System.out.println( stk1.pop() + " : " );
+         else
+            System.out.println("empty stack; cannot pop");
+      System.out.println();
+       
+      // pop too much intentionally 
+      System.out.println("\n--------- Second Stack ---------");
+      for (k = 0; k &lt; 11; k++)
+         if ( stk2.testStack(1) )
+            System.out.println( stk2.pop() + " : " );
+         else
+            System.out.println("empty stack; cannot pop");
+      System.out.println();
+   } 
+} // end of class Foothill ---------------------
+
+</pre>
+
+	<h5>File MyStack.java</h5>
+
+<pre>// ------------- Class MyStack -------------- 
+public class MyStack 
+{
+   final private static int SIZE = 10;
+   private double stck[];
+   private int tos;
+    
+   // ---------------------------------------------------
+   public  MyStack()
+   {
+      tos = 0;
+      stck = new double[SIZE];
+   }
+     
+   // ---------------------------------------------------
+   public boolean push( double item )
+   {
+      if (tos == SIZE)
+         return false;
+      stck[tos++] = item;
+      return true;
+   }
+     
+   // ---------------------------------------------------
+   public double pop()
+   {
+      if (tos == 0)
+         return Double.MIN_VALUE;  // non-optimal way to flag error
+          
+      return stck[--tos];
+   }
+   //---------------------------------------------------
+   // returns true if at least num_needed items are on the stack
+   public boolean testStack( int num_needed )
+   {
+      if (tos &gt;= num_needed)
+         return  true;
+      else
+         return  false;
+   }
+} // end of class MyStack -------------------------
+</pre>
+
+	<p>That's it.&nbsp; Try running the project again to make sure you haven't   broken anything. </p>
+	<h2>3B.5.4 When To Use Separate Files</h2>
+	<p>Normally you do not need a separate file for every class in your project. The   project would become unnecessarily complicated. If one class uses three or four   small helper classes that you will likely never use for any other project, place   those inside the same file as the class that uses them.&nbsp; Declare only the   principal class <strong>public</strong> and allow those other classes to retain default access (or make them <strong>private</strong>).</p>
+	<p>Programs with many classes are often neater when they are broken into   separate files.&nbsp; You'll have to determine which classes will get their own   files, and if more than one class goes into a file, you'll have to decide which   one is <strong>public</strong>.&nbsp; That decision should not be too hard: if you choose   the wrong one, the program will not work.&nbsp; That's because only the class   declared as <strong>public</strong> in a file can be used outside of that file.</p>
+	<div class="parenthetical"> <strong>Exception.</strong> If you or other programmers are writing code in the <em>same package</em> as the file in question, that code can access the <strong>non-public</strong>, <strong>default</strong> classes from this file.</div>
+	<p> If more   than one class needs to be used outside the file -- especially from a different <em>package</em> -- you should create two files,   one for each class, and declare them both <strong>public</strong>.</p>
+	<p>I will often place everything into a single file for these lectures so I can   make it easy for you to copy and paste an entire program into your IDE.&nbsp;   You should, likewise, send me projects that have everything in a single file to   make it easier for me to grade.&nbsp; That means only one public class and all   the imports at the top of the file.</p>
+	<h2>3B.5.5 Where We Were, Where We're Headed</h2>
+	<p>That's all for this week.&nbsp; We have reviewed and/or introduced all   fundamental Java concepts.&nbsp; You have a solid foundation of the language,   basic programming practices, examples of data structures (stacks, arrays), review of Strings, a working knowledge of multi-dimensional arrays and the foundation of classes and objects.</p>
+	<p>Now it's time to take a quantum step.&nbsp; Next week we will learn the key   concept of advanced Object-Oriented Programming: <strong> Inheritance</strong>.&nbsp;</p>
+	<p><span style="text-align: left"><img src="./CS 1B Module 3B Section 5_files/cs_A_common_2.gif" alt="guy with blackboard" width="149" height="91" border="0" align="right"></span></p>
+	<h4>Prevent Point Loss</h4>
+	<ul>
+		  	<li><strong>Don't be "verbose".</strong>&nbsp; In methods like   	constructors, mutators, or other non-I/O member functions, do not do any   	output - even in the case of an error.&nbsp; Leave the decision of how and   	when to do output to the client.   	(1 - 2 point penalty)</li>
+			<li><strong>Methods that should not be instance functions.</strong> Some methods should not be instance member functions.&nbsp; If the method   	does not act on the class data or acts on it in a way that is so specialized   	that only one application out of a million will make use of it, it should   	not be in your class.&nbsp; Make this an ordinary (static client or static   	main class) method, not a method of a lower-level class.&nbsp;   	(2 - 3 point penalty)</li>
+			<li><strong>Methods that should be instance functions. </strong> On the other hand, if a static method (or a method of some other class) takes only   	one object of a class as a parameter and works only on that one object, then   	it probably should be made an instance method of that object's class, and the   	object parameter should be removed. The reason we can eliminate the   	parameter once we make the method an instance method (of the previously   	passed-object's class) is that the object is then passed intrinsically to the method via the "this"   	object.&nbsp; (2 - 3 point penalty)</li>
+		</ul>
+	<p>Rest up and get ready for action.</p>
+	<div class="picCenter"><img src="./CS 1B Module 3B Section 5_files/cs_B_common_24.jpg" alt="mountain" width="294" height="182" border="0"></div>
+	</div>
+<!-- end .container --></div>
+
+
+</body></html>

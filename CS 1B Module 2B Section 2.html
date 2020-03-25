@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_2b_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 2B Section 2</title>
+<link href="./CS 1B Module 2B Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 2 - Binary Searching</h1>
+	<h2>2B.2.1 Need for Efficiency</h2>
+	<p>There is one problem with the <em><strong>linear search</strong></em>:&nbsp; it is not   efficient.&nbsp; If we have an array of 1,000,000 students and we are searching for   one, we'll have to compare, on average, 500,000 names with the <em><strong>key</strong></em> before we return with the position of the student. We <em>may</em> have to test all 1,000,000 (or maybe we get lucky and find it on the first test).</p>
+	<p>A<em><strong> binary search</strong></em> promises to find a student in one million names   using at most 20 name/key comparisons!&nbsp; There's one catch:&nbsp; we have to <em><strong> sort</strong></em> the array first.&nbsp; This is not as bad as it sounds since we often   store the array in sorted order anyway.</p>
+	<p>The concept is simple.&nbsp; We start out by comparing the <em><strong>key</strong></em> to the <em><strong>middle</strong></em> element of the   (sorted) array.&nbsp; If the <em><strong>key</strong></em> is <u><em>greater than</em></u> the <em> <strong>middle</strong></em> student, we know that <em><strong>key</strong></em>, if present in the   array, is in the <em><strong>upper half of the array</strong></em>. On the other hand, if the <em><strong>key</strong></em> is <em><u>less than</u></em> the <em><strong>middle</strong></em> student, then the <em><strong> key</strong></em>, if present, is in the <strong> <em>lower half sub-array</em></strong>.&nbsp;   Either way, we take the appropriate (upper or lower) sub-array as the new array   (it's now half as big as the original, thankfully) and repeat the test   recursively.&nbsp; This gets repeated until we either find the key or the   sub-array shrinks to nothing.</p>
+	<div class="picCenter"><img src="./CS 1B Module 2B Section 2_files/cs_B_common_11.JPG" alt="scenic death valley sign" width="300" height="200" hspace="25" vspace="7" border="0"></div>
+	<h2>2B.2.2 A Binary Algorithm</h2>
+	<p>Here is an example.&nbsp; First, we will simplify the <strong>Student</strong> class so that   it contains only last names.&nbsp; Now, imagine the array contains 100 elements and we   are looking for the <em><strong>key</strong></em> "chloe".&nbsp; Assume that "chloe" is in the   array.&nbsp; We sort the array and assume that "chloe" ends up at index 41 after the   sort.&nbsp; </p>
+	<p><em>Informally</em> (meaning, in the syntax below, wherein we sloppily identify the name "chloe" with the object for which we are searching) we are going to inspect the expression:</p>
+
+<pre> "chloe".compareTo(array[k].lastName)
+</pre>
+
+	<p>Since the array is sorted, we know that if k &lt; 41 the comparison will return   a positive number because "chloe" is greater than <strong>lastName</strong>.&nbsp; If <strong>k   &gt;   41</strong>, the result will be negative,&nbsp; because "chloe" will be less than <strong> lastName</strong>.&nbsp; If we compare "chloe" to item <strong>41</strong> exactly, <strong>compareTo()</strong> will return a <strong>0</strong>, indicating a perfect match.&nbsp;&nbsp; If we get a perfect match   we return the <em><strong>index </strong></em>(41) to the <em><strong>client</strong></em>.</p>
+	<p>We now start our binary search.&nbsp; (Note:&nbsp; You do not have to memorize the   following sequence.&nbsp; It is done automatically by the recursion.&nbsp; You only need   to understand the principles).</p>
+<ul>
+	<li>We enter the method with the entire index range 0 to 99.</li>
+	<li><strong>middleIndex</strong> = (0 + 99)/2 = 49 (we use int arithmetic)</li>
+	<li>"chloe" is less than the name in location 49, so we now search only the   	lower portion of the array, 0 to 48.</li>
+	<li><strong>middleIndex</strong> = (0+48)/2 = 24</li>
+	<li>"chloe" is greater than the name in <strong>middleIndex</strong>, 24, so we search the   	sub-array 25 to 48.</li>
+	<li><strong>middleIndex</strong> = (25+48)/2 = 36</li>
+	<li>"chloe" is greater than the name in <strong>middleIndex</strong>, 36, so we search the   	sub-array 37 to 48.</li>
+	<li><strong>middleIndex</strong> = (37+48)/2 = 42</li>
+	<li>"chloe" is less than the name in <strong>middleIndex</strong>, 42, so we search the   	sub-array 37 to 41.</li>
+	<li><strong>middleIndex</strong> = (37+41)/2 = 39</li>
+	<li>"chloe" is greater than the name in <strong>middleIndex</strong>, 39, so we search the   	sub-array 40 to 41.</li>
+	<li>middleIndex = (40+41)/2 = 40</li>
+	<li>"chloe" is greater than the name in <strong>middleIndex</strong>, 40, so we search the   	sub-array 41 to 41.</li>
+	<li>"chloe" is equal to the name in <strong>middleIndex</strong>, 41, so we return 41</li>
+</ul>
+	<p>Now the methods start "unwinding," returning from the last call back to the   first, passing back the 41 as they make their way back up the recursive chain.&nbsp;   This took us 7 comparisons compared to 41 if we had gone through the list   linearly.</p>
+	<p>For any name key that we want to find in the array, we go through this   process until we either find the student or the size of the sub-array we are   searching collapses into nothing.&nbsp; In an array of 1 million students, this   happens in, at most, 20 comparisons.</p>
+	<p>Here is the complete binary search algorithm as implemented in a static class   method of Student:</p>
+
+<pre>    public static int binarySearch(Student[] array, String keyLast,
+       int firstIndex, int lastIndex)
+    {
+       int middleIndex, result;
+       
+       if (firstIndex &gt; lastIndex)
+          return -1;
+          
+       middleIndex = (firstIndex + lastIndex) / 2;
+       result 
+          = keyLast.compareToIgnoreCase(array[middleIndex].lastName);
+       
+       if (result == 0)
+          return middleIndex;   //found him!
+       else if (result &lt; 0)
+          return binarySearch( array, keyLast, firstIndex, 
+             middleIndex - 1);
+       else
+          return binarySearch( array, keyLast, middleIndex + 1, 
+             lastIndex); 
+    }
+</pre>
+
+	<p>Notice that we always call<strong> binarySearch()</strong> with a smaller array than we   came in with, guaranteeing that we will either find the name, or that the first   and last index will eventually cross, resulting in the escape condition which   returns a -1.</p>
+	<p>Since the binary search requires a sorted array, we do a quick review of   sorting, then complete the example -- we're almost there!</p>
+  </div>
+  </div>
+<!-- end .container -->
+
+
+</body></html>

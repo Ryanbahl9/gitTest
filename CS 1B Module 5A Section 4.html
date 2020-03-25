@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5a_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5A Section 4</title>
+<link href="./CS 1B Module 5A Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+    <h1>Section 4&nbsp; The Layout</h1>
+    <h2>5A.4.1 FlowLayout<img src="./CS 1B Module 5A Section 4_files/pic_1a10_17.jpg" alt="screen shot" width="300" height="200" hspace="20" vspace="8" border="0" align="right"></h2>
+    <p>For reference, I am redisplaying a screen shot of the GUI that we are trying to build on this   page (and the following pages).</p>
+    <p>Our next group of statements is dedicated to setting up what we call a<em><strong> layout manager</strong></em> for the <strong>JFrame</strong>.&nbsp; There are different <em><strong>layout managers</strong></em> in <strong>Java</strong>, and each specifies how the <em><strong>controls</strong></em> (<em><strong>buttons</strong></em>, <em><strong>labels</strong></em>, etc.) will appear on   the <strong>JFrame</strong>.&nbsp; The simplest is called <strong>FlowLayout</strong> because the <em> <strong>controls</strong></em> will <em><strong>flow</strong></em> onto your <strong>JFrame</strong>, from left-to-right and top-to-bottom.</p>
+    <p>It is helpful to use <strong>FlowLayout</strong> with some <em><strong>gaps</strong></em> -- a   small amount of space above, below, left and right of each control.&nbsp; This   assures that the controls aren't placed too close to one another. We specify a   vertical gap (in pixels) and a horizontal gap (in pixels).&nbsp; The horizontal   gap will be 5, and the vertical gap will be 20.&nbsp; You'll see how these   numbers are specified in the code below.</p>
+    <p>Here is how one creates a <strong>FlowLayout</strong> with the gaps described and uses it on a <strong>JFrame</strong>:</p>
+
+<pre>   // set up layout which will control placement of buttons, etc.
+   FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 5, 20);
+   frmMyWindow.setLayout(layout);
+</pre>
+    
+    <p>Again, we start with a comment that documents what we are about to do:</p>
+
+<pre>   // set up layout which will control placement of buttons, etc.
+</pre>
+    
+    <p>Next we see this:</p>
+
+<pre>    FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 5, 20);
+</pre>
+<p>This line above creates a new <strong>FlowLayout</strong> for us, gives it the name <strong>layout</strong> and tells Java that we should center the controls (rather than left or right   justifying them), and use a horizontal gap of 5 pixels and a vertical gap of 20   pixels.&nbsp; This line can, like the <strong>JFrame</strong> line, be broken up into two   separate statements for ease of readability:
+</p>
+<div><pre>   FlowLayout layout ;
+   layout = new FlowLayout (FlowLayout.CENTER, 5, 20);
+</pre>
+    </div>
+    <p> Again, you don't have to understand the exact meaning of each of these   statements; just know that they create a flow layout.</p>
+ 
+<pre>    frmMyWindow.setLayout(layout);
+</pre>
+    
+    <p>This line sets the layout manager of the <strong>JFrame</strong> to the layout manager object, <strong>layout</strong>, that you created in the statement before.&nbsp; Notice the similarity to   the statements that we used to initialize the <strong>JFrame</strong> in the last section.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

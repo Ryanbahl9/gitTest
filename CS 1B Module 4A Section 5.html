@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_4a_5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 4A Section 5</title>
+<link href="./CS 1B Module 4A Section 5_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 5 - The Complete Listing in Multiple Files</h1>
+	<h2>4A.5.1 Multi-File Structure</h2>
+	<p>To help you get used to multi-file projects, which I introduced last week, I'm going to walk you through   the process of placing the <em><strong>classes</strong></em> <strong>StackNode</strong> and <strong>Stack</strong> into separate files <strong> StackNode.java </strong>and<strong> Stack.java</strong>,&nbsp;   leaving only the main <em><strong>class</strong></em> (which is called <strong>Foothill</strong> in my project) in   my main file, <strong>Foothill.java</strong>.</p>
+	<p>This will help in the next lesson when we derive new classes from these <strong><em>base   classes</em></strong>.&nbsp; It will make our main file less cluttered.</p>
+	<h2>4A.5.2 Two New Files: Stack.java and StackNode.java </h2>
+	<p>Using the method I described in a previous lecture, add a new class <strong> Stack</strong> to your Foothill folder in the package explorer window.&nbsp; </p>
+	<ul>
+		<li>Right click on <strong>Foothill</strong>, select <strong>Add → New → Class</strong>&nbsp;   	(adjust if your <em><strong>main class</strong></em> is not called <strong>Foothill</strong>):<br>
+		  <br>
+		  <div class="picCenter"><img src="./CS 1B Module 4A Section 5_files/pic_1b4_7.jpg" alt="console shot" width="542" height="130" border="2">&nbsp; </div>
+		</li>
+	</ul>
+	<ul>
+		<li>Name the file <strong>Stack</strong>:<br>
+		  <div class="picCenter"><img src="./CS 1B Module 4A Section 5_files/pic_1b4_8.jpg" alt="The name field is being changed to &quot;Stack&quot;" width="266" height="109" border="2">&nbsp; </div>
+		  <br>
+	  </li>
+		<li>You will see an empty <strong>Stack</strong> <em><strong>class</strong></em> definition.&nbsp; Get ready to delete   	it and replace it with your <em><strong>classes</strong></em>.<br>
+		  <div class="picCenter"><img src="./CS 1B Module 4A Section 5_files/pic_1b4_9.jpg" alt="The Stack.java file is shown and it contains an empty &quot;public class Stack { } " width="290" height="137" border="2">&nbsp; </div>
+		  <br>
+		</li>
+		<li>Go to your main <strong>Foohill.java</strong> file, cut the <strong>Stack</strong> class and paste   	it into this <strong>Stack.java</strong> file, overwriting the   	blank public class<strong> Stack{ }</strong> in that file.&nbsp; Add the keyword <strong>public</strong> in   	front of the <strong>Stack</strong> class. <br>
+			&nbsp;</li>
+		<li>Repeat the process, creating a new <strong>StackNode</strong> class in this   	project, removing the <strong>StackNode</strong> class from the main file and placing   	it into its own <strong>StackNode.java</strong> file.</li>
+	</ul>
+	<h2>4A.5.3 The Project State</h2>
+	<p>When done, you will have the following three files and contents:</p>
+	<h4>Stack.java</h4>
+
+<pre>//Class Stack ---------------------------------------
+public class Stack
+{
+   // pointer to first node in stack
+   private StackNode top;
+   
+   // constructor
+   public Stack()
+   {
+      top = null;
+   }
+   
+   public void push(StackNode newNode)
+   {   
+      if (newNode == null) 
+         return;   // emergency return
+      newNode.next = top;
+      top = newNode;
+   }  
+   
+   public StackNode pop()
+   {
+      StackNode temp;
+     
+      temp = top;
+      if (top != null)
+      {
+         top = top.next; 
+         temp.next = null; // don't give client access to stack!
+      }
+      return temp;      
+   }
+
+   // console display
+   public void showStack()
+   {
+      StackNode p;
+      
+      // Display all the nodes in the stack
+      for( p = top; p != null; p = p.next )
+         p.show();
+   }
+}</pre>
+
+
+	<h4>StackNode.java</h4>
+
+<pre>//Class StackNode  ----------------------------------
+public class StackNode
+{
+   // data (we allow Stack class public access)
+   protected StackNode next;
+    
+   // constructor
+   public StackNode()
+   {
+      next = null;
+   }
+   
+   // console display
+   public void show()
+   {
+      System.out.print( "(generic node) ");
+   }
+}</pre>
+
+	<h4>Foothill.java</h4>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      Stack stk = new Stack();
+      StackNode p;
+
+      // build the stack
+      for (int k = 0; k &lt; 5; k++)
+      {
+         p = new StackNode();
+         stk.push(p);
+      }
+
+      // show the stack, deleting as you pop
+      while ( (p = stk.pop()) != null)
+         p.show();
+      System.out.println();
+   }
+ }</pre>
+
+	<p>Now compile and run your program to make sure it produces the following   output:</p>
+	<div class="picCenter"><img src="./CS 1B Module 4A Section 5_files/pic_1b4_6.jpg" alt="console with five strings &quot;(generic node)&quot; all on one line" width="641" height="161" border="0">&nbsp; </div>
+	<p>You have created a generic <em><strong>stack</strong></em> data structure using <em><strong>linked-list</strong></em> principles.&nbsp; You have also learned how to derive <em><strong>subclasses</strong></em> from <em><strong>base classes</strong></em>.&nbsp;   In the next <span class="sectionOrAssignmentTitle">Module</span>, in a couple days, you will put these together to see how we   can build <em><strong>stacks</strong></em> of <strong>floats, doubles, </strong>or even <strong>Cards</strong> without   duplicating the <em><strong>stack</strong></em> logic from the <em><strong>base classes</strong></em>.</p>
+</div>
+</div>
+
+
+</body></html>

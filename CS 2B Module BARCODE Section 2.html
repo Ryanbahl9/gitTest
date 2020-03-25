@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0085)https://www.fgamedia.org/faculty/loceff/cs_courses/common/BARCODE/cs_1and2B_6b_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 2B Module BARCODE  Section 2</title>
+<link href="./CS 2B Module BARCODE Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 2 - Optical Barcodes (Optional)</h1>
+    <div class="parenthetical"> <strong>This section is optional</strong><strong></strong>. Ultimatly, it -- and the following two -- will be replaced by sections <strong>5</strong> through <strong>7</strong>  of the current module. You may proceed directly to those if you wish.    </div>
+	<h2>BARCODE.2.1 Barcodes</h2>
+	<p>Barcodes are ubiquitous.&nbsp; It is hard to imagine life without them.&nbsp;   As a consumer, you use them indirectly as you watch a clerk scan the items that   you purchased.&nbsp; If you request a mail-in rebate, you have to cut out the <strong><em>UPC code</em></strong> and attach it to your rebate request.&nbsp; When you send or receive a   package, your carrier has the tracking information encoded and printed as a   barcode on the box.</p>
+	<p> <img src="./CS 2B Module BARCODE Section 2_files/cs_1and2B_6b_3_Barcode-scanner.jpg" alt="barcode pic" width="300" height="336" hspace="15" border="0" align="left">In   industrial applications barcodes are used to manufacture, purchase and assemble   products.&nbsp; Medical centers place them on every drug container, syringe,   patient record and even on the patients themselves (look at the wrist band next   time you or someone you know is in the hospital). </p>
+	<p>Imagine the number and variety of companies that provide hardware and   software to encode, print, scan and decode these labels which are everywhere.&nbsp;   And it is growing.&nbsp; </p>
+	<p>The reason that this industry is so active is due, in part, to the fact that   the problem is not completely solved.&nbsp; In supermarkets, where angled   mirrors scan the item from several directions, there is redundancy (in the good   sense) that enables the bar code to be reconstructed with over 99% accuracy even if   the label is wrinkled, faded or poorly positioned;&nbsp; less than one in 100   items scanned require the clerk to manually key in the product number due to a   read error.&nbsp; But a shipping label that's been through a rainstorm,   stepped-on or partially ripped by the staple from a neighboring package, will   contain errors at a higher frequency.&nbsp; Add to that the fact that hand-held   scanners don't (yet) have the sophistication of their big brothers in the   supermarket, so they don't have as much "redundancy" (again in the good sense),   which multiplies the likelihood of an error.&nbsp; These errors cost money, so the companies are very motivated to improve things by buying better products   or hiring engineers internally to solve the problem.</p>
+	<p> <img src="./CS 2B Module BARCODE Section 2_files/cs_1and2B_6b_3_bacode_rusty.jpg" alt="barcode pic" width="301" height="232" hspace="15" vspace="5" border="2" align="right">To   give you a further sense of the reality of this problem, pharmaceutical   companies that process over a million orders a month can get errors at the rate   of 50% because of cheap printers from under-funded hospitals, doctor signatures   written over part of the codes, and transportation damage.&nbsp; Meanwhile,   energy companies, the military and construction manufacturers attempt to track   equipment by using codes embedded into the steel with lasers, but rust and sand   often destroy part of the codes.&nbsp; We cannot eliminate the damage, but we can   use error correcting codes that allow for 100% of the data to be recovered even   if part of the barcode is completely lost ... if the programming is done   right.&nbsp; That's where you come in.</p>
+	<p>This is an industry that will need programmers for decades.&nbsp; This   week, you'll get some hands on experience in coding and testing software that   manages optical barcode patterns.</p>
+	<h2>BARCODE.2.2 Tw0-Dimensional  Barcode Symbologies</h2>
+	<p> <img src="./CS 2B Module BARCODE Section 2_files/cs_1and2B_6b_3_bacode_pdf417.jpg" alt="barcode pic" width="263" height="79" hspace="20" border="0" align="left">One   of the most important class of barcodes are the 2-dimensional, or 2D, codes.&nbsp;   They can pack more information over a smaller area than the longer 1D strips.&nbsp;   There are several different formats, or <em><strong>symbologies</strong></em> as they are called, and any   product that reads 2D barcodes usually has to be designed to recognize and   interpret more than one format.&nbsp; Therefore<img src="./CS 2B Module BARCODE Section 2_files/cs_1and2B_6b_3_bacode_aztec.jpg" alt="barcode pic" width="99" height="94" border="0" align="right"> each has some large feature that helps a programmed algorithm to identify what   type it is.&nbsp;&nbsp; Above, left, you'll see a format called<em><strong> pdf-417</strong></em>. On the   right you'll see the same information in a format called <em><strong>Aztec</strong></em>.&nbsp; And below   is the format that I want to explore in a little more detail; it is called <strong> <em>Datamatrix</em></strong> (or <strong>DataMatrix</strong> or <strong>Data Matrix</strong>).</p>
+	<p align="center"> <img src="./CS 2B Module BARCODE Section 2_files/cs_1and2B_6b_3_bacode_datamatrix.jpg" alt="barcode pic" width="97" height="95" border="0"></p>
+	<p align="left">By the way, all of these codes are carrying the same text   string.&nbsp; Can you guess what it is?&nbsp; Here's a hint:</p>
+	<div class="picCenter"><img src="./CS 2B Module BARCODE Section 2_files/cs_1and2B_6b_3_bacode_128.jpg" alt="barcode pic" width="459" height="118" border="0"></div>
+	<p align="left">This last one, by the way, is a 1D code.&nbsp; While we're not   so interested in those this week, it is the only one that actually prints out   the words on the label with the code.&nbsp; It is called <em><strong>Code-128</strong></em>.</p>
+	<h2 align="left">BARCODE.2.3 Datamatrix</h2>
+	<p align="left">Let's look again at <em><strong>Datamatrix</strong></em>.&nbsp; Below are a   couple more samples.&nbsp; What do you notice about them?&nbsp; The more recognizable   feature, perhaps, is the solid black on the<em><strong> left and bottom</strong></em>.&nbsp; This is   called the <em><strong>Closed Limitation Line</strong></em>.&nbsp;&nbsp; Look a little more   closely and you'll notice that the <strong><em>right and top</em></strong> consist of an alternating black and white   pattern, so that the odd numbered pixels on the far right (and top) are black,   while the even numbered pixels are white.&nbsp; This is called the <em><strong>Open   Borderline</strong></em>.&nbsp; The <em><strong>Closed Limitation Line</strong></em> and <em><strong>Open   Borderline</strong></em> help   the algorithms because they:</p>
+	<ul>
+		<li>  Help   	situate the code in a standard position.<img src="./CS 2B Module BARCODE Section 2_files/cs_1and2B_6b_3_bacode_datamatrix2.jpg" alt="barcode pic" width="161" height="154" hspace="10" border="0" align="right">		</li>
+		<li> Determine the minimum size of each pixel.		</li>
+		<li> Determine the height and width of the <em><strong>Datamatrix</strong></em> (which as   	you can see from the examples can vary).		</li>
+	</ul>
+	<h4 align="left">There are two aspects of all these encoding schemes.</h4>
+	<ol>
+		<li> They have actual data - the message that is to be encoded.		</li>
+		<li> There is extra information encoded that allows much of the   	image to be destroyed without loss of the message.		</li>
+	</ol>
+	<p align="left">This second aspect is knows as <em><strong>error-correction</strong></em>,   and can be very sophisticated.&nbsp; Hamming codes are a simple example.&nbsp; <em><strong>Datamatrix</strong></em> uses something   called <em><strong>Reed-Solomon error correction</strong></em>, and to explain it, I'd have to ask you to   take two years of upper division math, and then we would need a three <img src="./CS 2B Module BARCODE Section 2_files/cs_1and2B_6b_3_Galois.jpg" alt="barcode pic" width="317" height="400" hspace="30" vspace="30" border="2" align="left">week   seminar on the coding of the algorithm, itself.&nbsp; Needless to say, we're not   going there.&nbsp; I will, however take a moment to tell you that the code is   based on the work done in the early 19th century by a young French mathematician   named <em><strong>Evariste Galois</strong></em>, who was neither recognized as a   mathematician nor able to stay out of political prison during the latter part   of his short, 21 year life.&nbsp; Galois was a tragic example of how a closed   and imbalanced educational system can shut out great genius and even ruin lives.&nbsp;   (We try to avoid that here at Foothill College.)&nbsp;&nbsp; He died in a duel that some say was   orchestrated by the government to   kill (he was a bit of a mis-guided   rabble   rouser, to be sure). Luckily (an understatement), he wrote up everything he discovered over his short life   the night before the duel.&nbsp; He sent it to his only living friend and fellow   mathematician, who himself did not comprehend its full value.&nbsp; Fifty years   later, it was discovered and motivated a branch of mathematics now called <em><strong> Galois Theory</strong></em>  that is required for every math and theoretical physics Ph.D. student   to understand.&nbsp;&nbsp; From modern particle physics to these error   correcting codes that appear on PC boards, submarines and packages, <em><strong>Galois   Theory</strong></em> -- the theory that manipulates objects called <strong><em>finite fields</em></strong> -- is the underlying theory that enables the error correction technology for <em><strong>Datamatrix</strong></em>.</p>
+	<p align="left">In our simplified approach we will pretend that the data is   stored as simple <strong>ASCII</strong> from left to right, packed between the <em><strong>Closed Limitation   Line</strong></em> and the <em><strong>Open Borderline</strong></em>.&nbsp; In other words, we are   not considering any error correction.&nbsp; Since <strong>ASCII</strong> uses (formally) 8 bits, and   we'll need an extra bit below and above each character, the bit pattern or dot   matrix for this pseudo-datamatrix will be 10 bits high (8 bits for the character   and 1 additional bit above and below.&nbsp; The simplified code will not be square,   because the width will be determined by the length of the message.&nbsp; Again,   whatever the width is, we'll need an extra bit on the left for the <em><strong>Closed   Limitation Line</strong></em> and one on the right for the <strong>Open Borderline</strong>.</p>
+	<p align="left">An example of our silly pseudo-datamatrix is this:</p>
+
+<pre>   * * * * * * * * * * * * * * * * * * * 
+   *                                    *
+   **** *** **   ***** ****   *********  
+   * ************ ************ **********
+   ** *      *    *  * * *         * *   
+   ***   *  *           * **    *      **
+   * ** * *  *   * * * **  *   ***   *** 
+   * *           **    *****  *   **   **
+   ****  *  * *  * **  ** *   ** *  * *  
+   **************************************
+</pre>
+
+<p align="left">As you can see, I am using *s to indicate black pixels, and   	blanks to indicate white ones.&nbsp; Also, the bottom and left edge are   	"solid" black (you have to use your imagination a little) and the top and   	right are alternating black-white pixels.&nbsp; In order to read this   	message we need to start at the far left and look at each column.&nbsp; We   	throw away the left column which is part of the <em><strong>Closed Limitation Line</strong></em> and   	also throw away the bottom and top.&nbsp; The first column is, then:</p>
+
+<pre>     128s
+   * 64s
+     32s
+   * 16s 
+   * Eights
+     Fours
+     Twos
+   * Ones
+</pre>
+
+<p align="left"> This tells us exactly how do read the code:&nbsp; It is 1 + 8 + 16 + 64 =   		89 = 'Y'&nbsp; (capital <strong>Y</strong>).&nbsp; We then move to the next   		column, and decode that one the same way.&nbsp; </p>
+	
+<p align="left"> This is pretty much punched paper tape from the 1970s (of which I have some great   		memories).</p>
+	
+<p align="left"> In summary, we are going to use the solid <em><strong>Closed Limitation Line </strong></em>and the <em><strong>Open Borderline</strong></em> simply to identify the size and extent of the code.&nbsp;   		After that, we'll look at (or print if we are creating the label) each   		column from left-to-right, converting the ASCII codes into a sequence of   		8 characters, or visa-versa.</p>
+<p align="left"> It turns out, the structure of the classes, objects and algorithms we'll   		need to write will be adequate as a framework for the more complex and   		real <em><strong>Datamatrix</strong></em>, even though we will only program a faint   		suggestion of the real deal.</p>
+	
+	<p align="left">Here is a complete text and the code to go with it, for you   	to use as you write your program:</p>
+
+<pre>* * * * * * * * * * * * * * * * * 
+*                                *
+****   * ***** **** **** ******** 
+*   *** ***************** ********
+*  * **  *   *   *  *    * **     
+* *       * *  **    * * *    ****
+*     *   *    ** * *  *  *  ** * 
+** *   * *****  **     * *      **
+**** **   **** ** *   *   *  * *  
+**********************************
+ CIS 15B rocks more than Zeppelin
+</pre>
+
+	<p>(<strong>CIS 15B</strong> is the older and slightly weaker version of <strong>CS 2B</strong> which, like <strong>CS 1B</strong>, rocks even <em>more</em> than <strong>CIS 15B</strong> rocked.) You can see that each side of the string contains an extra position for the   enclosing border columns.&nbsp; Remember, you have to remove the bottom and top, as well   to get the 8-bit codes.</p>
+</div>
+</div>
+
+
+</body></html>

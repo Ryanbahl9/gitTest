@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_6a_1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 6A Section 1</title>
+<link href="./CS 1B Module 6A Section 1_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 1 - Introduction to Applets</h1>
+  	<h2>6A.1.1 Introduction to Week Six</h2>
+  	<img src="./CS 1B Module 6A Section 1_files/cs_B_common_19.JPG" alt="scenic dam" width="200" height="300" hspace="7" vspace="6" border="1" align="right">
+<p> This   week we consider <strong>GUI</strong> programming in   more depth, and <em><strong>Applets</strong></em> in particular. Depending on the quarter and my mood, this GUI material may or may not be used immediately, and might apply to a future assignment, not necessarily this week's assignment.</p>
+<p> Another, long awaited topic we will study is that of <font color="#800080"><em> <strong>Exception Handling</strong></em></font>.</p>
+<h3>Applets and GUI</h3>
+<p> <strong>Applets</strong> are nothing more than   Java programs that can be run over the web.&nbsp; You store them on the web   server with your web page, and when the user clicks on a certain link that you   supplied, your applet will run on his or her system, right inside the web   browser. </p>
+<p>You see this happening all the time when you visit pages that have embedded   Java applets.</p>
+<p>Then, we are going to learn more about graphics and drawing in Java   applications as we discover how to draw onto <strong>JPanels</strong>. We will even learn one of   the more important general programming concepts as a by product: state   variables.</p>
+<h3>Reading</h3>
+<p>Review the links given in the A modules of the first weeks, especially the ones involving GUI and Exception classes.</p>
+<h2> 6A.1.2   Java and Applets<img src="./CS 1B Module 6A Section 1_files/cs_B_common_22.JPG" alt="pretty pastry" width="300" height="200" hspace="9" vspace="7" border="0" align="right"></h2>
+<p>An <strong>Applet</strong> is similar to an <em><strong>application</strong></em> (the sort of   program we have written so far) but <strong>Applets</strong> are run from web browsers. In   some development environments (<em><strong>Eclipse</strong></em>, e.g.) you may not see this   difference because they are designed to let you run either your <em><strong> application</strong></em> or <strong>Applet</strong> directly inside them. They will look   different, to be sure, but there isn't a difference in how they are launched. In   other development environments when you run your applet,<em><strong> Internet Explorer</strong></em> is automatically launched and your <strong>Applet</strong> runs inside the browser window.   An <strong>Applet</strong> can even be transported over the web and run on someone else's   system. It is this so-called platform independence (and the large platform   independent libraries that go with this feature) that makes <strong>Java</strong> special.</p>
+<h2>6A.1.3 Applets and Security</h2>
+<p>The idea that programs could be run on your computer without your realizing   it introduces many security issues. </p>
+<p>Java protects you from such potential security issues by providing a   verification layer that kicks in when an applet is run. This often surprises   programmers when converting applications to <strong>Applets</strong> because certain <strong> Applets</strong> work when testing them in their development environment, but when   placed on a web site, suddenly: no-can-run; they generate security exceptions.   You have to design for <strong>Applets</strong> or <em><strong>applications</strong></em>,   accordingly. </p>
+<h2>6A.1.4 The File Components of an Applet</h2>
+<p>With an <strong>Applet</strong> one needs to deal with more than just the source .java   files.&nbsp; Here are the files associated with every applet:</p>
+<ul>
+	<li>a <strong>.java source file</strong> into which to put our program statements   	(same as we have been doing up until now)</li>
+	<li>the <strong>.class files</strong> that it generates (also something that has been   	part of our application process)</li>
+	<li>an <strong>.html file </strong>that points to the .class file (this is new - every   	applet needs to be called from an html file)</li>
+	<li><strong>a browser</strong> into which we load this .html file (also new - like   	Safari, Internet Explorer or Firefox.</li>
+</ul>
+So the file and procedure sequence goes something like this:
+<ol>
+	<li>Edit the <strong>.java </strong>file. </li>
+	<li><em><strong>Compile</strong></em> it, thus generating various <strong>.class files </strong> (or .jar files for smaller, compressed archives). </li>
+	<li><em><strong>Create</strong></em> your <strong>.html file</strong> which references your Applet   	using the name of&nbsp; the <strong>.class </strong>(or .jar) files. </li>
+	<li>Using your browser,<em><strong> load the .html file</strong></em>. </li>
+</ol>
+<p>The Applet will run inside your browser window.&nbsp;&nbsp;
+</p>
+<p>While this is technically true, for our purposes we will develop and test   applets just as we have applications.&nbsp; That's because Eclipse provides its   own internal browser and HTML simulator for launching our applets.</p>
+<h2>6A.1.5 The Event-Driven Nature of Applets</h2>
+<p>In Java applications we had one main class (that I usually called <strong>Foothill</strong>),   and it contained, at a minimum, the principal method<strong> main().&nbsp; </strong>Program   execution always began at the top of this<strong> main()</strong> method.</p>
+<p>In <strong>Applets</strong>, instead of there being one <strong>main</strong>() method at which   the program begins, and which controls the thread of execution, there are   several important <em><strong>methods</strong></em> whose names are pre-ordained by Java: </p>
+
+<pre>   paint()
+   init()
+   start()
+   stop()
+   destroy()
+   actionPerformed()
+</pre>
+
+<p>This is not a complete list, just a few key methods. Not all of these methods   must be included in your program, but many will be, and if they are, they must   have the these names. </p>
+<p>Note that <strong>main</strong>() is not among them! Program execution does not begin   in <strong>main</strong>() in an <strong>Applet</strong>. Instead, it begins somewhere outside our   program (in the web browser or the applet driver of the IDE). Then, during the   life of our <strong>Applet</strong>, these <em><strong>methods</strong></em> are occasionally called   for us. </p>
+<p>For instance, when the <strong>Applet</strong> is born, the <strong>init</strong>() <em><strong>method</strong></em> is called. When the user moves it off the screen (by clicking on the back arrow   of the browser) the <strong>stop</strong>() method is called. If it is reloaded later, the <strong>start</strong>() method is called. If the user clicks on one of our GUI controls   the <strong>actionPerformed</strong>() may be called. </p>
+<p>This is known as <strong><em>event-driven programming</em></strong> and we've been using   it in our Swing GUI programs whenever we had buttons or text areas for the user   to manipulate. Our program is designed to respond to events quickly and   efficiently and then return to the client -- in this case a client over which   we have no direct control. </p>
+<h2>6A.1.6 An Easy Applet</h2>
+<p>It would be unfair to make you read all of this theory without providing at   least one short example before leaving the page.&nbsp; So here is  a simple <strong> Applet</strong>.&nbsp; I made it more verbose than I had to in order to demonstrate   the<strong> init() </strong>and<strong> paint() </strong>methods.&nbsp; </p>
+<p>You should create a new project called <strong> JApplet Project</strong> and add a new class <strong>Foothill</strong>.&nbsp; Then paste the   following source code into the <strong>Foothill.java</strong> file.</p>
+
+<pre>import java.awt.*;
+import java.applet.*;
+  
+public class Foothill extends Applet
+{
+   String message;
+   public void init() 
+   {
+      message = new String("Hi Java World.");
+   }
+  
+   public void paint( Graphics g ) 
+   {
+      g.drawString( message, 30, 30 );
+   }
+}
+</pre>
+
+<p>There is one possible change  you may notice when launching your application. If you click <strong>Run As</strong>, you'll see <strong>Applet</strong> instead of <strong>Application</strong>: <strong>Run As →   Java Applet. </strong></p>
+<div class="picCenter"> <img src="./CS 1B Module 6A Section 1_files/appPic6.JPG" width="517" height="182" alt="app launch"></div>
+
+<p>Here's the run:</p>
+<div class="picCenter"> <img src="./CS 1B Module 6A Section 1_files/appPic7.JPG" width="260" height="356" alt="app pic">You'll see the   window at right appear, probably in the far upper left of your screen.</div>
+<p>There is a lot you can tell from looking at the source and run:</p>
+<ul>
+	<li>Our class is derived from the <strong>Applet</strong> class in the <strong>java.awt </strong> <em>package</em>.</li>
+	<li>We have private data and public methods as we do in most classes.</li>
+	<li>There are two methods, <strong>init() </strong>and<strong> paint()</strong> which we   	override from the base class <strong>Applet</strong>.</li>
+	<li>The<strong> init() </strong>method is just like a <em><strong>constructor</strong></em>.&nbsp;   	Usually with Applets, programmers use <strong>init()</strong> instead of constructors   	to initialize data.&nbsp; You could use either or both.</li>
+	<li>The<strong> paint() </strong>method is drawing directly to the applet panel.&nbsp;   	This is not typical -- usually we draw inside sub-panels of the applet   	frame, however it works well for a demonstration.</li>
+	<li>We are making use of an instance method called <strong>drawString()</strong> that   	we have not seen before.&nbsp; This is not unique to <strong>Applets</strong> - we   	could have used it, and can use it, in any Swing-based GUI application.&nbsp;&nbsp; <strong>drawString() </strong>is one of several methods like <strong>drawOval(), drawLine(),   	drawImage() </strong>etc.&nbsp; in the <strong>Graphics</strong> class.&nbsp; These are   	fundamentally different from components like <strong>JButtons</strong> or <strong> JTextAreas</strong>, in that drawing does not create any <em>objects</em>.&nbsp;&nbsp;   	There is only the nameless light and color that results from the <strong>draw()</strong> method. Once the String is drawn, the affected pixels are on their own.&nbsp;   	They'll get no further help from our program or the JRE.</li>
+	<li>Every time our window is damaged (the user covers it with a spreadsheet   	when the boss walks past, then reveals our applet window again), the browser   	automatically calls the <strong>paint()</strong> method so it can repair the damage.&nbsp;   	That's why we put the <strong>drawString() </strong>method inside <strong>paint()</strong>.&nbsp;   	Those pixels were erased and have to be redrawn.&nbsp; Any drawing that you   	do with draw() functions must be called inside <strong>paint(),</strong> either   	directly, as we have done here, or indirectly, but calling another method   	that draws the graphics.</li>
+	<li>In summary, <strong>init()</strong> is called when the applet starts, and paint() is   	called whenever JRE detects damage to our window requires a fresh coat of   	... paint.</li>
+</ul>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_9a_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 9A Section 4</title>
+<link href="./CS 1B Module 9A Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 4 - Deeper Into Class Generics</h1>
+	<h2>9A.4.1 More on Generics Classes</h2>
+	<p>Now that we have seen an example of a <strong>generic</strong>, let's review and   expand our understanding of these things.</p>
+	<p>Suppose we write a <strong>queue</strong> of <strong>Galaxies</strong> (not a <strong>Collections Queue</strong>,   but our own <em><strong>custom</strong></em> <strong>queue</strong>) in a class we call <strong>QGalaxy</strong>,   and later want a <strong>queue</strong> of <strong>Cards</strong>.   Before we had <strong>generics</strong> we might have taken the <strong>QGalaxy</strong> and converted   it to a <strong>queue</strong> of <strong>Cards,</strong> manually, using copy/paste then changing the name of the new class to <strong>QCard</strong>, doing a global search-and-replace on the word <strong>Galaxy</strong>, replacing it with <strong>Card</strong>, cleaning up any other code manually that   is not applicable to <strong>Cards</strong>.&nbsp; Not good.</p>
+	<p><strong>Generics</strong> have allow us to work smarter. We now know to implement a generic <strong>Queue</strong> by using special notation which (as we saw in our <strong>Revealer </strong>and<strong> Stack</strong>)&nbsp; includes   a <strong><em>type parameter</em></strong> (usually <strong>E</strong>). <strong>E</strong> can be replaced with an actual type when we are ready to apply our <strong>generic</strong> to a specific class like <strong>Card</strong>.&nbsp; Thus, if we make a <strong> generic</strong>, <strong> Queue</strong>, we can later apply it to the <strong>Card</strong> class with notation like <strong>Queue&lt;Card&gt;</strong>, and if we want a <strong>queue</strong> of <strong>Galaxies</strong>, we   can   likewise declare that using the notation <strong>Queue&lt;Galaxy&gt;</strong>. If we ever   need to modify the implementation of our generic <strong>Queue,</strong> the changes   will be reflected in the classes <strong>Queue&lt;Galaxy&gt;</strong>, <strong>Queue&lt;Card&gt;</strong>,   and any other <strong>Queue</strong> classes that we might declare using <strong>Queue&lt;Our_Class&gt;</strong>.</p>
+	<p> <img src="./CS 1B Module 9A Section 4_files/cs_C_common_16.jpg" alt="scenic flowers" width="410" height="308" hspace="30" vspace="3" border="2" align="left"></p>
+	<h2>9A.4.2 Defining a Generic Class</h2>
+	<p>To reiterate, a generic class definition looks like a regular class definition, except you   would follow the class name with the notation "<strong>&lt;E&gt;</strong>".</p>
+	<p><strong>E</strong> is a <em><strong>type parameter</strong></em> and it holds the place of the   specific types that we will ultimately use. Think   of the <strong>E</strong> as you would a function's <em><strong>formal parameter</strong></em>.&nbsp;   You use it in the definition with the understanding that the actual value (a <em> <strong>type argument</strong></em> like <strong>Float</strong> or <strong>Card</strong>) will be provided when the user <em>invokes</em> or <em><strong>instantiates</strong></em> the <strong> generic</strong>.&nbsp; The programmer who uses this <strong>generic</strong> can provide any   class in place of <strong>E</strong> (but <em>not</em> any primitive type like <strong>int</strong> or <strong>double</strong>).&nbsp;   Within the <em>definition</em> of the generic methods and data, however, we just use the formal parameter, <strong>E</strong>.</p>
+	<div class="important"> Special   		Note On Primitives&nbsp;
+			<p> Generics   		require <em><strong>class</strong></em> types, not <em><strong>primitive</strong></em> types,   		inside the angled brackets.&nbsp; So <strong>Stack&lt;int&gt;</strong> is illegal. while <strong>Stack&lt;Card&gt;</strong> is fine.&nbsp;&nbsp; Java allows you to get around   		this restriction somewhat by using "<em><strong>wrapper classes"</strong></em>.&nbsp;   		So, if you have defined a generic class, say <strong>Stack</strong>, and you want   		to instantiate a <strong>Stack</strong> object around a <em><strong>primitive</strong></em> type, like <strong>int</strong>, you could do so by using the primitive's   		associated wrapper class.&nbsp; <strong>int</strong>'s wrapper class is called <strong> Integer</strong>, so you instantiate the <strong>Stack</strong> like so:&nbsp; </p>
+
+<pre>Stack&lt;Integer&gt; stk = new Stack&lt;Integer&gt;();
+</pre>
+
+			<p>After this, you can use primitive <strong>ints</strong> in your method calls, because Java supports "<em><strong>autoboxing</strong></em>",   		which means it automatically will package the <strong>int</strong> into an <strong> Integer</strong> object (behind the scenes) before passing it to the methods   		like <strong>push()</strong>.&nbsp; Here's an example:</p>
+
+<pre>   for (int x = 35; x &lt; 70; x += 5)
+      stk.push(x);
+</pre>
+
+			<p><em><strong>Autoboxing</strong></em> applies to method   		calls, not generic instantiation, so you must use the generic <strong>Integer</strong> when instantiating, but you can use primitive <strong>int</strong>s when calling   		methods.</p>
+			<p>In short - <em><strong>generics</strong></em> require a <em> <strong>non-primitive</strong></em> type parameter, but you can use wrapper classes when instantiating a generic object and then apply the methods directly to <strong>primitives</strong> later on.</p>
+			</div>
+	<p>The type parameter is   used almost as it would be if <strong>E</strong> were a specific class.&nbsp;&nbsp; For example,   consider the <strong>Node</strong> class:</p>
+
+<pre>class Node&lt;E&gt;
+{
+   // class definition ...
+</pre>
+
+	<p> If we wish to declare a member of type <strong>E</strong>, we just do it:</p>
+
+<pre>   private E data;
+</pre>
+
+	<p> If we want a function to return a reference of type <strong>E</strong>, again we do it:</p>
+
+<pre>   public E getData()
+   {
+      return data;
+   }</pre>
+
+	<p> And here we can define a method that takes an <strong>E</strong> object as a parameter:</p>
+
+<pre>   public Node(E data)
+   {
+      setData(data);
+   }</pre>
+
+	<p> There is a limit to this idea.&nbsp; You <em>cannot</em> use <strong>E</strong> to invoke a   	<em><strong>constructor</strong></em> of type <strong>E</strong>; this is illegal:</p>
+
+<pre>   data = new E();  // compiler error!
+</pre>
+
+	<p> The reason is subtle.&nbsp; When you define a <strong><em>generic class</em></strong> using a type   parameter, <strong>E</strong>,&nbsp; and present it to the compiler, a <em><strong>class</strong></em> is created   that takes the most basic class type, <strong>Object</strong>, as its fundamental type in   place of <strong>E</strong>.&nbsp; Since there is no actual <strong>E</strong> yet - at least not   until you <em><strong>instantiate</strong></em> one -- the compiler doesn't know how to create an <strong>E</strong> object.&nbsp; </p>
+	<p> What you get when you <em><strong>instantiate</strong></em> a class like <strong> Node&lt;Float&gt;</strong> is nothing more (or less) than</p>
+	<ol>
+		<li>a generic <strong>Node</strong> that uses <strong>Objects</strong> (<em>not</em> <strong>Floats</strong>) as its encapsulated type,&nbsp; </li>
+		<li>the ability to use <strong>Float</strong> objects without<em><strong> type coercion</strong></em> when   	calling or using your <strong> Node</strong> class methods, and </li>
+		<li>a type-safe error reporting mechanism that will, at compile time, reject   	non-<strong>Float</strong> operation on this <em><strong>class</strong></em>. </li>
+	</ol>
+	<p>Don't get me wrong - this is a lot.&nbsp; But it is not the same as   implementing the class <strong>Node</strong> using actual <strong>Floats</strong> in the definition.</p>
+	<p>In the last section, we created two <strong>Node</strong> classes, <strong>Stack&lt;Float&gt;</strong> and <strong>Stack&lt;String&gt;</strong>.&nbsp; It provided us with compiler warnings or errors if we   attempted to use  the return value of <strong>fStk.pop()</strong> as anything but a <strong>Float (or float)</strong>, or <strong>sStk.pop()</strong> as anything other than a <strong>String</strong>.&nbsp; That's good   - it helps us find errors before we run our program.&nbsp; But what if we just   declared an  <em><strong>instance</strong></em> of a <strong>Stack</strong> without giving a type parameter:</p>
+
+<pre>   Stack stk = new Stack();
+</pre>
+
+	<p> This could be interesting.&nbsp; It creates a <strong>Stack</strong> of what?&nbsp; We   don't have <strong>&lt; some-type </strong>&gt; after the <strong>Stack</strong> name.&nbsp; The answer is that it   creates a <em><strong>Stack of Objects</strong></em>.&nbsp; This means we could actually <strong> push()</strong> anything in   the <strong>Stack</strong> and <strong>pop()</strong> anything off .&nbsp; Try it:</p>
+
+<pre>      Stack stk = new Stack();
+      stk.push(3.5);
+      stk.push("hi dad");
+</pre>
+
+	<p>When we <strong>pop()</strong> off this <strong>Stack</strong>, however, we get no help from the   compiler if we misuse the object <strong>pop()</strong>ped.&nbsp; We must type-coerce to   the correct type, and if we guess wrong, we'll get a run-time error.&nbsp; You   can play with this if you like. The code is on the previous pages and all you   have to do is remove the type parameter in the instantiation.&nbsp; This is a   little advanced, so the first time around you may skip it.&nbsp; </p>
+	<h2>9A.4.3 Using Multiple Class Parameters</h2>
+	<p>We can have more than one <em><strong>class parameter</strong></em>.&nbsp; Let's create a <strong>generic</strong> that   allows us to have <strong><em>ordered pairs</em></strong> of objects of different types.&nbsp; For   instance, we might have ordered pairs of <strong>Integers, <font color="#008000">(3, 5), (-4, 12)</font>,</strong>&nbsp; or   ordered pairs of a <strong>String</strong> and a <strong>Double <font color="#008000">("mom".   0.32), ("dad", -99.32</font></strong><font color="#008000">)</font>. The idea   is that we might want different class types for the first and second component   of what we will call the <strong>OrderedPair</strong> <em><strong>class generic</strong></em>.</p>
+	<p>Here is a definition of such a class.&nbsp; Study it for a moment and notice   that we are allowing virtually any class to be used in each of the positions:</p>
+
+<pre>class OrderedPair&lt;A, B&gt;
+{
+   private A first;
+   private B second; 
+   public OrderedPair()
+   {
+   }
+
+   public OrderedPair(final A a, final B b)
+   {
+      setBoth(a, b);
+   }
+   public void setFirst(final A a)
+   {
+      first = a;
+   }
+   public void setSecond(final B b)
+   {
+      second = b;
+   }
+   public void setBoth(final A a, final B b)
+   {
+      setFirst(a);
+      setSecond(b);  
+   }
+   public A getFirst()
+   { 
+      return first;
+   } 
+   public B getSecond()
+   { 
+      return second;
+   } 
+   public String toString()
+   {
+      return "(" + first + ", " + second + ") ";
+   }
+}</pre>
+
+	<p> Here is the implementation of these <em><strong>methods</strong></em> along with a trial run.&nbsp; There are   a few   things that we will discuss in a moment, but the main thing to notice is that we   use the two class parameters <strong>A</strong> and <strong>B</strong> as we would any <em><strong>formal parameters</strong></em>, placing them in   position wherever we would use an ordinary class name (besides, of course, the   special generic notation that precedes the class name and function signatures).</p>
+
+<pre>import java.util.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      OrderedPair&lt;Integer, Integer&gt; intPr;
+      OrderedPair&lt;String, Double&gt; mixedPr;
+      
+      intPr = new OrderedPair&lt;Integer, Integer&gt;(3, -59);
+      mixedPr = new OrderedPair&lt;String, Double&gt;("teach", 21.96);
+      
+      System.out.println("Individual pairs: " + intPr + mixedPr);
+      
+      // we can't create arrays of generics, but we can create collections
+      ArrayList&lt;OrderedPair&lt;String, Double&gt;&gt; mixedPrArray 
+         = new ArrayList&lt;OrderedPair&lt;String, Double&gt;&gt;();
+      
+      // build the mixed pair array and show
+      for (int k = 0; k &lt; 10; k++)
+      {
+         mixedPrArray.add( 
+            new OrderedPair&lt;String, Double&gt;("CIS " + k , k/10.)
+            );
+      }
+      System.out.println("Mixed Pair Array: "); 
+      for (int k = 0; k &lt; 10; k++)
+         System.out.println( mixedPrArray.get(k));
+   }
+}
+
+/* ----------------------- Run ------------------------
+
+Individual pairs: (3, -59) (teach, 21.96) 
+Mixed Pair Array: 
+(CIS 0, 0.0) 
+(CIS 1, 0.1) 
+(CIS 2, 0.2) 
+(CIS 3, 0.3) 
+(CIS 4, 0.4) 
+(CIS 5, 0.5) 
+(CIS 6, 0.6) 
+(CIS 7, 0.7) 
+(CIS 8, 0.8) 
+(CIS 9, 0.9) 
+
+------------------------------------------------------- */</pre>
+
+
+</div>
+</div>
+
+
+</body></html>

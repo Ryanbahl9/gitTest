@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_9a_5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 9A Section 5</title>
+<link href="./CS 1B Module 9A Section 5_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 5 - Generic Functions</h1>
+	<h2>9A.5.1 Generic Methods</h2>
+	<p>Besides <em><strong>generic classes</strong></em>, Java provides another kind of <strong> generic,</strong> a &nbsp;<strong><em>generic method</em></strong>.&nbsp; <strong><em>Generic methods </em></strong>are written when we want to create a function that can be used with arbitrary types. For example, one can write   generic searching and sorting <strong><em>methods</em></strong><em><strong> </strong></em>that can be   used with any arbitrary type.</p>
+	<p>To perform identical operations for each type of data compactly and conveniently, use <strong><em>generic method</em></strong><em><strong>s</strong></em>. You can write a single function definition. Based on the <em><strong>argument</strong></em> types provided in calls to the <em><strong>function</strong></em>, the compiler   will adapt the definition to support the type passed.</p>
+	<h2>9A.5.2 Implementing (Defining) Static Generic Methods</h2>
+	<p>You can define <strong>static</strong> methods that contain <em><strong>type parameters</strong></em>, i.e., <em><strong>generic methods</strong></em>,   by adding a type parameter, <strong>&lt;E&gt;</strong> before the return type.&nbsp; As an example of   the simplest order, here is a <strong>static <em>method</em></strong> that prints an <em><strong>object</strong></em> of any type by   prefacing it with a phrase:</p>
+
+<pre>   static &lt;E&gt; void showThing(E myObject)
+   {
+      System.out.println("Here it is :\n" + myObject);
+   }</pre>
+
+	<p> This method can be called the usual way:</p>
+
+<pre>   showThing("Hi");
+   showThing(3);  // auto-boxed to Integer</pre>
+
+	<p>And the result is the predicted:</p>
+
+<pre>Here it is :
+Hi
+Here it is :
+3</pre>
+
+	<p>The following <em><strong>generic method</strong></em> <strong>loadArray(</strong>) empowers us to   to load an array with a fixed value, regardless of the type of the array, and a   second <em><strong>generic method</strong></em> <strong>printArray()</strong> sends out the array to   the screen in a specific format, again without regard for the type.</p>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      Float[] fltArray = new Float[10];
+      String[] strArray = new String[10];
+      
+      loadArray(fltArray, new Float(-3.5));
+      printArray(fltArray);
+      
+      loadArray(strArray, new String("Can anyone hear me?"));
+      printArray(strArray);
+   }
+   
+   static &lt;E&gt; void printArray(E[] array)
+   {
+      System.out.println("The First International List of Loceff");
+      for (int k = 0; k &lt; array.length; k++)
+         System.out.println("&lt;---|" + array[k] + "|---&gt;");
+      System.out.println("************ END LIST ***********");
+  }
+
+   static &lt;E&gt; void loadArray(E[] array, E value)
+   {
+      for (int k = 0; k &lt; array.length; k++)
+         array[k] = value;
+   }
+ }
+
+/* --------------------- Run ------------------------
+
+The First International List of Loceff
+&lt;---|-3.5|---&gt;
+&lt;---|-3.5|---&gt;
+&lt;---|-3.5|---&gt;
+&lt;---|-3.5|---&gt;
+&lt;---|-3.5|---&gt;
+&lt;---|-3.5|---&gt;
+&lt;---|-3.5|---&gt;
+&lt;---|-3.5|---&gt;
+&lt;---|-3.5|---&gt;
+&lt;---|-3.5|---&gt;
+************ END LIST ***********
+The First International List of Loceff
+&lt;---|Can anyone hear me?|---&gt;
+&lt;---|Can anyone hear me?|---&gt;
+&lt;---|Can anyone hear me?|---&gt;
+&lt;---|Can anyone hear me?|---&gt;
+&lt;---|Can anyone hear me?|---&gt;
+&lt;---|Can anyone hear me?|---&gt;
+&lt;---|Can anyone hear me?|---&gt;
+&lt;---|Can anyone hear me?|---&gt;
+&lt;---|Can anyone hear me?|---&gt;
+&lt;---|Can anyone hear me?|---&gt;
+************ END LIST ***********
+
+---------------------------------------------- */</pre>
+
+	<h2>9A.5.3 Defining Static Methods Outside the Invoking Class</h2>
+	<p>You don't have to define your <em><strong>generic</strong></em><strong> static </strong>methods within your main (<strong>Foothill</strong>) <em><strong>class</strong></em>.&nbsp; In fact, sometimes   you might create a class simply to hold a few <strong>static</strong> (<em>generic</em>)   methods.&nbsp; Let's see why this is good, and show an example of how it is   used.</p>
+	<p>Recall a couple pages back to our <strong>Revealer</strong> class.&nbsp; It was a <em> <strong>generic class</strong></em> that contained two <strong><em>instance methods</em></strong>.&nbsp;&nbsp;   We instantiated a couple <strong>Revealer</strong> objects, one <strong>Revealer&lt;Card&gt;</strong> and   one <strong>Revealer&lt;String&gt;</strong> and used those <em><strong>objects</strong></em> to dereference the desired   <em><strong>methods</strong></em>.&nbsp; A little thought will lead you to the conclusion that the two <strong> Revealer</strong> <strong>objects</strong> were not really very useful components.&nbsp; We only   wanted to use the <em><strong>methods</strong></em> in the <em><strong>class</strong></em>, and use them generically — i.e., apply   them to <strong>Card</strong>, <strong>String</strong> or any other type we might have a whim to   "reveal".&nbsp; </p>
+	<p>Now that we know how to define a <em><strong>generic method</strong></em>, we can change our approach.&nbsp;   Make the <strong>Revealer</strong> class non-generic, but let its two member methods be <em><strong>static   generic methods</strong></em>.&nbsp; If we do this, we can apply them using the class name,   <strong>Revealer</strong>, without any <em><strong>object instantiations</strong></em>.</p>
+	<p>Here is the new, improved <strong>Revealer</strong>:</p>
+
+<pre>class Revealer
+{
+   static public &lt;E&gt; void displayGUI(E myThing)
+   {
+      String report = myThing.toString();
+      JOptionPane.showMessageDialog(null, report, 
+            "Loceff's Data Revealer", JOptionPane.PLAIN_MESSAGE);
+   }
+   
+   static public &lt;E&gt; void displayConsole(E myThing)
+   {
+      String report = myThing.toString();
+      System.out.println(" --- Loceff's Data Revealer ---");
+      System.out.println(report);
+      System.out.println(" ------------------------------\n\n");
+   }
+}</pre>
+
+	<p> And here is the simpler <strong>main() </strong>showing how we use the class name to   dereference the static methods, <em>without any need to pass a type argument in   angled brackets</em>:</p>
+
+<pre>public class Foothill
+{
+   public static void main(String[] args)
+   {
+      String string1 = "death of a salesman";
+      String string2 = "queen's gambit";
+      Card card1, card2, card3;
+ 
+ 
+      card1 = new Card();
+      card2 = new Card('5');
+      card3 = new Card('9', Card.hearts);
+
+      Revealer.displayGUI(card1);
+      Revealer.displayGUI(string1);
+      Revealer.displayGUI( new Card('t',Card.clubs) );
+      
+      Revealer.displayConsole(card3);   
+      Revealer.displayConsole(card2);
+      Revealer.displayConsole(string2); 
+   }
+}</pre>
+
+	<h2>9A.5.4&nbsp; Restrictions on Generic Methods</h2>
+	<p>So, what are the limitations and precautions about using a <strong><em>generic</em></strong><em><strong> method</strong></em>?&nbsp; </p>
+	<p>The first restriction is that the <em><strong>arguments</strong></em> passed to such methods must be   <em><strong>objects</strong></em>, not <em><strong>primitives</strong></em>.&nbsp; However, since wrapper classes like <strong>Integer</strong> auto-wrap primitives, as needed, you normally don't even notice this problem.&nbsp;   In the examples above we passed in an <strong>int</strong> and <strong>double</strong> and all was well. However   inside <strong>displayInAsterisks()</strong> we have an actual <em>object</em> (replace <strong>x</strong> with <strong>x.toString()</strong> inside the method and it will run because by the time   the <strong>int</strong> gets into the function it has been auto-boxed in an <strong>Integer</strong> object.)</p>
+	<p>The<em><strong> type parameter</strong></em>, <strong>E</strong>, can be used inside a generic method in very limited   contexts.&nbsp; Declaring a simple reference of type <strong>E</strong> is permissible, for example:</p>
+
+<pre>   static &lt;E&gt; void displayInAsterisks(E x)
+   {
+      E temp = x;
+      
+      System.out.println(" *** " + temp + " ***");
+   }
+</pre>
+
+	<p>However, you cannot <em><strong>instantiate</strong></em> an object of type <strong>E</strong>.&nbsp; The following is   illegal:</p>
+
+<pre>   static &lt;E&gt; void displayInAsterisks(E x)
+   {
+      <span style="background-color: #00FF99">E temp = new E(x);  // error</span>
+      System.out.println(" *** " + temp + " ***");
+   }
+</pre>
+
+	<p>Also, you cannot access specific <em><strong>members</strong></em> of the <strong>E</strong> class, even if the <em><strong>passed object</strong></em> happens to belong to a class that has those methods.&nbsp; For example, imagine a class <strong>Instructor</strong> that has a <strong>getName()</strong> method.&nbsp; You can pass an <strong>Instructor</strong> object to a   generic method, but you cannot try to call <strong>getName()</strong> from inside the definition   since the compiler does not recognize <strong>E</strong> as an <strong>Instructor</strong>, but only a general <strong>Object</strong>.&nbsp; The following is illegal:</p>
+
+<pre>   static &lt;E&gt; void showNameInAsterisks(E x)
+   {
+      System.out.println(" *** " + <span style="background-color: #00FF99">x.getName()</span> + " ***"); <span style="background-color: #00FF99">// error</span>
+   }</pre>
+
+	<p> The reason these things don't work is that when the compiler translates a   	generic method, it replaces all occurrences of <strong>E</strong> with <strong>Object</strong> internally and uses type casts to make everything compile. So at compile   	time, you cannot do too many specific things with the <strong>E</strong> types inside   	the <em><strong>method</strong></em> — only things that apply to <strong>Object</strong>.&nbsp; This hidden   	process is known as <em><strong>type erasure</strong></em>. There are some   	ways to improve this restriction, though, by putting some qualifiers or   	restrictions on the type, <strong>E</strong>, inside the function header. We'll see   	that next.</p>
+	<h2>9A.5.5 Type Bounds</h2>
+	<p>Imagine a base class, <strong>Resident</strong> with two accessors <strong>getName()</strong> and <strong>getID()</strong>, and a static method that takes two <strong>Resident</strong> objects and   prints them in order. Here is the signature of the static method (the   implementation is unimportant):</p>
+
+<pre>   static void displayInNameOrder(Resident r1, Resident r2)
+</pre>
+
+	<p>If we knew that all the <em><strong>objects</strong></em> we would ever want to send to that <em><strong>method</strong></em> were <em><strong>subclasses</strong></em> of, i.e., extended from, <strong>Resident</strong>, then we could use the   <em><strong>base class methods</strong></em> <strong>getName()</strong> and <strong>getID()</strong> within its definition,   since any <em><strong>derived class</strong></em> of <strong>Resident</strong> <em><strong>inherits</strong></em> them.&nbsp; So, if we had   various <em><strong>objects</strong></em> in <em><strong>derived classe</strong></em>s like <strong>Citizen</strong>, <strong>ResdientAlien</strong>, <strong> Student</strong>, <strong>Employee</strong>, etc., all of which were derived from <strong>Resident</strong>,   we could pass those <em><strong>objects</strong></em> to <strong>displayInNameOrder()</strong> and everything would   work.</p>
+	<p>We would like something like that for <em>generic methods</em>.&nbsp; Rarely do we   know much about the <em><strong>base classes</strong></em> of any <em><strong>objects</strong></em> we send to <em><strong>generic methods</strong></em>, but   we can demand some weak conditions from them that allow us to treat them more   specifically than just generic objects.&nbsp; One of the most common things to   demand of an object passed to a generic method is that it <strong>implements</strong> <strong> Comparable</strong>.&nbsp; By declaring that in the angled brackets we now have the   right to use the<strong> compareTo()</strong> method on the parameterized types, most notably the   <em><strong>method parameters</strong></em>. Here is a function that declares its type parameters   implement <strong>Comparable</strong>.&nbsp; Note the syntax:</p>
+
+<pre>   static &lt;E extends Comparable&lt;E&gt;&gt; 
+   E findLargestOfThree(E x, E y, E z)
+   {
+      if (x.compareTo(y) &gt; 0)
+         return (x.compareTo(z) &gt; 0) ? x : z;
+      else
+         return (y.compareTo(z) &gt; 0) ? y : z; 
+   }</pre>
+
+	<p>Now, our client can call this method on any object of a class <strong>E</strong> that   extend <strong>Comparable&lt;E&gt;:</strong></p>
+
+<pre>   largestInt = findLargestOfThree(4, 9, -9);
+   largestString = findLargestOfThree("hi", "mom", "87");
+</pre>
+
+	<h2>9A.5.6 Wildcards</h2>
+	<p>This is all nice, but usually we are working with many different derived   classes of some base class that implements <strong>Comparable</strong> <font color="#FF0000"><em>on itself</em></font>.&nbsp; The   reason the above works, is that <font color="#FF0000"><strong>Integer</strong></font> implements <strong>Comparable&lt;<font color="#FF0000">Integer</font>&gt;</strong> and <font color="#0000FF"><strong>String</strong></font> implements <strong>Comparable&lt;<font color="#0000FF">String</font>&gt;</strong>.&nbsp; Indeed, we could also define our own   custom class that implements <strong>Comparable</strong> as follows, and this would work, too:</p>
+
+<pre>class MyInt implements Comparable&lt;MyInt&gt;
+{
+   public int theInt;
+   public MyInt(int n) { theInt = n; }
+   public int compareTo(MyInt other)
+   {
+      return (theInt - other.theInt);
+   }
+}</pre>
+
+	<p>Now, we call <strong>findLargestOfThree()</strong> on <strong>MyInt</strong> objects without any complaint:</p>
+
+<pre>   MyInt a = new MyInt(5);
+   MyInt b = new MyInt(-29);
+   MyInt c = new MyInt(77);
+   MyInt x;
+
+   x = findLargestOfThree(a, b, c);</pre>
+
+	<p>This works because the generic method signature requires that the class <strong>E   extends Comparable&lt;E&gt;</strong>, which all the above classes do.&nbsp; But what   happens if we <em>derive</em> a class from <strong>MyInt</strong>.&nbsp; Shouldn't the   derived objects work?&nbsp; They are <strong>MyInt</strong> objects, and they can be   compared, so it seems like we should be able to pass in derived objects without   complaint.&nbsp; Let's try:</p>
+
+<pre>class SpecialInt extends MyInt
+{
+   public SpecialInt(int n) { super(n); }
+   // etc.
+}</pre>
+
+	<p>That's the derived class. We can certainly use <strong>compareTo() </strong>on&nbsp; <strong>MyInt</strong> objects.&nbsp;   The compiler is happy to do so:</p>
+
+<pre>   SpecialInt a = new SpecialInt(5);
+   SpecialInt b = new SpecialInt(-29);
+   SpecialInt c = new SpecialInt(77);
+   SpecialInt x;
+
+   a.compareTo(b);  // no problem</pre>
+
+	<p>But now we attempt to apply our generic function on three <strong>SpecialInt</strong> objects:</p>
+	<div class="picCenter"><img src="./CS 1B Module 9A Section 5_files/pic_1b9_5.jpg" alt="ide warning shot" width="431" height="152" border="1"></div>
+	<p>Ouch. We have one of those little red circles with the white<strong> <font color="#FFFFFF"><span style="background-color:#FF0000; ">X</span></font></strong> in it. Darn.&nbsp; Two questions:</p>
+	<ol>
+		<li><strong>What's wrong?</strong> (and how do we fix it)</li>
+		<li><strong>Do we really need to do this anyway?</strong>&nbsp; (Maybe we don't care   	about fixing it)</li>
+	</ol>
+	<p>The problem is that <strong>SpecialInt</strong> does not implement <strong>Comparable&lt;SpecialInt&gt;</strong>.&nbsp;   The generic declaration of<strong> findLargestOfThree()</strong> states that it requires <strong>"E that extends   Comparable&lt;E&gt;"</strong>.&nbsp; Note the <strong>E</strong> in both places. <strong>SpecialInt</strong> <u> <em>does</em></u> extend <strong>Comparable&lt;MyInt</strong>&gt; because it is, by   inheritance, a <strong>MyInt</strong>.&nbsp;   But that's like saying <strong>E extends Comparable&lt;Q&gt;</strong>, and that's not what the   signature of <strong>findLargestOfThree()</strong> requires.&nbsp; </p>
+	<p>It seems like, in order to make the signature work on subclasses of <strong>MyInt</strong>, we would have to manually redefine <strong>compareTo()</strong> on every subclass and declare those subclasses to individually implement <strong>Comparable&lt;ON THEMSELVES&gt;</strong>,   something that is ridiculously tedious.</p>
+	<p>Instead of being ridiculously tedious, Java is&nbsp; ridiculously obtuse.&nbsp;   It offers an eye-crossing syntax to handle the situation using the wildcard character, <strong>?</strong>.&nbsp; Here is how we have to prefaces the generic function (and most   others that we will define):</p>
+
+<pre>   static &lt;E extends Comparable&lt;? super E&gt;&gt;
+</pre>
+
+	<p>Roughly, this says that the ensuing generic static method will accept as a   	type parameter any <strong>E</strong> that is a subclass of some base class that   	implements Comparable.&nbsp; </p>
+	<p>It's not worth a paragraph of definitions to explain the above syntax   	in detail, because whenever we use the wildcard, it will usually be in this exact format, so it   	is best to put this in a safe place and paste it when needed.&nbsp; It will   	allow you to pass arrays and subclasses of type <strong>Comparable</strong>, or any   	other interface that you want your generic function to receive.</p>
+	<p>Here is the entire program with all classes and generics defined:</p>
+
+<pre>public class Foothill
+{
+   public static void main(String[] args)
+   {
+      SpecialInt a = new SpecialInt(5);
+      SpecialInt b = new SpecialInt(-29);
+      SpecialInt c = new SpecialInt(77);
+      SpecialInt x;
+      
+      a.compareTo(b);
+
+      x = findLargestOfThree(a, b, c);
+ 
+      System.out.println(x.theInt + " " );  
+    }
+   
+   static &lt;E extends Comparable&lt;? super E&gt;&gt;
+   E findLargestOfThree(E x, E y, E z)
+   {
+      if (x.compareTo(y) &gt; 0)
+         return (x.compareTo(z) &gt; 0) ? x : z;
+      else
+         return (y.compareTo(z) &gt; 0) ? y : z; 
+   } 
+}
+
+class MyInt implements Comparable&lt;MyInt&gt;
+{
+   public int theInt;
+   public MyInt(int n) { theInt = n; }
+   public int compareTo(MyInt other)
+   {
+      return (theInt - other.theInt);
+   }
+}
+
+class SpecialInt extends MyInt
+{
+   public SpecialInt(int n) { super(n); }
+   // etc.
+}</pre>
+
+	<p>Do we really need to use this?&nbsp;.&nbsp; When we do data structures in   Java (<span class="sectionOrAssignmentTitle">CS 1C</span> - the most fascinating,   and by far the most challenging of the <font color="#800080"><em><strong>A</strong></em></font>, <em><font color="#800080"><strong>B</strong></font></em>, <font color="#800080"><em><strong>C</strong></em></font> sequence) we will constantly use this in our custom made <strong>ADT</strong>s (abstract   data types).</p>
+	<div class="picCenter"><img src="./CS 1B Module 9A Section 5_files/cs_B_common_44.jpg" alt="scenic dock" width="410" height="308" border="2"></div>
+</div>
+</div>
+
+
+</body></html>

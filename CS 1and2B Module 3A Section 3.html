@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0082)https://www.fgamedia.org/faculty/loceff/cs_courses/common/LIFE/cs_1and2B_3a_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1and2B Module 3A Section 3</title>
+<link href="./CS 1and2B Module 3A Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 3 - Binary and Hex</h1>
+	<h2>3A.3.1 The Binary Number System</h2>
+
+	<p>At the machine level, all data are stored as <em><strong>binary representations</strong></em>.&nbsp; In   order to work with data at this level, we need to understand what a binary   representation is.</p>
+	<h3>Decimal or Base 10</h3>
+	<p>We begin by examining the numbers we know, ordinary decimal numbers.&nbsp;   Pick a number, any number.&nbsp; <strong>3095</strong> you say?&nbsp; Fine.&nbsp; While we   think we know what this number means, we might balk if asked to explain it.&nbsp;   One explanation is that each digit, the <strong>3</strong>, the <strong>0</strong>, the <strong>9</strong> and   the <strong>5</strong> represent a portion, or contribution, of/to the full number.&nbsp;   Working <u><em>from right-to-left</em></u>:</p>
+	<ul>
+		<li>There are <strong>5</strong> 1s in the number 3095, contributing the number 5.</li>
+		<li>There are <strong>9</strong> 10s in the number 3095, contributing the number 90.</li>
+		<li>There are <strong>0</strong> 100s in the number 3095, contributing the number 0 <font color="#FF0000">(see NOTE).</font></li>
+		<li>There are <strong>3</strong> 1000s in the number 3095, contributing the number   	3000.</li>
+	</ul>
+	<div class="important"> Note 
+		<p>When we say "there are <strong>zero</strong> <strong>100</strong>s in <strong>3095"</strong>,   we are not denying that there are lots of <strong>100</strong>s making up the number <strong>3095</strong>.&nbsp;   We mean, rather, that if you <em>first</em> count  all the larger powers  of 10 (cubes or larger) — the thousands, the 10 thousands, etc. <em><u></u></em>— then there are no 100s left over.&nbsp; After you account for the three (3) thousand&nbsp;(the total of the larger-than-squared powers of 10 in <strong>3095</strong>) there is only a <strong>95</strong> left   over, and this does not contain any <strong>100</strong>s.</p>
+	</div>
+<p>If you add it all up, you get:</p>
+	<p align="center">5*1 + 9*10 + 0*100 + 3*1000 = (no surprise) 3095.</p>
+	<p>So you see,  the position of each digit, when measured from the right end   of the number, represents an increasing<em><strong> power of 10</strong></em>. </p>
+	<div class="wideTable">
+		<table>
+			<caption>
+				3095 as Properly Intepreted in Decimal
+				</caption>
+			<tbody><tr>
+				<td>10<sup>4 </sup>(and   			beyond)</td>
+				<td>10<sup>3</sup></td>
+				<td>10<sup>2</sup></td>
+				<td>10<sup>1</sup></td>
+				<td>10<sup>0</sup></td>
+			</tr>
+			<tr>
+				<td>All 0, so no need to write leading 0s</td>
+				<td>3</td>
+				<td>0</td>
+				<td>9</td>
+				<td>5</td>
+			</tr>
+			<tr>
+				<td>"10 thousands place (and beyond)"</td>
+				<td>"thousands place"</td>
+				<td>"hundreds place"</td>
+				<td>"tens place"</td>
+				<td>"1s place"</td>
+			</tr>
+		</tbody></table>
+</div>
+	<p>(In case you didn't know, 10<sup>0</sup> =   (<em>anything</em> non-zero)<sup>0</sup> = 1.)</p>
+	<p>We call this <em><strong>base 10</strong></em> because each position of a number   represents a power of 10, acting as a base to the exponent.&nbsp; You don't even   think about it because you've been using base 10 since you were old enough to   ask for a new toy.</p>
+	<h3>Binary or Base 2</h3>
+	<p>At the microscopic level, computer memory consist of <em>bits</em>, each of   which can be in only one of two states (these are usually one of two charge   states in a very tiny capacitor).&nbsp; This means we can't store numbers in   decimal format because we cannot represent a 5 vs. a 3 vs. a 9 in a <strong><em>single bit</em></strong>. We can   only represent two values: 0 or 1.&nbsp; This is why computers use binary   numbers.</p>
+	<p>The binary system is like an super-simple decimal system. Instead of ten   digits, 0-9, there are only two digits, 0 and 1.&nbsp; Each position of a binary   number represents a power of 2.&nbsp; So, the number 1001 can be understood   using the same table as above, but using 2 as a base, rather than 10.&nbsp;   Again, <u>from right-to-left:</u></p>
+	<ul>
+		<li>There is <strong>1</strong> 1 in the number 1001, contributing the number 1.</li>
+		<li>There are <strong>0</strong> 2s in the number 1001, contributing the number 0.</li>
+		<li>There are <strong>0</strong> 4s in the number 1001, contributing the number 0.</li>
+		<li>There is <strong>1</strong> 8 in the number 1001, contributing the number 8</li>
+	</ul>
+	<p>If you add it all up, you get:</p>
+	<p align="center">1*1 + 0*2 + 0*4 + 1*8 = 9.</p>
+	<p>So, in the <em><strong>binary system</strong></em> <strong>1001</strong> represents the number <strong>9</strong> (<u><em><strong>not</strong></em></u> the number <em>one thousand and one</em>).&nbsp; Here is the tabular   representation:</p>
+	<div align="center">
+		<div class="wideTable">
+			<table>
+			<caption> 9 Represented in Binary</caption>
+				<tbody><tr>
+					<td>2<sup>4</sup>(and   			beyond)</td>
+					<td>2<sup>3</sup></td>
+					<td>2<sup>2</sup></td>
+					<td>2<sup>1</sup></td>
+					<td>2<sup>0</sup></td>
+					</tr>
+				<tr>
+					<td>All 0, so no need to write leading 0s</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					</tr>
+				<tr>
+					<td>"16s place (and beyond)"</td>
+					<td>"eights place"</td>
+					<td>"fours place"</td>
+					<td>"twos place"</td>
+					<td>"1s place"</td>
+					</tr>
+			</tbody></table>
+		</div>
+	</div>
+	<p>We usually call the places or positions in a binary number <em><strong>bits</strong></em>.&nbsp;   Because we only get to use a 0 or 1 in each <em>bit</em>, it takes more digits to   represent the same number in binary than it does in decimal. For example the   number 129 in binary requires eight bits:</p>
+	<p align="center">129 decimal = 10000001 binary</p>
+	<p>This is easily seen by noticing that the eighth place from the right is the   128s place (start with 1 and double it 7 times).&nbsp; So the number is 1*128 +   1 = 129.</p>
+	<p>Eight bits has a special name in computation: the <em>byte</em>. </p>
+	<p>Here are some binary and decimal equivalents:</p>
+	<div align="center">
+		<div class="narrowTable">
+			<table>
+				<caption> Some Binary-Decimal Equivalents </caption>
+				<tbody><tr>
+					<td align="right" width="200">decimal</td>
+					<td align="right" width="200">binary</td>
+					</tr>
+				<tr>
+					<td align="right" width="200">3</td>
+					<td align="right" width="200">11</td>
+					</tr>
+				<tr>
+					<td align="right" width="200">21</td>
+					<td align="right" width="200">10101</td>
+					</tr>
+				<tr>
+					<td align="right" width="200">32</td>
+					<td align="right" width="200">100000</td>
+					</tr>
+				<tr>
+					<td height="26" align="right" width="200">137</td>
+					<td height="26" align="right" width="200">10001001</td>
+					</tr>
+				<tr>
+					<td align="right" width="200">255</td>
+					<td align="right" width="200">11111111</td>
+					</tr>
+			</tbody></table>
+		</div>
+		<h2 align="left">3A.3.2 Hexadecimal Notation</h2>
+	</div>
+	<h3>Hexadecimal or Base 16</h3>
+	<p>In base 16, also called <em><strong>hexadecimal</strong></em>, each position represents a power of 16.&nbsp;   That means we need 16 digits for each place.&nbsp; Of course the digits 0-9 are   good for the first 10 but what about the next six?&nbsp; We use the characters <strong>A</strong> - <strong>F</strong>.&nbsp; So <strong>A</strong> represents 10, <strong>B</strong> = 11, <strong>C</strong> =   12, and so on up to <strong>F</strong> = 15.&nbsp; This means that we can use fewer   positions in hex to represent the same number in decimal.&nbsp; For example <strong>D</strong> (hex) = 13 (decimal).&nbsp; And <strong>FFF</strong> (hex) = 4095 (decimal).</p>
+	<p>The <em><strong>hexadecimal</strong></em> number (or <em><strong>hex</strong></em> number, for short) <strong>2DA1</strong> can be   analyzed.&nbsp;&nbsp; Again, <u>from right-to-left:</u></p>
+	<ul>
+		<li>There is <strong>1</strong> 1 in the number 2DA1, contributing the number 1.</li>
+		<li>There are <strong>A (that is, 10)</strong> 16s in the number 2DA1, contributing   	the number 160.</li>
+		<li>There are <strong>D</strong> (that is, 13) 256s in the number 2DA1, contributing   	the number 3328.</li>
+		<li>There are <strong>2</strong> 4096s in the number 2DA1, contributing the number   	8192</li>
+	</ul>
+	<p>If you add it all up, you get:</p>
+	<p align="center">1*1 + A*16 + D*256 + 2*4096 = 11681.</p>
+	<p>So, in the hexadecimal system 2DA1 represents the number 11681.&nbsp; Here is   the tabular representation:</p>
+	<div class="wideTable">
+		<table>
+			<caption>
+				2DA1 Interpreted as Hex
+				</caption>
+			<tbody><tr>
+				<td>16<sup>4</sup>(and   			beyond)</td>
+				<td>16<sup>3</sup></td>
+				<td>16<sup>2</sup></td>
+				<td>16<sup>1</sup></td>
+				<td>16<sup>0</sup></td>
+			</tr>
+			<tr>
+				<td>All 0, so no need to write leading 0s</td>
+				<td>2</td>
+				<td>D</td>
+				<td>A</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>"65,536s place (and beyond)"</td>
+				<td>"4096 place"</td>
+				<td>"256s place"</td>
+				<td>"16s place"</td>
+				<td>"1s place"</td>
+			</tr>
+		</tbody></table>
+</div>
+	<p>Sometimes programmers use <em><strong>hex</strong></em> when they really want to enter a <em><strong>binary number</strong></em>,   because <em><strong>hex</strong></em> is easier on the eyes.&nbsp; It is easy to convert a <em><strong>binary</strong></em> number   to a <em><strong>hex</strong></em> and back:&nbsp; just group the binary number into clumps of 4 digits:</p>
+	
+    <p>&nbsp;&nbsp; 1010 0011 0111 1000 binary = A 3 7 8 hex</p>
+	<p>You can write a hex literal in C++ and Java using the prefix <strong>0x</strong> before the   number:</p>
+
+<pre>   int x = 0x2DA1;  // the decimal value happens to be 11681 as we saw
+   int y = 0xA378;  // the binary value happens to be 1010001101111000 as we saw
+  // now print x and y to see the decimal values 
+</pre>
+
+	<p>Note that we are not discussing <em><strong>hex</strong></em> or <em><strong>bin</strong></em> <em><strong>output</strong></em>, so the result of the   output will be decimal.</p>
+	<p>We won't use <em><strong>hex</strong></em> in what follows, but it is important to know that it is seen   and needed in programming frequently.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

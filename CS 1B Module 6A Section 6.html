@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_6a_6.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 6A Section 6</title>
+<link href="./CS 1B Module 6A Section 6_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 6 - Drawing Using Events</h1>
+	<h2>6A.6.1 Communication Between Distinct Classes</h2>
+	<p>Here is the situation.&nbsp; We have a program that contains a main <strong>JFrame</strong>,   class <strong>GraphicsFrame</strong>, and a<em> totally separate</em> <strong>JPanel</strong> class, <strong>DrawingPanel</strong>.&nbsp; Our <strong>GraphicsFrame</strong> has three buttons that say <strong>Line, Oval </strong>and<strong> Rectangle</strong>, and we would somehow like the pressing   of those buttons to affect the drawing on the <strong>DrawingPanel</strong>.&nbsp;   In other words, we want this:</p>
+	<div style="border-style: solid; border-width: 1px; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px">
+		<p align="left">&nbsp;Press <font face="MS Sans Serif" color="#800000"><strong> Line</strong></font>, and see ...&nbsp;&nbsp;&nbsp; <img src="./CS 1B Module 6A Section 6_files/pic_1b6_10.jpg" alt="GUI shot" width="256" height="175" border="0">&nbsp;&nbsp; </p>
+		<p align="center">Press <font face="MS Sans Serif" color="#800000"><strong>Oval</strong></font> and see ... <img src="./CS 1B Module 6A Section 6_files/pic_1b6_11.jpg" alt="GUI shot" width="256" height="175" border="0">&nbsp;&nbsp; </p>
+		<p align="right">Press <font face="MS Sans Serif" color="#800000"><strong> Rectangle</strong></font> and see ...&nbsp; <img src="./CS 1B Module 6A Section 6_files/pic_1b6_12.jpg" alt="GUI shot" width="256" height="175" border="0"></p>
+	</div>
+	<p>However, as I said, the <strong>DrawingPanel</strong> is a completely separate class -- it's   not even a <em>subclass</em> of <strong>GraphicsFrame</strong> --&nbsp; and doesn't know about   those buttons.&nbsp; When we create event handlers (<strong>Listeners</strong>) for the   three buttons, they will be <em>inner classes</em> to <strong>GraphicsFrame</strong>, and   have nothing to do with the <strong>DrawingPanel</strong>.</p>
+	<p>How can we get the button listeners inside one class to affect the drawing    within the panel of another class?&nbsp; Often, I don't want you to continue until you   understand the solution to some problem.&nbsp; This time I don't want you to   read further until you understand the problem itself, never mind the solution.</p>
+	<p>So take a moment and review the listing in the last section if you need to,   so you can see how we have a minor dilemma involving communicating information   from the (as yet unwritten) listeners in the <strong>JFrame</strong> class to the separate <strong>JPanel</strong> class.</p>
+	<p>The solution to this problem is so important in higher level applications   programming that I can't emphasize it enough.&nbsp; What you are about to learn   will serve you for the rest of your programming career.</p>
+	<h2>6A.6.2 State Variables</h2>
+	<p>Part of our solution will involve what are called <em><strong>state variables</strong></em>.&nbsp; They are   members of a class that hold the <em>current state</em> of the application.&nbsp; We use   state variables in other classes without realizing it.&nbsp; When we set the   font of a control, using <strong>setFont()</strong>, every letter drawn on the control, until   further notice, is drawn using that font.&nbsp; The <strong>JComponent</strong> remembers that   choice because, somewhere in its class definition, there is a state variable <font face="Courier New" size="2"> <span style="background-color:#CCFFFF; font-weight:700; ">Font current_font;</span></font>.   Same with the <strong>Color</strong> in the <strong>Graphics</strong> context, <strong>g</strong>.&nbsp; Once   we set the <strong>Color</strong>, it stays set until we change it.</p>
+	<p>So we will want a <em>state variable</em> for our <strong>JPanel</strong> subclass <strong> DrawingPanel</strong>, that "remembers" which of the three optional shapes, line,   oval or rectangle, is the current shape.&nbsp; If we have that, then there is   hope that another class like <strong>GraphicsFrame</strong> can somehow modify that state   variable through its event handlers.</p>
+	<p>We start by placing a new private instance member, currentShape, into the class to hold the   state.&nbsp; It will be an <strong>int</strong>.&nbsp; Also, we'll want to symbolize what that <strong>int</strong> means through some class constants.&nbsp; A 0 would be interpreted as an <strong>oval</strong>, a 1 as a <strong>rectangle</strong>, etc. but we don't want to have to remember that, so we   use static class members to symbolize those values.&nbsp; Here is what we need   to add to <strong>DrawingPanel</strong>:</p>
+
+<pre>   // state variable - tells which shape we should draw.
+   private int currentShape;
+
+   // can be one of the following:
+   public static final int OVAL = 0;
+   public static final int RECTANGLE = 1;
+   public static final int LINE = 2;
+</pre>
+
+	<p>This goes, outside the <strong>paintComponent()</strong> method because these are class   members we are defining.&nbsp;&nbsp; Now, putting a value like OVAL or LINE into <strong>currentShape</strong> will only help things if the <strong>paintComponent()</strong> reads   and obeys that value.&nbsp; Here's how that will go:</p>
+
+<pre>   // draw the shape
+   switch(currentShape)
+   {
+      case OVAL:
+         g.drawOval(5, 5, reasonableWidth, reasonableHeight); 
+         break;
+      case RECTANGLE:
+         g.drawRect(5, 5, reasonableWidth, reasonableHeight); 
+         break;
+      case LINE:
+         g.drawLine(5, 5, reasonableWidth, reasonableHeight); 
+         break;
+      default:
+         g.drawLine(5, 5, reasonableWidth, reasonableHeight); 
+         break;    
+      }
+</pre>
+
+	<p>Things are looking promising.&nbsp; Now, we can probably fill in the rest of <strong>paintComponent()</strong> to set the color, based on our previous version, so there's not   much else complicated to think about there.&nbsp; </p>
+	<p>We next have to turn to the   issue of allowing the methods in the <strong>GraphicsFrame</strong> class to set the <strong>currentShape</strong> member.&nbsp; This, of course, is the job of a <em>mutator</em> function.&nbsp;   We'll have to add such a method to our <strong>DrawingPanel</strong> class.&nbsp; You might think   to do this:</p>
+
+<pre>   public void setShape(int newState)
+   {
+      currentShape = newState;
+   }
+</pre>
+
+	<p><strong><font color="#FF0000" size="4">Minus 3 points!</font></strong>&nbsp; No mercy.&nbsp; You should know by now how bad that is.&nbsp;   Here's how it should be done.</p>
+
+<pre>   public boolean setShape(int newState)
+   {
+      if (newState &gt;= FIRST_VALID_STATE 
+            &amp;&amp; newState &lt;= LAST_VALID_STATE )<br>
+      {
+         currentShape = newState;
+         return true;
+      }
+      return false;
+   }
+</pre>
+
+	<p>Of course, we'll have to define <strong>FIRST_VALID_STATE</strong>&nbsp; and <strong>LAST_VALID_STATE</strong> , and that can be accomplished through final static members, as we did with <strong> OVAL, LINE, RECTANGLE</strong>.</p>
+	<p>This completes part one of the challenge. We have a nice <strong>DrawingPanel</strong> that   will cooperate with our event handlers form the <strong>GraphicsFrame</strong> class.&nbsp; The   problem, of course, is we have no event handlers yet.&nbsp; More to do ... .</p>
+	<h2>6A.6.3 Adding Listeners for the Buttons</h2>
+	<p>This is going to be easy, actually.&nbsp; We know how to create an inner   listener class and register it with the button components.&nbsp; We also know   that for buttons, we have to supply an <strong>actionPerformed()</strong> method to actually   handle the event.&nbsp; What goes into that method is becoming increasingly   clear.&nbsp; We have to find out which button pressed was pressed, and then call   the (recently and triumphantly designed) <strong>setShape()</strong> method of our <strong> DrawingPanel</strong>.&nbsp; </p>
+	<p>Here is the listener class and the <strong>actionPerformed()</strong> method:</p>
+
+<pre>   // inner class for JButton Listener
+   class ShapeButtonListener implements ActionListener
+   {
+      // event handler for JButton
+      public void actionPerformed(ActionEvent e)
+      {
+         if (e.getSource() == btnLine)
+            pnlDrawingPanel.setShape(DrawingPanel.LINE);
+         else if (e.getSource() == btnOval)
+            pnlDrawingPanel.setShape(DrawingPanel.OVAL);
+         else if (e.getSource() == btnRectangle)
+            pnlDrawingPanel.setShape(DrawingPanel.RECTANGLE); 
+         
+         pnlDrawingPanel.repaint();
+      }
+   } // end inner class ShapeButtonListener
+</pre>
+
+	<p>Notice that we don't need three separate listeners for each of the three   buttons.&nbsp; This is more efficient.&nbsp; We let the <strong>getSource()</strong> method on the <strong>ActionEvent</strong> parameter tell us which button evoked the   event.&nbsp; Then we call the <strong>setShape()</strong> method, passing the perfect   parameter of that button.</p>
+	<p>Oh, you're wondering about the <strong>repaint()</strong> call?&nbsp; Setting the shape   only changes the value of the state variable in the class.&nbsp; It does not   generate a call to the<strong> paintComponent()</strong> method that actually draws.&nbsp;   Furthermore, you should not try to remedy this by calling <strong>paintComponent()</strong> yourself, but rather ask Java to do it for you.&nbsp; That's what <strong>repaint() </strong>does.&nbsp; </p>
+	<p>As an interesting experiment, try commenting out that method call, and run   your program (when you are ready -- we'll give the listing in the next section).&nbsp;   You will notice two things:</p>
+	<ol>
+		<li>Pressing a button has no immediate effect, as I just said.</li>
+		<li>If you press a button then resize the frame, the new shape will appear.</li>
+	</ol>
+	<p>How does this behavior agree with what you know about the <strong>paintComponent()</strong> method of the <strong>JPanel</strong> and the behavior of our listener as described above?&nbsp;   I'll be interested to hear your understanding or confusion on this issue.</p>
+	<p>So ... we're ready for the whole enchilada.</p>
+	
+		<h2>6A.6.4&nbsp; The Listing</h2>
+
+<pre>import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+   
+public class Foothill
+{
+   public static void main(String[] args)
+   {
+      // establish main frame in which program will run
+      GraphicsFrame myGraphicsFrame = 
+         new GraphicsFrame("Graphics Thing");
+      myGraphicsFrame.setSize(300, 200);
+      myGraphicsFrame.setLocationRelativeTo(null);
+      myGraphicsFrame.setDefaultCloseOperation(
+            JFrame.EXIT_ON_CLOSE);
+      
+      // show everything to the user
+      myGraphicsFrame.setVisible(true);
+   }
+}
+
+// GraphicsFrame class is derived from JFrame class
+class GraphicsFrame  extends JFrame
+{
+   private JButton btnLine, btnOval, btnRectangle;
+   private JPanel pnlButtonPanel;
+   DrawingPanel pnlDrawingPanel;
+   private JLabel lblMyLabel;
+   
+   // constructor
+   public GraphicsFrame(String title)
+   {
+      // pass the title up to the JFrame constructor
+      super(title);
+      
+      // set layout
+      BorderLayout layout = new BorderLayout(15, 2);          
+      setLayout(layout);
+      
+      // title goes on NORTH of layout
+      lblMyLabel = new JLabel("Push a button and have some fun.");
+
+      // create buttons to go on south panel
+      btnLine = new JButton("Line"); 
+      btnOval = new JButton("Oval"); 
+      btnRectangle = new JButton("Rectangle"); 
+      
+      // create button panel and add buttons
+      pnlButtonPanel = new JPanel();
+      pnlButtonPanel.setLayout( 
+            new FlowLayout(FlowLayout.CENTER, 10, 8));
+      pnlButtonPanel.add(btnLine);
+      pnlButtonPanel.add(btnOval);
+      pnlButtonPanel.add(btnRectangle);
+      
+      // create  drawing panel
+      pnlDrawingPanel = new DrawingPanel();
+      pnlDrawingPanel.setBackground(new Color(200, 43, 79));
+      
+      add(lblMyLabel, BorderLayout.NORTH);
+      add(pnlDrawingPanel, BorderLayout.CENTER);
+      add(pnlButtonPanel, BorderLayout.SOUTH); 
+      
+      // now define behavior of buttons
+      ShapeButtonListener listen = new ShapeButtonListener();
+      btnLine.addActionListener(listen);
+      btnRectangle.addActionListener(listen);
+      btnOval.addActionListener(listen);   
+   }
+   
+   // inner class for JButton Listener
+   class ShapeButtonListener implements ActionListener
+   {
+      // event handler for JButton
+      public void actionPerformed(ActionEvent e)
+      {
+         if (e.getSource() == btnLine)
+            pnlDrawingPanel.setShape(DrawingPanel.LINE);
+         else if (e.getSource() == btnOval)
+            pnlDrawingPanel.setShape(DrawingPanel.OVAL);
+         else if (e.getSource() == btnRectangle)
+            pnlDrawingPanel.setShape(DrawingPanel.RECTANGLE); 
+         
+         pnlDrawingPanel.repaint();
+      }
+   } // end inner class ShapeButtonListener
+}
+
+class DrawingPanel extends JPanel
+{
+   // state variable - tells which shape we should draw.
+   private int currentShape;
+   
+   // can be one of the following:
+   private static final int FIRST_VALID_STATE = 0;
+   public static final int OVAL = 0;
+   public static final int RECTANGLE = 1;
+   public static final int LINE = 2;
+   private static final int LAST_VALID_STATE = 2;
+
+   protected void paintComponent( Graphics g )
+   {
+      super.paintComponent(g);   // always do this!
+      int reasonableWidth, reasonableHeight;
+      
+      // We'll draw object at 90% size of this JPanel
+      reasonableWidth = (int) (getWidth() * .9);
+      reasonableHeight = (int) (getHeight() * .9);
+           
+      g.setColor(new Color(39, 210, 255));
+      // draw the shape
+      switch(currentShape)
+      {
+         case OVAL:
+            g.drawOval(5, 5, reasonableWidth, reasonableHeight); 
+            break;
+         case RECTANGLE:
+            g.drawRect(5, 5, reasonableWidth, reasonableHeight); 
+            break;
+         case LINE:
+            g.drawLine(5, 5, reasonableWidth, reasonableHeight); 
+            break;
+         default:
+            g.drawLine(5, 5, reasonableWidth, reasonableHeight); 
+            break;    
+      }
+  }
+   public boolean setShape(int newState)
+   {
+      if (newState &gt;= FIRST_VALID_STATE 
+            &amp;&amp; newState &lt;= LAST_VALID_STATE )<br>
+      {
+         currentShape = newState;
+         return true;
+      }
+      return false;
+   }
+}
+</pre>
+	
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

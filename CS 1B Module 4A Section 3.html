@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_4a_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 4A Section 3</title>
+<link href="./CS 1B Module 4A Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 3 - Building Blocks of A Dynamic Stack</h1>
+	<h2>4A.3.1 Linked List Style Programming</h2>
+	<p>We are going to take a few minutes to create a new <em><strong>class</strong></em>.&nbsp; Once we do   that, we can return to <em><strong>inheritance</strong></em> and <em><strong>derived classes</strong></em>. (You might have guessed that the <em><strong>class</strong></em> we create will become a <em><strong>base class</strong></em> for further <strong><em>subclassing</em></strong>.)</p>
+	<p> <img src="./CS 1B Module 4A Section 3_files/cs_B_common_28.JPG" alt="scenic duck art" width="300" height="200" hspace="10" vspace="7" border="0" align="right">In   a past lesson we created a <em><strong>stack</strong></em> data structure.&nbsp; We now want to   implement a <em><strong>stack</strong></em> in another manner — one which will give us a   more flexible basis for other solutions. It will be based on a very general data   structure called a <em><strong>linked-list</strong></em>.</p>
+	<p><em><strong>Linked lists</strong></em> are powerful structures that are explored in <span class="sectionOrAssignmentTitle">CS   1C</span> and other data structures courses. They can be used for many things besides   creating <em><strong>dynamic stacks</strong></em>.&nbsp; Our implementation of <em><strong>stacks</strong></em> using <em><strong>linked lists </strong></em>will   reveal the power of <strong><em>linked lists</em></strong>and give you an idea of other things you can do   with them.</p>
+	<p>The original stack class we wrote had a <em><strong>fixed-size array</strong></em> inside it.&nbsp; Instead   of using a fixed-size <em><strong>array</strong></em> we will now  allocate memory only as needed. That is,   every time we get a <span class="codeInLine">push()</span> request, we'll allocate another <em><strong>object</strong></em> to   hold the item being pushed. That way, our <em><strong>stack</strong></em> will grow and shrink as needed.</p>
+	<p>The concepts that we will use besides <em><strong>linked-lists</strong></em> (which we will learn here)   are <em><strong>inheritance</strong></em> (i.e. <em><strong>derived classes</strong></em>) and <em><strong>dynamic memory allocation</strong></em>.</p>
+	<h2>4A.3.2 A Small Node Class</h2>
+	<p>We  start with a small <em><strong>class</strong></em> that we shall call <strong>StackNode</strong>.&nbsp; A <strong> StackNode</strong> will hold a single item that is to be pushed onto the <em><strong>stack</strong></em>.&nbsp; The   plan will be to dynamically create a <strong>StackNode</strong> <em><strong>object</strong></em> whenever the <em><strong>client</strong></em> wants to <strong>push()</strong>, and we will delete that <strong>StackNode</strong> when the <em><strong>client</strong></em> wants to <strong> pop()</strong>.&nbsp; But don't worry about <strong>push() </strong>or<strong> pop()</strong>, just yet.&nbsp;   Let's first create our <strong>StackNode</strong> <em><strong>class</strong></em>.</p>
+<pre>//Class StackNode  ----------------------------------
+class StackNode
+{
+   // data (protected allows only certain other classes to access "next" directly)
+   protected StackNode next;
+    
+   // constructor
+   public StackNode()
+   {
+      next = null;
+   }
+   
+   // console display
+   public void show()
+   {
+      System.out.print( "(generic node) ");
+   }
+}</pre>
+
+	<p>The first thing you will find odd about this <em><strong>class</strong></em> is that the only data is   called <span class="codeInLine">next</span>. <span class="codeInLine">next</span> will turn out to be nothing more than a <em><strong>reference</strong></em> to a <span class="codeInLine">StackNode</span> <em><strong>object</strong></em><strong></strong>.&nbsp; In other words, the<span class="codeInLine"> next</span> <strong><em>instance member</em></strong> of the<span class="codeInLine"> StackNode</span> <strong><em>class</em></strong> points to another<span class="codeInLine"> StackNode</span> <em><strong>object</strong></em>.&nbsp; That might sound circular, but it is   actually correct.&nbsp; What holds these <span class="codeInLine">StackNode</span>s together are the<span class="codeInLine"> <em>next</em></span> "<em>pointers</em>."&nbsp; In a given <em><strong>linked-list</strong></em> we would start with the first <span class="codeInLine">StackNode</span> whose <span class="codeInLine">next</span> <em><strong>member</strong></em> would point to the second<span class="codeInLine"> StackNode</span>.&nbsp; Then the second <strong><span class="codeInLine">StackNode</span></strong>'s<strong> <span class="codeInLine">next</span></strong><em><strong>member</strong></em> would point to the third <span class="codeInLine">StackNode</span>,   and so on. </p>
+	<p>You may wonder how we can construct anything useful using a <em><strong>class</strong></em> that has no <em><strong>data</strong></em> beside this <strong> <span class="codeInLine">next</span></strong> <em><strong>member</strong></em>.&nbsp; There are no <strong>ints</strong>, no <strong>floats</strong>, no <strong>strings</strong>, no <strong>Cards</strong>.&nbsp; What are we going to be   creating a stack <em><strong>of</strong></em>, exactly, if there is no data?&nbsp; Great   question.&nbsp; In fact, we will not be providing data to the <strong> <span class="codeInLine">StackNode</span></strong> now   because we will do that later when we <em><strong>derive</strong></em> a new <em><strong>subclass</strong></em> from <span class="codeInLine">StackNode</span>.&nbsp; Remember our <span class="codeInLine">Phone</span> and <span class="codeInLine">PhoneWX</span>?&nbsp; See where   I'm going with this?&nbsp; We can <em><strong>add data</strong></em> to the <strong><em>base class </em><span class="codeInLine">StackNode</span></strong> by <strong> <em>deriving</em></strong> another <em><strong>class</strong></em> from it.</p>
+	<p>But don't worry about that yet.</p>
+	<p>We give a short <strong>main() </strong>that tests the limited functionality of <strong> StackNode</strong>.&nbsp; Be sure that you understand these fundamental "moves" we are   making.&nbsp; If you do, then the rest should come easily.</p>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      StackNode node1 = new StackNode(), node2 = new StackNode();
+
+      // one way to use Stack Nodes
+      node1.next = node2;
+
+      // a more common way to use StackNodes
+      node2.next = new StackNode();
+
+      for (StackNode p = node1; p != null; p = p.next)
+         p.show();
+      System.out.println();
+   }
+ }</pre>
+
+	<p>Here is the output:</p>
+	<div class="picCenter"><img src="./CS 1B Module 4A Section 3_files/pic_1b4_4.jpg" alt="console showing three (generic node) strings on one line" width="459" height="161" border="0"></div>
+	<p>See how we linked-up one <em><strong>node</strong></em> with the next?&nbsp; Also, each <em><strong>node</strong></em> has no   unique data in it, so <strong>show()</strong>ing it will print out the same boring   message for every <strong>Node</strong>:&nbsp; <span class="codeInLine">"(generic node)"</span>. </p>
+	<p>About the line:</p>
+
+<pre>   protected StackNode next;
+</pre>
+
+	<p>Notice that our <span class="codeInLine">next</span> <em><strong>member</strong></em> is not <strong>public</strong>.&nbsp; We declare   <em><strong>members</strong></em> of certain <em><strong>classes</strong></em> to be <strong>protected</strong>.&nbsp; This allows only <em><strong>classes</strong></em> that are in the same <strong>package</strong> to access<strong> <span class="codeInLine">next</span> </strong>directly, so our   programmer/users of the <em><strong>class</strong></em>, not being in the same <strong>package</strong>, will not be able   to tinker with this <strong><em>member</em></strong>.&nbsp; We don't want to declare it <strong>private</strong> because there are some anticipated <em><strong>classes</strong></em>, like <strong>FloatNode</strong> and <strong>Stack</strong>,   that will need to modify this <em><strong>member</strong></em> — <em>even if they are in different <strong>packages</strong></em>. The <em><strong>client</strong></em> <strong>main()</strong> was able to access the<strong> <span class="codeInLine">next</span> </strong><em><strong>member</strong></em> and this seems like it leads to   potential security problems, but don't forget that this <strong><em>main</em> Foothill </strong> <em><strong>class</strong></em> is only your personal test <em><strong>class</strong></em>.&nbsp; <em><strong>Classes</strong></em> built by other programmers that use <strong>StackNode</strong> <em><strong>objects</strong></em> will not be part of your package and the <strong>protected</strong> keyword applied to <span class="codeInLine">next</span> means that to these "outside" <em><strong>classes</strong></em>,<strong> <span class="codeInLine">next</span> </strong>will behave as if it   were <strong>private</strong>, exactly what we want.</p>
+	<h2>4A.3.4 Entire Listing</h2>
+	<p>Here's everything in one copy/paste-able window:</p>
+	<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      StackNode node1 = new StackNode(), node2 = new StackNode();
+
+      // one way to use Stack Nodes
+      node1.next = node2;
+
+      // a more common way to use StackNodes
+      node2.next = new StackNode();
+
+      for (StackNode p = node1; p != null; p = p.next)
+         p.show();
+      System.out.println();
+   }
+}
+
+
+//Class StackNode  ----------------------------------
+class StackNode
+{
+   // data (protected allows only certain other classes to access "next" directly)
+   protected StackNode next;
+
+   // constructor
+   public StackNode()
+   {
+      next = null;
+   }
+
+   // console display
+   public void show()
+   {
+      System.out.print( "(generic node) ");
+   }
+}
+
+/* -------------------------- RUN ------------------- 
+
+(generic node) (generic node) (generic node) 
+
+----------------------------------------------------- */</pre>
+	<p>This is a rough idea of   how we can use <span class="codeInLine"> StackNode</span> to build a larger <em><strong>stack</strong></em>.&nbsp; In fact, let's get   to that <strong><em>stack</em></strong> next.</p>
+</div>
+</div>
+
+
+</body></html>

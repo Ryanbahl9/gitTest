@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0089)https://www.fgamedia.org/faculty/loceff/cs_courses/common/LIFE/cs_1and2B_bool_func_1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1and2B Module Bool Section 1</title>
+<link href="./CS 1and2B Module Bool Section 1_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section BOOL - Boolean Functions </h1>
+  	<h2>BOOL.1 Boolean Functions</h2>
+	<p>A subject of intense interest and research in computer science is that of <em><strong>boolean functions</strong></em> (or <em><strong>logic gates</strong></em>). These are functions that have one or more binary inputs (<em><strong>input bits</strong></em>) and one or more binary outputs (<em><strong>output bits</strong></em>). Such <em><strong>functions</strong></em> can be built using a special class of functions which only have one output bit. Here's an example with <em><strong>three inputs</strong></em> and <em><strong>one output</strong></em>:</p>
+    <div class="picCenter"><img src="./CS 1and2B Module Bool Section 1_files/bool_a.JPG" width="387" height="131" alt="bools"></div>
+    
+   	<p>Each of the inputs, <strong>A</strong>, <strong>B</strong> and <strong>C</strong>, can take one of two values: <strong>true</strong> or <strong>false</strong> (or if we prefer, <strong>1</strong> or <strong>0</strong>). The output, <strong>Z</strong>, can be either <strong>true</strong> (<strong>1</strong>) or <strong>false</strong> (<strong>0</strong>).</p>
+   	<p>How many possible inputs are there? Count them: <strong>ABC</strong> can be <strong>000</strong>, <strong>001</strong>, <strong>010</strong>, ... , <strong>111</strong>, in binary notation, or <strong>0</strong>, <strong>1</strong>, <strong>2</strong>, ..., <strong>7</strong>, in decimal integer notation. So this particular function can be thought of as taking an <strong>int</strong> from 0 to 7 as input and a <strong>boolean</strong> (<strong>true</strong> or <strong>false</strong>) as  output.</p>
+   	<p>These are the beasts we want to study today. It turns out that the most complicated and open problems in computer science can be reduced to, or described by, such <em><strong>boolean functions</strong></em>. One studies the <em><strong>circuits</strong></em> that implement these functions and asks questions about how fast the circuits grow as we increase the number of inputs. </p>
+   	<h2> BOOL.2   Some Important Unary and Binary Boolean Functions</h2>
+	<p> We are all familiar with boolean operators   <strong>OR</strong> (<span class="codeInLine">||</span>), <strong>AND</strong> (<span class="codeInLine">&amp;&amp;</span>) and <strong>NOT</strong> (<span class="codeInLine">!</span>) of computer programming. Their <em><strong>output</strong></em> value (<strong>true</strong> or <strong>false</strong>) is determined by the boolean values of one input (in the case of the <strong>NOT</strong> operator) or  two inputs (in the case of the <strong>OR</strong> and <strong>AND</strong> operators). Here  are the tables — also called the <em><strong>truth tables</strong></em> — that define the <strong>OR</strong> and <strong>AND</strong> <em><strong>operator</strong></em>:</p>
+	<div align="center"> <font size="4" face="Arial Black">OR</font>
+		<table width="60%" height="131" border="0" cellpadding="0" cellspacing="0" bordercolor="#808080" bordercolorlight="#800000" bordercolordark="#000000" bgcolor="#808080" id="table4">
+			<tbody><tr>
+				<td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">a</font></strong></td>
+				<td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">b</font></strong></td>
+				<td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">a||b</font></strong></td>
+			</tr>
+			<tr>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+			</tr>
+			<tr>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+			</tr>
+			<tr>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+			</tr>
+			<tr>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+			</tr>
+	  </tbody></table>
+		<br>
+		<font size="4" face="Arial Black">AND</font>
+	  <table width="60%" height="131" border="0" cellpadding="0" cellspacing="0" bordercolor="#808080" bordercolorlight="#800000" bordercolordark="#000000" bgcolor="#808080" id="table5">
+			<tbody><tr>
+				<td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">a</font></strong></td>
+				<td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">b</font></strong></td>
+				<td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">a&amp;&amp;b</font></strong></td>
+			</tr>
+			<tr>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+			</tr>
+			<tr>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+			</tr>
+			<tr>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+			</tr>
+			<tr>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+			</tr>
+	  </tbody></table>
+	</div>
+    
+    <p>These operators are now seen to be <em><strong>boolean functions</strong></em> which have two <strong>boolean</strong> (or binary) inputs and one <em><strong>boolean</strong></em> (binary) output.  Here are the same <em><strong>truth tables</strong></em> shown in binary form with the common mathematical symbols:</p>
+    <div class="picCenter"><img src="./CS 1and2B Module Bool Section 1_files/and_or.JPG" alt="andor"></div>
+    <p class="question">How many other <em><strong>boolean functions</strong></em> are there that have <em><strong>two inputs</strong></em> and <em><strong>one output</strong></em>? Same question for functions with <em><strong>one input</strong></em> and one output. (You can discuss this in the forums.)</p>
+    <p>Here is the important unary  function <strong>NOT</strong> (unary means one input):</p>
+    <div class="picCenter"><img src="./CS 1and2B Module Bool Section 1_files/not.JPG" alt="not"></div>
+    <p>There are three more  <em><strong>binary operations</strong></em> (also called <em><strong>gates</strong></em>) which are commonly used in computer science and engineering. They are, along with their symbols:</p>
+    <div class="picCenter"><img src="./CS 1and2B Module Bool Section 1_files/nand_nor.JPG" alt="nandnor"></div>
+    <div class="picCenter"><img src="./CS 1and2B Module Bool Section 1_files/xor.JPG" alt="xor"></div>
+    <h2>BOOL.3 Boolean Functions as Functions of Integers</h2>
+    <p>If we consider the two binary inputs, <strong>a</strong> and <strong>b</strong>, taken together as a single <em><strong>decimal integer number</strong></em>, then we can show the <em><strong>truth tables</strong></em> in the following way:</p>
+    <div align="center">
+    		<font size="4" face="Arial Black"> OR</font>
+		<table width="60%" height="131" border="0" cellpadding="0" cellspacing="0" bordercolor="#808080" bordercolorlight="#800000" bordercolordark="#000000" bgcolor="#808080" id="table6">
+			<tbody><tr>
+				<td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">input</font></strong></td>
+				<td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">ouput</font></strong></td>
+			</tr>
+			<tr>
+				<td align="center"><strong><font face="Courier">false false → 00 = 0(dec)</font></strong></td>
+				<td align="center"><strong><font face="Courier">false</font></strong></td>
+			</tr>
+			<tr>
+				<td align="center"><strong><font face="Courier">false true → 01 = 1(dec)</font></strong></td>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+			</tr>
+            <tr>
+				<td align="center"><strong><font face="Courier">true false → 10 = 2(dec)</font></strong></td>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+			</tr>
+            <tr>
+				<td align="center"><strong><font face="Courier">true true → 11 = 3(dec)</font></strong></td>
+				<td align="center"><strong><font face="Courier">true</font></strong></td>
+			</tr>
+	  </tbody></table>
+    </div>
+	<p>&nbsp; </p>
+	<div align="center"> <font size="4" face="Arial Black"> AND</font>
+	  <table width="60%" height="131" border="0" cellpadding="0" cellspacing="0" bordercolor="#808080" bordercolorlight="#800000" bordercolordark="#000000" bgcolor="#808080" id="table">
+	    <tbody><tr>
+	      <td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">input</font></strong></td>
+	      <td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">ouput</font></strong></td>
+        </tr>
+	    <tr>
+	      <td align="center"><strong><font face="Courier">false false → 00 = 0(dec)</font></strong></td>
+	      <td align="center"><strong><font face="Courier">false</font></strong></td>
+        </tr>
+	    <tr>
+	      <td align="center"><strong><font face="Courier">false true → 01 = 1(dec)</font></strong></td>
+	      <td align="center"><strong><font face="Courier">false</font></strong></td>
+        </tr>
+	    <tr>
+	      <td align="center"><strong><font face="Courier">true false → 10 = 2(dec)</font></strong></td>
+	      <td align="center"><strong><font face="Courier">false</font></strong></td>
+        </tr>
+	    <tr>
+	      <td align="center"><strong><font face="Courier">true true → 11 = 3(dec)</font></strong></td>
+	      <td align="center"><strong><font face="Courier">true</font></strong></td>
+        </tr>
+      </tbody></table>
+    </div>
+	<p>&nbsp;</p>
+	<p>As you can see, we have turned our original tables, which took <em><strong>two boolean inputs</strong></em> (<strong>a</strong> and <strong>b</strong>), into equivalent tables that take<em><strong> a single decimal int input</strong></em> (<strong>0 - 3</strong>).  Here are the tables for <strong>AND</strong> and <strong>OR</strong> expressed as <em><strong>functions</strong></em> of <em><strong>decimal ints</strong></em>:</p>
+    <div class="picCenter"><img src="./CS 1and2B Module Bool Section 1_files/and_or_as_ints.JPG" width="209" height="427" alt="andorint"></div>
+	<p>If you prefer, you can even take the output to be an int, but in this case, it will only take on the values 0 or 1.</p>
+	<p>These two <em><strong>boolean functions</strong></em> -- and any other <em><strong>boolean function</strong></em> -- can be therefore represented in our programs as an <em><strong>array</strong></em> of <strong>bools</strong> (C++ or Python) or <em><strong>array</strong></em> of <strong>booleans</strong> (Java), the size of the array being the 2<sup><em>N</em></sup>, where <em>N</em> is the number of binary inputs. The <em><strong>input</strong></em> to the <em><strong>function</strong></em> would be the <em><strong>index</strong></em> of the <em><strong>array element</strong></em>, and the <em><strong>output</strong></em> is the <em><strong>boolean</strong></em> <strong>true/false</strong> (or <strong>int 1/0</strong>) value stored at that position of the <em><strong>array</strong></em>. For the above gates with 2 binary inputs, the size of the table is 2<sup>2</sup> = 4, as you can see.</p>
+    
+<pre>   // C++ ---------------------------
+   bool orGate[4] = {false, true, true, true};
+   bool andGate[4] = {false, false, false, true};
+   
+
+   // Java ---------------------------
+   boolean[] orGate = {false, true, true, true};
+   boolean[] andGate = {false, false, false, true};
+
+
+   # Python -------------------------
+   or_gate = [False, True, True, True]<br>   and_gate = [False, False, False, True]
+</pre>
+<p>Each <em><strong>array</strong></em> (<strong>list</strong> in Python) allows us to compute the answer to any input question by indexing the array:</p>
+<pre>   // C++ ---------------------------
+   bool output;
+
+   // value of OR gate for input #2 (corresponding to a=true and b=false):
+   output = orGate[2];
+   cout &lt;&lt; "or[2] " &lt;&lt; output &lt;&lt; endl;
+
+   // value of AND gate for input #1 (corresponding to a=false and b=true):
+   output = andGate[1];
+   cout &lt;&lt; "and[1] " &lt;&lt; output &lt;&lt; endl;
+   
+
+   // Java ---------------------------
+   boolean output;
+      
+   // value of OR gate for input #2 (corresponding to a=true and b=false):
+   output = orGate[2];
+   System.out.println("or[2] " + output);
+         
+   // value of AND gate for input #1 (corresponding to a=false and b=true):
+   output = andGate[1];
+   System.out.println("and[1] " + output);
+
+
+   # Python ---------------------------
+   # value of OR gate for input #2 (corresponding to a=True and b=False):
+   output = or_gate[2]
+   print("or[2] " + str(output))
+         
+   # value of AND gate for input #1 (corresponding to a=False and b=True):
+   output = and_gate[1]
+   print("and[1] " + str(output))</pre>
+<p>The runs for these programs:</p>
+<pre>// C++ ---------------------------
+
+or[2] 1
+and[1] 0
+Press any key to continue . . .
+   
+// Java --------------------------
+or[2] true
+and[1] false
+
+# Python -------------------------
+
+or[2] True<br>and[1] False</pre>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

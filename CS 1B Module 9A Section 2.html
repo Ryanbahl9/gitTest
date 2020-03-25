@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_9a_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 9A Section 2</title>
+<link href="./CS 1B Module 9A Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 2 - Generic Classes</h1>
+	<h2>9A.2.1 Creating a Generic Class</h2>
+	<p>To make this <em><strong>class</strong></em> applicable to any data type, not just <strong>Cards</strong>, requires   that we add some notation to it.&nbsp; It goes as follows (don't try to memorize   these steps, just look briefly at them, and refer back when you see the example):</p>
+	<ol>
+		<li>After the class name in the first line of the definition, add the symbol<strong> &lt;E&gt;,</strong> as in class <strong>Revealer&lt;E&gt;</strong></li>
+		<li>Inside the definitions, wherever we had a <strong>Card</strong>, we put the symbol <strong>E</strong>.</li>
+	</ol>
+	<p>In the <em><strong>client</strong></em>, instead of declaring a <strong>Revealer</strong>, we declare a <strong>Revealer&lt;Card&gt;</strong> or&nbsp;<strong> Revealer&lt;String&gt;</strong>&nbsp; or&nbsp; <strong>Revealer&lt;Dog&gt;</strong>, depending on the   type we need.&nbsp; </p>
+	<p>In case you haven't noticed the connection, the angled brackets, <strong>&lt; &gt;</strong>,   were used before when we implemented Java <em><strong>interfaces</strong></em> or <em><strong> Framework Collections</strong></em> using our own classes:&nbsp; <strong>Comparable&lt;<font color="#000080">Card</font>&gt;,   ArrayList&lt;<font color="#000080">Float</font>&gt;, PriorityQueue&lt;<font color="#000080">Rectangle</font>&gt;</strong>.&nbsp;   Of course!&nbsp; In these previous sessions we were passing a <em><strong>type   argument</strong></em> to the <em><strong>generic</strong></em> and in our current lesson we are   learning how to <em>make</em> a <em><strong>generic</strong></em> class using a <em> <strong>type   parameter</strong></em>.&nbsp; </p>
+	<p>When we learned about&nbsp; <em><strong>methods</strong></em>, we first learned how to use <em>existing   methods</em> by passing our <em><strong>arguments</strong></em> to them without worrying about how to   define <em><strong>methods</strong></em> (remember when we first learned <strong>println( <font color="#000080"> <em>our arguments</em></font> )</strong>,&nbsp; <strong>JOptionPane.ShowMessageDialog( <font color="#000080"><em>our arguments</em></font> )</strong>?).&nbsp; Then later we   learned how to create our own <em><strong>methods</strong></em> by provisioning them with <em><strong>formal   parameters</strong></em> of our own invention.&nbsp; So with <em><strong>generics</strong></em>,   we learned to use existing generic classes in previous lessons (<strong>Comparable&lt;Card&gt;,   ArrayList&lt;Float&gt;, PriorityQueue&lt;Rectangle&gt;</strong>) and now we are building our own   generics from scratch.</p>
+	<p>Here is the full program with the <em>genericized</em> class and an adjusted <strong>main()</strong>:</p>
+
+<pre>import java.util.*;
+import javax.swing.*;
+
+public class Foothill
+{
+   public static void main(String[] args)
+   {
+      String string1 = "death of a salesman";
+      String string2 = "queen's gambit";
+      Card card1, card2, card3;
+ 
+     <span style="background-color: #00FFFF"> Revealer&lt;Card&gt; rv1 = new Revealer&lt;Card&gt;();    </span>
+     <span style="background-color: #00FFFF"> Revealer&lt;String&gt; rv2 = new Revealer&lt;String&gt;();
+</span> 
+      card1 = new Card();
+      card2 = new Card('5');
+      card3 = new Card('9', Card.Suit.hearts);
+
+      rv1.displayGUI(card1);
+      rv2.displayGUI(string1);
+      rv1.displayGUI( new Card('t',Card.Suit.clubs));
+      
+      rv1.displayConsole(card3);   
+      rv1.displayConsole(card2);
+      rv2.displayConsole(string2); 
+   }
+}
+
+class Revealer<span style="background-color: #00FFFF">&lt;E&gt;</span>
+{
+   public   void displayGUI(<span style="background-color: #00FFFF">E</span> myThing)
+   {
+      String report = myThing.toString();
+      JOptionPane.showMessageDialog(null, report, 
+            "Loceff's Data Revealer", JOptionPane.PLAIN_MESSAGE);
+   }
+   
+   public   void displayConsole(<span style="background-color: #00FFFF">E</span> myThing)
+   {
+      String report = myThing.toString();
+      System.out.println(" --- Loceff's Data Revealer ---");
+      System.out.println(report);
+      System.out.println(" ------------------------------\n\n");
+   }
+}</pre>
+
+	<p>The output is:</p>
+
+<pre> --- Loceff's Data Revealer ---
+9 of Hearts
+ ------------------------------
+
+
+ --- Loceff's Data Revealer ---
+5 of Spades
+ ------------------------------
+
+
+ --- Loceff's Data Revealer ---
+queen's gambit
+ ------------------------------</pre>
+<img src="./CS 1B Module 9A Section 2_files/pic_1b9_2.jpg" alt="gui shot" width="268" height="122" border="0">&nbsp;&nbsp; → &nbsp;&nbsp;<img src="./CS 1B Module 9A Section 2_files/pic_1b9_3.jpg" alt="gui shot" width="268" height="122" border="0">	&nbsp;&nbsp; → &nbsp;&nbsp; <img src="./CS 1B Module 9A Section 2_files/pic_1b9_4.jpg" alt="gui shot" width="268" height="122" border="0">
+	<h2>9A.2.2 Analysis</h2>
+	<p>Besides the odd notation, the concept is simple.&nbsp; We use the symbol <strong>"E"</strong> in place of the type <strong>Card</strong> in various parts of the method definitions.&nbsp; It   is a place holder - a <em><strong>type parameter</strong></em>.&nbsp; In fact, <strong>E</strong> can be anything, as long as you use the same   letter or word in the phrase<strong> Revealer&lt;E&gt;</strong>.&nbsp;&nbsp;Usually   programmers choose <strong>E</strong> or <strong>T</strong> as type parameters, and if they need   more they use other single capital letters.&nbsp;&nbsp; This is one time where   the use of single letters is ok.&nbsp; </p>
+	<p>Using <strong>generics</strong> in the <em><strong>client</strong></em> is particularly easy.&nbsp; In   fact, it looks very much like how we declared an <strong>ArrayList</strong> class.&nbsp; Of   course.&nbsp; The <strong>ArrayList</strong> class is a <strong>generic</strong>, just one that   someone else designed for us.</p>
+	<div class="picCenter"><img src="./CS 1B Module 9A Section 2_files/cs_C_common_15.jpg" alt="scenic trees from above" width="302" height="216" border="0"></div>
+</div>
+</div>
+
+
+</body></html>

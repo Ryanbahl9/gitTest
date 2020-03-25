@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_7b_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 2B Module 7B Section 4</title>
+<link href="./CS 2B Module 7B Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 4 - A Pseudo-Datamatrix Class  (Optional)</h1>
+	<div class="parenthetical"> <strong>This section is optional</strong><strong></strong>. Ultimatly, it will be replaced by sections <strong>7B.5</strong> through <strong>7B.7</strong>. You may proceed directly to those if you wish. </div>
+	<h2>7B.4.1 A Strategy for the Solution Barcode Classes</h2>
+	<p>We are ready for the actual class or classes that will implement <strong>BarcodeIO</strong> and contain, as an internal member object, a <strong>BarcodeImage</strong>.&nbsp; Before we   jump in and start creating this class, let's think about what its purpose is.&nbsp;   Are we ready to implement a specific barcode symbology like <strong>Datamatrix</strong>,   or <strong>pdf-417</strong>?&nbsp; </p>
+<p>Maybe not.&nbsp; A lot of the things we want to do next would apply to <em>any</em> symbology.&nbsp; So a good design should implement <strong>BarcodeIO</strong> with an   embedded <strong>String</strong> and <strong>BarcodeImage</strong> members into a new <em>base class </em>called <strong>ImageReaderWriter</strong> that does things like print a label and read in   a label.&nbsp; What we should <em>not</em> be doing at this level of abstraction   is converting the image to text or vice versa, since that is symbology-dependent.&nbsp;&nbsp;   From the recommended <strong>ImageReaderWriter</strong>, we would subclass specific symbology classes.&nbsp;   When you think about it, you might ask what to do with the two interface   methods, <strong>generateImageFromText() </strong>and<strong> translateImageToText()</strong>.&nbsp;   They don't quite have an obvious place in <strong>ImageReaderWriter</strong>, since we   need a symbology for their implementation.&nbsp; However, we can give abstract   and generic shells for these methods and require the subclasses do the   implementation.</p>
+<p>Anyway, the structure should be something like this:</p>
+	<div class="picCenter"><img src="./CS 2B Module 7B Section 4_files/cs_B_common_38.JPG" alt="class diag"></div>
+	<p>This is what it <em>should</em> look like.&nbsp; What we <em>will</em> do,   however, is skip the   general base class <strong>ImageReaderWriter</strong> and go directly, instead, to <strong> DataMatrix</strong>.&nbsp; This is to keep the example and assignment manageable.&nbsp;   So here is the diagram we will follow:</p>
+<div class="picCenter"><img src="./CS 2B Module 7B Section 4_files/cs_B_common_39.JPG" width="387" height="398" alt="actual class diagram"></div>
+	<h2>7B.4.2 The Target Class, DataMatrix</h2>
+	<p>This class is a pseudo <em>Datamatrix</em> data structure, not a true <em> Datamatrix</em> implementation, because it does not contain   any of the error correction or encoding in a real <em>Datamatrix</em>.&nbsp; However, it   does have the 2D array format and a left and bottom <strong>BLACK</strong> edge and an   alternating right and top <strong>BLACK-WHITE</strong> pattern as seen in prior pages.</p>
+	<h3>&nbsp;&nbsp; DataMatrix Data</h3>
+	<ul>
+		  	<li><strong>public static final char BLACK_CHAR = '*'; </strong></li>
+			<li><strong>public static final char WHITE_CHAR = ' '</strong>;&nbsp;&nbsp; </li>
+			<li><strong>private BarcodeImage image </strong>- a single internal copy of any image <em>scanned-in</em> OR <em> passed-into the constructor</em> OR <em>created   	by BarcodeIO's <strong>generateImageFromText()</strong><strong>.</strong></em></li>
+			<li><strong>private String text</strong> - a single internal copy of any text <em>read-in</em> OR <em> passed-into the constructor</em> OR <em>created   	by <strong>BarcodeIO's translateImageToText()</strong><strong>.</strong></em></li>
+			<li><strong>private int actualWidth</strong> and <strong>actualHeight</strong> - two <strong>ints</strong> that are typically <strong><em>less than</em></strong> <strong>BarcodeImage.MAX_WIDTH</strong> and <strong>BarcodeImage.MAX_HEIGHT</strong> which represent the actual portion of the <strong> BarcodeImage</strong> that has real <em>signal</em>.&nbsp; This is dependent on the   	data in the image, and can change as the image changes through mutators.</li>
+	</ul>
+	<h3>&nbsp;&nbsp; DataMatrix Methods</h3>
+	<ul>
+		  	<li><em><strong>Constructors</strong></em>.&nbsp; Three minimum, but you could have   	more:
+		  		<ul>
+		  			<li><strong>Default Constructor </strong>-&nbsp; constructs an empty, but   		non-null, image and text value.&nbsp; The initial image should be all   		white, however, <strong>actualWidth</strong> and <strong>actualHeight</strong> should start at <strong>0</strong>, so it   		won't really matter what's in this default image, in practice.&nbsp; The <strong>text</strong> can   		be set to blank, "", or something like "undefined".</li>
+		  			<li><strong>DataMatrix(BarcodeImage image)</strong> - sets the <strong>image</strong> but leaves   		the <strong>text</strong> at its default value.&nbsp; Call <strong>scan()</strong> and avoid duplication   		of code here.</li>
+		  			<li><strong>DataMatrix(String text)</strong> - sets the <strong>text</strong> but leaves the <strong>image</strong> at its default value.&nbsp; Call <strong>readText()</strong> and avoid duplication   		of code here.</li>
+	  			</ul>
+	  		</li>
+			<li><strong>readText(String text)</strong> - a <strong><em>mutator</em></strong> for text.&nbsp;   	Like the constructor;&nbsp; in fact it is called <em>by</em> the constructor.</li>
+			<li><strong>scan(BarcodeImage image)</strong> - a <em><strong>mutator</strong></em> for <strong>image</strong>.&nbsp; Like   	the constructor;&nbsp; in fact it is called <em>by</em> the constructor.&nbsp; Besides calling   	the <strong>clone()</strong> method of the <strong>BarcodeImage</strong> class, this method would do one   	thing, at minimum, in the basic option:&nbsp; set the <strong>actualWidth</strong> and <strong>actualHeight</strong>.&nbsp;    	Because <strong>scan()</strong> calls <strong>clone()</strong>, it should deal with the <strong> CloneNotSupportedException</strong> by <strong><em>embedding</em></strong><em><strong> the clone() call within a try/catch block</strong></em>.&nbsp; Don't   	attempt to hand-off the exception using a "throws" clause in the function   	header since that will not be compatible with the underlying <strong>BarcodeIO</strong> interface.&nbsp; The <strong>catches(...)</strong> clause can have an empty body that   	does nothing.</li>
+			<li><em><strong>Accessors</strong></em> for <strong>actualWidth</strong> and <strong>actualHeight</strong> but <em><strong>no mutators!</strong></em> (why?)</li>
+			<li><strong>private int computeSignalWidth()</strong> and <strong>private int   	computeSignalHeight()</strong> - Assuming that the image is correctly situated in   	the lower-left corner of the larger <strong>boolean</strong> array, these methods use the   	"spine" (Closed Limitation Line) of the array (left and bottom BLACK) to determine the actual size - it   	returns the <strong>int</strong> values as <em><strong>functional returns</strong></em>. </li>
+			<li><strong>Implementation of all BarcodeIO methods.</strong></li>
+	</ul>
+<h3>Other Considerations for <strong>DataMatrix</strong></h3>
+	<ul>
+		<li><strong>displayImageToConsole()</strong> should display only the relevant portion   	of the image, clipping the excess blank/white from the top and right.&nbsp;   	Also, show a border as in:</li>
+<pre>------------------------------------
+|* * * * * * * * * * * * * * * * * |
+|*                                *|
+|****   * ***** **** **** ******** |
+|*   *** ***************** ********|
+|*  * **  *   *   *  *    * **     |
+|* *       * *  **    * * *    ****|
+|*     *   *    ** * *  *  *  ** * |
+|** * *** *****  **     * *      **|
+|****  *   **** ** *   *   *  * *  |
+|**********************************|
+------------------------------------ 
+</pre>
+
+		<li><font color="#800080"><em>Optional - </em></font>The methods <strong>generateImageFromText()</strong> and <strong>translateImageToText()</strong> are the tricky parts, and it will help if you   	have some methods like the following to break up the work:&nbsp; <strong>private   	char readCharFromCol(int col)</strong> and <strong>private boolean writeCharToCol(int   	col, int code)</strong>.&nbsp; While you don't have to use these exact methods,   	you must not turn in huge methods <strong>generateImageFromText()</strong> and <strong>translateImageToText()</strong> that are not broken down to smaller ones.</li>
+	</ul>
+	<ul>
+		<li><font color="#800080"><em>Optional </em></font>- <strong>public void   	displayRawImage() </strong>can be implemented to show the full image data   	including the blank top and right.&nbsp; It is a useful debugging tool.</li>
+	</ul>
+	<ul>
+		<li><font color="#800080"><em>Optional </em></font>- <strong>private void   	clearImage()</strong> - a nice utility that sets the image to white =&nbsp; false.</li>
+	</ul>
+<p>As you can tell, the implementation of this is going to be your assignment   this week.&nbsp; I have provided some significant structure and also a lot of   useful code that you can steal from the <strong>TwoDimImage</strong> class.</p>
+	<p>Do this one step-at-a-time, following my outline and also digesting   what you are doing and why you are doing it at each juncture. I am here for   questions, as usual.</p>
+	<h2>7B.4.3&nbsp; A Sample Main()</h2>
+	<p>Here is a <strong>main()</strong> to use as a test of your code.&nbsp; You should create simpler <strong>main()</strong>s as you work your way up to this:</p>
+	
+<pre>  public static void main(String[] args)
+   {
+      String[] sImageIn = 
+      { 
+            "                                      ",
+            "                                      ",
+            "                                      ",
+            "* * * * * * * * * * * * * * * * *     ",
+            "*                                *    ",
+            "**** * ****** ** ****** *** ****      ",
+            "* ********************************    ",
+            "*    *   *  * *  *   *  *   *  *      ",
+            "* **    *      *   **    *       *    ",
+            "****** ** *** **  ***** * * *         ",
+            "* ***  ****    * *  **        ** *    ",
+            "* * *   * **   *  *** *   *  * **     ",
+            "**********************************    "
+      };
+      
+      String[] sImageIn_2 = 
+      { 
+            "                                          ",
+            "                                          ",
+            "* * * * * * * * * * * * * * * * * * *     ",
+            "*                                    *    ",
+            "**** *** **   ***** ****   *********      ",
+            "* ************ ************ **********    ",
+            "** *      *    *  * * *         * *       ",
+            "***   *  *           * **    *      **    ",
+            "* ** * *  *   * * * **  *   ***   ***     ",
+            "* *           **    *****  *   **   **    ",
+            "****  *  * *  * **  ** *   ** *  * *      ",
+            "**************************************    "
+      };
+      
+      BarcodeImage bc = new BarcodeImage(sImageIn);
+      DataMatrix dm = new DataMatrix(bc);
+     
+      // First secret message
+      dm.translateImageToText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
+      
+      // second secret message
+      bc = new BarcodeImage(sImageIn_2);
+      dm.scan(bc);
+      dm.translateImageToText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
+      
+      // create your own message
+      dm.readText("CS 1B rocks more than Zeppelin");
+      dm.generateImageFromText();
+      dm.displayTextToConsole();
+      dm.displayImageToConsole();
+   } 
+</pre>
+
+</div>
+</div>
+
+
+</body></html>

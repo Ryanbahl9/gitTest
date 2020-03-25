@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_4a_1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 4A Section 1</title>
+<link href="./CS 1B Module 4A Section 1_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+  	<h1>Section 1 - Introduction to Inheritance: Base Classes</h1>
+  	<h2>4A.1.1 Orientation	</h2>
+  	<p>This week we introduce <em><strong>inheritance</strong></em>, the mechanism that allows us to reuse   old, or existing, <em><strong>classes</strong></em> in new applications.&nbsp; <em><strong>Inheritance</strong></em> is universal to   all contemporary <em><strong>object-oriented</strong></em> programming languages, including C++, Python,   C# and, of course, Java.&nbsp; The notation is slightly different in each language, but if you   understand the concept in one, you will understand it in all.</p>
+	<p>Most large programming projects rely on <em><strong>inheritance</strong></em>.&nbsp; <em><strong>Classes</strong></em> defined by    programmers, now long gone, have been completely debugged and   tested.&nbsp; Nevertheless, you can still <em><strong>extend</strong></em> those classes (using <em><strong>inheritance</strong></em>) to create new   functionality, without going into the source code of the original <em><strong>class</strong></em>, known as the <em><strong>base</strong></em> (a.k.a. <em><strong>super</strong></em> or <em><strong>parent</strong></em>) <em><strong>class</strong></em>.</p>
+	<div class="picCenter"><img src="./CS 1B Module 4A Section 1_files/cs_B_common_26.JPG" alt="scenic chessboard" width="300" height="200" border="0"></div>
+	<h2>4A.1.2 Reading and Resources</h2>
+<p>All the resources needed for this week and instructions on textbook reading have already been posted in <span class="sectionOrAssignmentTitle">Module A1</span> of the first three weeks. Refer to those pages and links, regularly.</p>
+
+<!-- end .container -->
+<h2>4A.1.3 A Base Class</h2>
+<p>A <em><strong>base</strong></em> (or <em><strong>super</strong></em> or <em><strong>parent</strong></em>) <em><strong>class</strong></em> is just a <em><strong>class</strong></em>, the same way an <strong>Employee</strong> is just a <strong>Person</strong>. It is the creation of a second   entity (<em><strong>hiring</strong></em> the <strong>Person</strong>), that makes the <strong>Person</strong> an <strong>employee</strong>. A <em><strong>class</strong></em> like <strong>Person</strong> would be a <em><strong>base class</strong></em>, if we knew that it was about to be <em><strong>extended</strong></em> to another <em><strong>class</strong></em>, like <strong>Employee</strong>. To do that, we <em><strong>derive</strong></em> (or <em><strong> extend</strong></em> or <em><strong>subclass</strong></em>) a new <em><strong>class</strong></em> from it, which, without modification to the <em><strong>original class</strong></em>, turns that one into a   semantic entity known as a <em><strong>base</strong></em> (<em><strong>super, parent</strong></em>) <em><strong>class.</strong></em></p>
+<p>Any <em><strong>class</strong></em> is a <em><strong>base class</strong></em> if you <strong><em>derive</em></strong> a <em><strong>new class</strong></em> (called the <strong><em>derived, child</em></strong> or <strong><em>sub</em></strong><em><strong>class</strong></em>) from it. </p>
+<h3>Base Class: Phone</h3>
+<p>We create an ordinary <em><strong>class</strong></em>, <strong>Phone</strong>. It will store an <em><strong>areaCode</strong></em> and <em><strong>phone number</strong></em> in two separate <strong>string</strong> <em><strong>members</strong></em> <span class="codeInLine">areaCode</span> and <span class="codeInLine">number</span>, respectively. The <em><strong>constructor</strong></em> for <strong>Phone</strong> will initialize all <em><strong>members</strong></em> so there is no   chance of garbage cluttering them up.&nbsp;&nbsp; Since the <em><strong>class</strong></em> is so straightforward,   I'll list it inside the complete program.</p>
+<p>Copy and paste it into your <strong><em>IDE</em></strong>, then run it:</p>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      Phone me = new Phone("123", "1234567"),
+            you = new Phone();
+
+      System.out.println("\nAfter Constructors:");
+      System.out.print("ME ...   \n   ");
+      me.showPhone();
+      System.out.print("YOU ...   \n   ");
+      you.showPhone();
+      
+      me.setBoth("408", "99XX9887BAD7");
+      you.setBoth("714", "9998877");
+      
+      System.out.println("\nAfter setBoth():");
+      System.out.print("ME ...   \n   ");
+      me.showPhone();
+      System.out.print("YOU ...   \n   ");
+      you.showPhone();
+      
+      if (!me.setAC("719498"))
+         me.setAC("818");
+      if (!you.setPhNum("5551212"))
+         you.setPhNum("9997777");
+      
+      System.out.println("\nAfter setAC(), setPhNum():");
+      System.out.print("ME ...   \n   ");
+      me.showPhone();
+      System.out.print("YOU ...   \n   ");
+      you.showPhone();
+
+      System.out.println("\nUsing accessors:");
+      System.out.println("ME ...\n   "
+            + me.getAreaCode() + "   "
+            + me.getNumber());
+      System.out.println("YOU ...\n   "
+            + you.getAreaCode() + "   "
+            + you.getNumber());
+      
+      System.out.println("\ndialing():");
+      System.out.println("ME ...\n   "
+      + "   " +  me.dialing());
+      System.out.println("YOU ...\n   "
+      + "   " +  you.dialing());
+
+      System.out.println("\nredialing():");
+      System.out.println("ME ...\n   "
+      + "   " +  me.redialing(3));
+      System.out.println("YOU ...\n   "
+      + "   " +  you.redialing(3));
+   }
+}
+   
+// Base Class Phone  -----------------------------
+class Phone
+{
+   // private data
+   private  String areaCode;
+   private  String number;
+
+   // public static constants
+   public static final String DEFAULT_AC  = "000";
+   public static final String DEFAULT_NUM  = "0000000";
+   public static final int VALID_PH_NUM_LEN = 7;
+   public static final int VALID_AC_NUM_LEN = 3;
+
+   public Phone()
+   {
+      number = DEFAULT_NUM;
+      areaCode = DEFAULT_AC;
+   }
+
+   public Phone(String ac, String num)
+   {
+      if ( !setPhNum(num) )
+         number = DEFAULT_NUM;
+      if ( !setAC(ac) )
+         areaCode = DEFAULT_AC;
+   }
+
+   // mutators
+   public boolean setPhNum(String num)
+   {
+      if ( !validPhNumber(num) )
+         return false;
+      number = num;
+      return true;
+   }
+   public boolean setAC(String ac)
+   {
+      if ( !validAC(ac) )
+         return false;
+      areaCode = ac;
+      return true;
+   }
+   
+   public boolean setBoth(String ac, String num)
+   {
+       // set only good args.  bad ones don't change member
+       boolean retValNum, retValAC;
+
+       retValNum = setPhNum(num);
+       retValAC = setAC(ac);
+
+       // client gets false if either was bad.
+       return retValNum &amp;&amp; retValAC;
+   }
+
+   // accessors
+   public String getAreaCode()
+   {
+      return areaCode;
+   }
+   public String getNumber()
+   {
+      return number;
+   }
+
+   // stringizers
+   public String toString()
+   {
+      String result;
+      result = "(" + areaCode + ")"
+            + number.substring(0,3) + "-"
+            + number.substring(3,7);
+      return result;
+   }
+
+   public void showPhone()
+   {
+      System.out.println(toString());
+   }
+
+   // for demonstration
+   public String dialing()
+   {
+      return  "Now dialing " + toString() + "\n";
+   }
+
+   public String redialing(int numTimes)
+   {
+      int k;
+
+      String retStr = "Trying number " + numTimes + " times ...\n";
+
+      for (k = 0; k &lt; numTimes; k++)
+         retStr += dialing();
+      retStr += "done.\n";
+
+      return retStr;
+   }
+   
+   // helpers for vetting Phone numbers  --------------------------
+   protected static boolean isNumber(String s)
+   {
+      for(int k = 0; k &lt; s.length(); k++)
+         if (!Character.isDigit(s.charAt(k)))
+            return false;
+      return true;
+   }
+
+   private static boolean validPhNumber(String s)
+   {
+      if (isNumber(s) &amp;&amp; (s.length() == VALID_PH_NUM_LEN))
+         return true;
+      return false;
+   }
+
+   private static boolean validAC(String s)
+   {
+      if (isNumber(s) &amp;&amp; (s.length() == VALID_AC_NUM_LEN))
+         return true;
+      return false;
+   }
+}</pre>
+
+<h4>Things worthy of note:</h4>
+<ol>
+	<li>We have a <strong><em>static class method</em></strong> <span class="codeInLine">isNumber()</span>.&nbsp; Because   	this <em><strong>method</strong></em> is a utility that works exclusively on its <em><strong>parameter</strong></em>, a <strong>string</strong>, and there is no specific <strong>Phone</strong> <em><strong>object</strong></em> to which it belongs, it is natural to make it a <strong> static</strong> <em><strong>method</strong></em>.&nbsp; It can be used (and is, above) to validate a <strong>string</strong>, testing whether it contains all numeric digits.</li>
+	<li>We have two similar helper <em><strong>methods</strong></em> that are also <strong>static</strong> for the same reasons: <span class="codeInLine">validAC()</span> and <span class="codeInLine">validPhNumber()</span>.</li>
+	<li><span class="codeInLine">isNumber() </span>is neither <strong>public</strong> nor <strong>private</strong>, but a new   	category called <strong>protected</strong>.&nbsp; <strong>Protected</strong> is like <strong>private</strong> from the point of view of the <em><strong>client</strong></em>: the <em><strong>client</strong></em> may not access it.&nbsp; But <em> <strong>derived classes</strong></em> (which we are about to introduce) that are based   	on <strong>Phone</strong> <em>can</em> use this <em><strong>method</strong></em>.&nbsp; So <strong>protected</strong> means it is   	accessible from the <em><strong>class</strong></em> and its <em><strong>derived classes</strong></em>, but not from other,   	external <em><strong>classes</strong></em>.&nbsp;The <strong>protected</strong> <strong>access modifier</strong> can also be used for <em><strong>member</strong></em> data and<em><strong> instance </strong></em><strong><em>methods</em></strong>.&nbsp;&nbsp;   	Although we have not discussed <em><strong>packages</strong></em>, <strong>protected</strong> also confers accessibility to other <em><strong>methods</strong></em> within the same <em><strong>package</strong></em>.</li>
+	<li>The <strong>class</strong> has the usual and expected <em><strong>members</strong></em> and <em><strong>methods</strong></em>. There are some <strong>static finals</strong> for defaults and limits, <em><strong>mutators</strong></em> for individual as well as multiple <strong>private members</strong>, <em><strong>accessor</strong></em>, <em><strong>stringizers</strong></em>, etc. This is a good <em><strong>class</strong></em> to compare with your prospective <span class="sectionOrAssignmentTitle">programming labs</span> before you submit them, if only to check that yours also has these properties.</li>
+</ol>
+<p>Here is a copy of the run:</p>
+<pre>After Constructors:
+ME ...   
+   (123)123-4567
+YOU ...   
+   (000)000-0000
+
+After setBoth():
+ME ...   
+   (408)123-4567
+YOU ...   
+   (714)999-8877
+
+After setAC(), setPhNum():
+ME ...   
+   (818)123-4567
+YOU ...   
+   (714)555-1212
+
+Using accessors:
+ME ...
+   818   1234567
+YOU ...
+   714   5551212
+
+dialing():
+ME ...
+      Now dialing (818)123-4567
+
+YOU ...
+      Now dialing (714)555-1212
+
+
+redialing():
+ME ...
+      Trying number 3 times ...
+Now dialing (818)123-4567
+Now dialing (818)123-4567
+Now dialing (818)123-4567
+done.
+
+YOU ...
+      Trying number 3 times ...
+Now dialing (714)555-1212
+Now dialing (714)555-1212
+Now dialing (714)555-1212
+done.</pre>
+</div>
+</div>
+
+
+</body></html>

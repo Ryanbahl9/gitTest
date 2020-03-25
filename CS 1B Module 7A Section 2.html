@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_7a_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 7A Section 2</title>
+<link href="./CS 1B Module 7A Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 2 - Interfaces and Comparable</h1>
+	<h2>7A.2.1 Interfaces</h2>
+	<p><em><strong>Interfaces</strong></em> are similar to <em><strong>abstract classes</strong></em>.   Specifically, they are like abstract classes in which: </p>
+	<ol>
+		<li>there are no data -- only <em><strong>methods</strong></em>. </li>
+		<li>all methods are declared <em><strong>abstract</strong></em>. </li>
+	</ol>
+
+<pre>   public interface LessThan 
+   {
+      public boolean isLessThan( double x);
+   }
+</pre>
+
+	<p>Note that in an <strong>interface</strong> you do not use the word <em><strong>class</strong></em>, and   you do not need to use the word <em><strong>abstract</strong></em> since everything is   considered abstract. You cannot <em>define</em> a method in an <strong>interface</strong>.&nbsp;&nbsp; You <em>declare</em> the methods using a <em><strong>method header</strong></em>, but give no   definition.&nbsp; This is the same as the <em>method prototype</em> in an abstract   class.&nbsp; Again, notice the semicolon after the method header.</p>
+	<p>Another important difference between <em><strong>interfaces</strong></em> and <em><strong> abstract classes</strong></em> is the way in which you subclass from them. In fact,   the word <em><strong>subclass</strong></em> does not apply to an interface. Instead we use   the word <em><strong>implement</strong></em>. </p>
+
+<pre>   public class Natural implements LessThan
+   {
+      double d;
+      public boolean isLessThan(double b)
+      {
+         return (d &lt; b);
+      }
+   }
+</pre>
+
+	<p>Here we are declaring a class of <strong>doubles</strong> called <strong>Natural</strong> that implements the <strong> LessThan</strong>   interface using the expected &lt; ordering. (This is just the   ordinary sense of one number being&nbsp; "less than" another, so what   we are doing here is making sure that a method call like&nbsp; <strong> nat_x.isLessThan(nat_w)</strong> has the expected meaning.)</p>
+	<p>The thing to remember about implementing interfaces is that you must define   every method that the interface declares. </p>
+	<p>Why even have <em><strong>interfaces</strong></em> if they are essentially the same as <em> <strong>abstract classes</strong></em> with no data? One reason is that you can <em><strong> extend</strong></em> one class, and <em><strong>implement</strong></em> from an interface at the   same time: </p>
+
+<pre>   class Audio extends Message implements LessThan 
+   {
+      ...
+   }
+</pre>
+
+	<p>Without this, there is no way to combine the behavior of two separate parent   types into a single new class. (In C++ this is done without interfaces using <em> <strong>multiple inheritance</strong></em>.)</p>
+	<p>Interfaces are used to define intended behavior of future classes that   implement them.&nbsp; They provide an orderly way to name a group of related   methods that can work on potentially different types of objects.&nbsp; We'll see   this more clearly in the coming sessions.</p>
+	<h2>7A.2.2 Java-Defined Interfaces</h2>
+	<p>We have used interfaces implicitly: </p>
+
+<pre>     class ShapeButtonListener implements ActionListener
+</pre>
+
+	<p>Now that we know what an <em><strong>interface</strong></em> is, we can actually figure   out by reverse engineering what the <strong>ActionListener</strong> interface declaration   looks like. </p>
+	<p>Everything that you need to know to do this is contained in two places. </p>
+	<ol>
+		<li>the last section, and </li>
+		<li>any one of the classes that implements <strong>ActionListener</strong>. </li>
+	</ol>
+	<p>I'm going to let you figure this one out for yourself because it is really   very simple. </p>
+	<p>The reason we want to understand the nature of <em><strong>Interfaces</strong></em> is   that we are going to go a little more into the AWT toolkit and to do so we have   to talk about other interfaces besides <strong>ActionListener</strong>. </p>
+	<p>In particular, the hierarchy of interfaces in java that is of interest to us   is: </p>
+
+<pre>   Object
+      EventListener
+         ActionListener
+         ItemListener
+         MouseListener
+         ...
+      (about 9 other types of listeners).
+</pre>
+
+	<p>We have seen that we can implement an <strong>ActionListener</strong> and we want to   understand more about what that means. </p>
+	<h2>7A.2.3 compareTo()</h2>
+	<p>Above, I gave an example of a hypothetical <strong>LessThan</strong> interface   that could be implemented by any class that wants to impose its own specific   ordering to its objects.&nbsp; In fact, Java defines a similar <strong>Comparable</strong> interface like this:</p>
+
+<pre>   public interface Comparable 
+   {
+      public int compareTo( Object o);
+   }
+</pre>
+
+	<p>We can implement <strong>Comparable</strong> in any class that needs a custom definition of   what it means for two objects to be &lt;, &gt; or ==.&nbsp; And we have the perfect   candidate for such a class: <strong>Card</strong>.</p>
+	<h2>7A.2.4 Comparing Card Values</h2>
+    <div class="parenthetical"><strong>Note to Some Classes:</strong> You may have already written a<strong> compareTo()</strong> method in your early assignments, and this may be review for you. But even if you have, we are doing something a little differently: we are going to declare that <strong>Card implements Comparable</strong>, an important detail we didn't know about back then.</div>
+<p>We know that two cards (in most games) have face values that are ordered like   so, from least to greatest:</p>
+	<p align="center"><font face="Albertus" size="4" color="#0000FF">2, 3, 4, 5, 6,   7, 8, 9, T, J, Q, K, A</font></p>
+	<p>If they have the same face values, then their suits can be used to break a   tie.&nbsp; From lowest to highest the order is:</p>
+	<p align="center"><font face="Albertus" size="4">Clubs, <font color="#FF0000"> Diamonds</font>, <font color="#FF0000">Hearts</font>, Spades</font></p>
+	<p>Of course many card games have different orderings, but I'm going to go with   this ordering for our example.</p>
+	<p>There is no easy way for a client to determine the relative ordering of two   cards, so we will implement the <strong>Comparable</strong> interface in the <strong>Card</strong> class, and give   our client a nice <strong>compareTo() </strong>method that will always work.&nbsp; We have to   think hard about this, because it's not that easy.&nbsp; If I had defined card   values to be <strong>ints</strong> from 0 to 12, then things might be easier, especially if we   defined 0 to be '2', 1 to be '3', ... 11 to be 'K' and 12 to be 'A'.&nbsp;   However, I didn't.&nbsp; I used <strong>chars</strong> to store the values and placed values like   'J', 'K' and '4' inside those fields.&nbsp; So we have to do some fancy footwork   to create comparison test.</p>
+	<p>I think you'll find that the algorithm below is logical, even if it takes a   few lines of code to implement.&nbsp; I am going to omit all the other methods   in the <strong>Card</strong> class because you have seen them.&nbsp; Just look at the first line   of the class and the definition of <strong>compareTo()</strong> (and it's helpers).</p>
+
+<pre>class Card implements Comparable
+{   
+
+   // type and constants
+   public enum Suit { clubs, diamonds, hearts, spades }
+
+   // for ordering
+   public static char[] valueRanks = { '2', '3', '4', '5', '6', '7', '8', '9', 
+      'T', 'J', 'Q', 'K', 'A'};
+   static Suit[] suitRanks = {Suit.clubs, Suit.diamonds, Suit.hearts, 
+      Suit.spades};
+   static int numValsInOrderingArray = 13;
+
+   // private data
+   private char value;
+   private Suit suit;
+
+   // sort member methods
+   public int compareTo(Object other)
+   {
+      if (! (other instanceof Card) )
+         return -1;
+      
+      Card otherCard = (Card)other;
+      
+      if (this.value == otherCard.value)
+         return ( getSuitRank(this.suit) - getSuitRank(otherCard.suit) );
+
+      return ( 
+            getValueRank(this.value) 
+               - getValueRank(otherCard.value) 
+            );
+   }
+
+   // helpers for compareTo()
+   public static int getSuitRank(Suit st)
+   {
+      int k;
+
+      for (k = 0; k &lt; 4; k++) 
+         if (suitRanks[k] == st)
+            return k;
+
+      // should not happen
+      return 0;
+   }
+
+   public  static int getValueRank(char val)
+   {
+      int k;
+
+      for (k = 0; k &lt; numValsInOrderingArray; k++) 
+         if (valueRanks[k] == val)
+            return k;
+
+      // should not happen
+      return 0;
+   }
+
+   // lots of irrelevant things omitted
+}
+</pre>
+
+	<p>Do you see?&nbsp; First notice that we have to use the same signature for the <strong>compareTo()</strong> method that Java uses, which means we take an <strong>Object</strong>, not a <strong>Card </strong>as a parameter.&nbsp;&nbsp;&nbsp;   Everything in Java is derived from <strong>Object</strong>.&nbsp; Next, we use the <strong>instanceof</strong> operator to make sure we are holding a <strong>Card</strong>, and if we are, we <em>type coerce </em>to <strong>Card</strong> type.&nbsp; From that point we can deal with a <strong>Card</strong> object called <strong>otherCard</strong>, and   compare <strong>otherCard</strong> to <strong><em>this</em></strong>.</p>
+	<p>The rest of the code relies on the fact that I have created an array with the   card values listed from left to right.&nbsp; I find the position in that array   of the candidate card value and use that position as the   "strength" of the card.&nbsp; This is a way to convert the chaotic 'A', '4', 'K' format to a   simple 0, 2, ... 12 format.&nbsp; If you run through the loops with a pencil and   piece of paper, taking two specific cards as examples, you will see it.</p>
+	<h2>7A.2.5 Using compareTo() in a Client</h2>
+	<p>Let's test this in a main.&nbsp; I'll use a previous <strong>main() </strong>and modify it to   compare the <strong>Queen of Spades</strong> to every card in the deck.&nbsp; Here is the   relevant code:</p>
+
+<pre>public class Foothill
+{
+   public static void main(String[] args)
+   {
+      Card[][] deck = new Card[4][13];
+      int row, col;
+      Card.Suit st;
+      char val;
+      
+      // instantiate the array elements
+      for (row = 0; row &lt; deck.length; row++)
+         for (col = 0; col &lt; deck[row].length; col++)
+            deck[row][col] = new Card();
+    
+      // assign values to array elements
+      for (row = 0; row &lt; deck.length; row++)
+      { 
+         // set the suit for this loop pass
+         st = Card.Suit.values()[row];
+ 
+         // now set all the values for this suit
+         deck[row][0].set('A', st);
+         for (val='2', col = 1; val &lt;= '9'; val++, col++)
+            deck[row][col].set(val, st);
+         deck[row][9].set('T', st);
+         deck[row][10].set('J', st);
+         deck[row][11].set('Q', st);
+         deck[row][12].set('K', st);
+      }
+      
+      // test compareTo with queen of spades
+      Card queenOfSpades = new Card('q', Card.Suit.spades);
+      String phrase;
+      for ( row = 0; row &lt; deck.length; row++)
+      {
+         for ( col = 0; col &lt; deck[row].length; col ++)
+         {
+            if ( queenOfSpades.compareTo(deck[row][col]) &lt; 0 )
+                  phrase = " is less than ";
+            else if ( queenOfSpades.compareTo(deck[row][col]) &gt; 0 )
+                  phrase = " is greater than ";
+            else
+                  phrase = " is equal to ";
+                 
+            System.out.println(queenOfSpades + phrase
+                  + deck[row][col] );
+         }   
+      }
+   }
+}
+</pre>
+
+	<p>And here is the output that proves the algorithm actually works as advertised:</p>
+	
+<pre>Q of spades is less than A of clubs
+Q of spades is greater than 2 of clubs
+Q of spades is greater than 3 of clubs
+Q of spades is greater than 4 of clubs
+Q of spades is greater than 5 of clubs
+Q of spades is greater than 6 of clubs
+Q of spades is greater than 7 of clubs
+Q of spades is greater than 8 of clubs
+Q of spades is greater than 9 of clubs
+Q of spades is greater than T of clubs
+Q of spades is greater than J of clubs
+Q of spades is greater than Q of clubs
+Q of spades is less than K of clubs
+Q of spades is less than A of diamonds
+Q of spades is greater than 2 of diamonds
+Q of spades is greater than 3 of diamonds
+Q of spades is greater than 4 of diamonds
+Q of spades is greater than 5 of diamonds
+Q of spades is greater than 6 of diamonds
+Q of spades is greater than 7 of diamonds
+Q of spades is greater than 8 of diamonds
+Q of spades is greater than 9 of diamonds
+Q of spades is greater than T of diamonds
+Q of spades is greater than J of diamonds
+Q of spades is greater than Q of diamonds
+Q of spades is less than K of diamonds
+Q of spades is less than A of hearts
+Q of spades is greater than 2 of hearts
+Q of spades is greater than 3 of hearts
+Q of spades is greater than 4 of hearts
+Q of spades is greater than 5 of hearts
+Q of spades is greater than 6 of hearts
+Q of spades is greater than 7 of hearts
+Q of spades is greater than 8 of hearts
+Q of spades is greater than 9 of hearts
+Q of spades is greater than T of hearts
+Q of spades is greater than J of hearts
+Q of spades is greater than Q of hearts
+Q of spades is less than K of hearts
+Q of spades is less than A of spades
+Q of spades is greater than 2 of spades
+Q of spades is greater than 3 of spades
+Q of spades is greater than 4 of spades
+Q of spades is greater than 5 of spades
+Q of spades is greater than 6 of spades
+Q of spades is greater than 7 of spades
+Q of spades is greater than 8 of spades
+Q of spades is greater than 9 of spades
+Q of spades is greater than T of spades
+Q of spades is greater than J of spades
+Q of spades is equal to Q of spades
+Q of spades is less than K of spades
+
+</pre>
+
+	<p>You can use your code or mine from assignments #1 or #2 and add these methods and changes to the <strong>Card</strong> class -- or if they are already in the <strong>Card</strong> class, change their signatures so that they obey the <strong>Comparable</strong> interface requirement as I have done, above. Thus, you have what you need to create a full, working program in one file.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

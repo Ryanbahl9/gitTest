@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_2b_1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 2B Section 1</title>
+<link href="./CS 1B Module 2B Section 1_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 1 -&nbsp; Recursion</h1>
+	<h2>2B.1.1 Recursive Functions (<font color="#ff0000">Review from CS 1A</font>)</h2>
+	<p>We review a functional concept, <strong><em>recursion</em></strong>, which you   may have had in <em><strong>CS 1A</strong></em> (CIS 27A).&nbsp; We need recursion in our next search algorithm, the   binary search.</p>
+	<p align="center"> <img src="./CS 1B Module 2B Section 1_files/cs_B_common_10.JPG" alt="decorative statue" width="200" height="300" border="0"></p>
+	<p align="left">Look at this example:</p>
+
+<pre>public class Sample
+{   
+   // -------  main --------------
+   public static void main(String[] args)
+   {
+      System.out.println( myPow(2.4, 4) + " vs. " 
+            + Math.pow(2.4, 4));
+      System.out.println( myPow(1.23, 9) + " vs. " 
+            + Math.pow(1.23, 9));
+      System.out.println( myPow(5535, -29) + " vs. " 
+            + Math.pow(5535, -29));
+   }
+  
+   // -------  My Power --------------
+   public static double myPow(double base, long exp)
+   {
+      if (exp == 0)
+         return 1.;
+      if (exp &lt; 0)
+         return 1. / myPow( base, -exp);
+      else
+         return base * myPow( base, exp-1 );
+   } 
+}  
+</pre>
+
+	<p>As you see, I am defining my own home-rolled version of the <strong>Math.pow()</strong> method which I call <strong>myPow()</strong>.&nbsp; In my version, I only care about integer   exponents, so I make the exponent parameter a <strong>long</strong>.&nbsp; Then, I test to see   if I get the same results as <strong>Math.pow()</strong>, and, of course, I do.&nbsp; The odd   thing about this method is that it calls itself!</p>
+
+	<p><em><strong>Recursion</strong></em> is sometimes defined as a method calling itself, and<strong> myPow()</strong> certainly does that. There is more to it than that, but that usually   gets the right neurons firing when thinking about the concept. <br>
+	&nbsp;</p>
+	<p>This method <strong>myPow()</strong> used to compute a <em><strong>base</strong></em> to an <em><strong> exp</strong></em> power, say<strong> 2.4<sup>4</sup></strong> or "2.4 raised to the 4th power"   which is </p>
+	<pre>    2.4 * 2.4 * 2.4 * 2.4.  </pre>
+	<p>The way this method works is by breaking the situation into cases. Ignore the <strong>exp&lt;0 </strong>case for now. </p>
+	<ul>
+		<li><strong>If exp == 0</strong>, then the answer is 1, because <em>anything to the 0 power is 1</em>. If you didn't know that before, now you do. <br>
+		</li>
+		<li><strong>If exp is&nbsp;&gt; 0</strong>, Let's say <strong>4</strong>, then <strong>myPow(base, 4)</strong> ends up using the final else statement of the method, which will evaluate   	to: 
+	<pre>        base * myPow(base, 3);</pre>
+
+So the <em><strong>function calls itself </strong></em>using the same <em><strong>base</strong></em>, but a   	power of <strong>3</strong>, instead of <strong>4</strong>. Whatever answer the function gets on that "inner"   	call, it multiplies that answer by the <em><strong>base</strong></em>, and that is the   	final answer we want. This should make sense to you, since<br>
+<br>
+<span class="picCenter"><strong>base<sup>4</sup></strong> is nothing more than<strong> base * base<sup>3</sup></strong></span> <br>
+<br>
+In fact, this always works: <strong>myPow(7, 5)</strong> is computed by finding <strong> myPow(7, 4)</strong> and multiplying that answer by one more <strong>7</strong>. You don't   	have to follow the logic all the way down;&nbsp; just realize that if the function   	keeps calling itself (as it will do) the <strong>exp</strong> gets smaller and smaller   	until it finally hits 0 at which time the function returns a 1. Then the   	function calls (which have built up) start "paying off" -- or "unwinding"   	-- resulting in that 1 being multiplied by a <strong>7</strong>.&nbsp; Continuing to   	unwind, that answer is   	multiplied by another <strong>7</strong>, etc. This happens five times in total. It sounds messy, but look at   	the program. It's really clean and simple.
+</li>
+
+		<li><strong>The exp &lt; 0</strong> case is for negative exponents. A negative exponent   	is just the <em><strong>reciprocal</strong></em> of the positive exponent (remember that   	from high school arithmetic?), and that is why that case looks as it does. </li>
+	</ul>
+	<p>In general, a <em><strong>recursive function </strong></em>has <em><u>at least </u></em>two   cases. </p>
+	<ul>
+		<li>One case returns a value without the function calling itself.&nbsp; There is   	no recursive call in this case.&nbsp; This is called the <em><strong>escape case.</strong></em></li>
+		<li>The other case(s) results in the function calling itself, but the inner   	function call uses <em><strong>different arguments</strong></em> than it was passed.&nbsp;   	The new arguments that it passes to "itself" must bring us closer to the   	so-called <em><strong>escape case</strong></em> (above). </li>
+	</ul>
+	<p>In our example, the escape case is the one in which exp==0.&nbsp; The other cases always   result in a recursive call that brings us closer to that escape case.&nbsp; For example, if we enter the method with <strong>exp</strong> equal to 7, then we call <strong>myPow() </strong>recursively passing in 6 to the <strong>exp</strong>, thus bringing it closer to the escape case   of 0.</p>
+	<p>As you can see, the above program works:</p>
+
+<pre>33.1776 vs. 33.1776
+6.44386 vs. 6.44386
+2.81572e-109 vs. 2.81572e-109
+</pre>
+<div class="important"> Caution
+	<p> Recursion is not as efficient as an algorithm   that does something using loops, directly, without calling itself.&nbsp; The <strong>myPow()</strong> method is not a good example of when recursion should be used,   but it is the universal way to teach recursion (although factorials and   Fibonacci are two other popular substrates, and Fibonacci is a disaster if done   recursively).</p>
+</div>
+<p>There are times when you simply have no viable alternative to recursion, and   there are other times when you can manage without recursion, but with no   meaningful savings and an increase in complexity.</p>
+	<p>An example of a situation where one cannot do without recursion is a 3-D   imaging application called a "ray tracer".&nbsp; Most such algorithms must "recurse"   - there is just no way around it.&nbsp; "Radiosity" algorithms are even more   sophisticated lighting methods that create realism to computer animation.&nbsp;   Again, recursion is a requirement here.&nbsp; The up-coming binary search   algorithm is an example where one might find a non-recursive solution, but it   would suffer the following two drawbacks:</p>
+	<ol>
+		<li>It would lack simplicity and clarity.</li>
+		<li>It would not really reduce the overhead significantly.</li>
+	</ol>
+	<p>You have to gauge the time and place to apply recursion.&nbsp; </p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

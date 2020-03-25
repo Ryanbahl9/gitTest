@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_6b_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 6B Section 3</title>
+<link href="./CS 1B Module 6B Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 3 - Font Metrics for a Rational Class</h1>
+	<h2>6B.3.1 Rational Numbers</h2>
+	<p><em><strong>Rational numbers</strong></em> are defined to be the set of all numbers of   the form:</p>
+	<div class="picCenter">
+		<pre><strong>num/den</strong>
+</pre>
+	</div>
+
+	<p>where <strong>num</strong> and <strong>den</strong> are integers, and <strong>den != 0</strong> (<strong>num</strong> is called the <em><strong>numerator</strong></em> and <strong>den</strong> is called the <em><strong> denominator</strong></em>). </p>
+	<p>A single <em><strong>rational number</strong></em> may have many forms, so we define the<em><strong> reduced form </strong></em>to be the one in which the <em><strong>numerator</strong></em> and <em> <strong>denominator</strong></em> share <u>no common factors</u> and the denominator is   positive. </p>
+	
+<pre>    4/8, 300/600, (-20)/(-40) and 1/2
+</pre>
+
+	<p>These are all the same <em><strong>rational number,</strong></em> with <strong>1/2</strong> being   the reduced form. </p>
+	<p>In case a <em><strong>rational number </strong></em>has a <em><strong>reduced form</strong></em> with   a <strong>1</strong> in the denominator we normally just write the numerator. </p>
+	<p>We want to write a GUI program that will allow the user to enter the   numerator and denominator into two text fields, and when the enter key is   struck, the rational number will be written as a fraction, in reduced form.&nbsp;   It will look something like this:</p>
+	<div class="picCenter"><img src="./CS 1B Module 6B Section 3_files/pic_1b6_17.jpg" alt="GUI shot" width="300" height="200" border="0"></div>
+	<p align="left">The reason that this is a good week to write this application is   that we can use it to deal with two types of exceptions:&nbsp; <strong> ArithmeticExceptions</strong> and <strong>NumberFormatExceptions</strong>.&nbsp; And, since we   always like to have fun, we'll learn how to use <strong>drawString()</strong> more accurately.&nbsp;   Do you see how the numbers are centered in the middle of the center panel?&nbsp;   In the same way that money doesn't grow on trees (according to my father),   center alignment in <strong>drawString() </strong>doesn't magically happen. We have to make it   happen.&nbsp; For that, we'll need to use <strong>FontMetrics</strong>.</p>
+	<h2 align="left">6B.3.2 FontMetrics</h2>
+	<p align="left">If you are inside any component (but usually a <strong>JPanel</strong>) and need   information about the dimensions of the current font, you would use the <strong>FontMetrics</strong> class.&nbsp; You might think you would use the Font class's <strong>getSize()</strong> and other methods for this, but they don't give you information at the pixel   level the way <strong>FontMetrics</strong> objects do.</p>
+	<p align="left">You will need a Graphics context, g, to access the current <strong>FontMetrics</strong> values, but normally you have one; the most common place to use <strong>FontMetrics</strong> is from within the <strong>paintComponent</strong>() method of a <strong>JPanel</strong>.&nbsp; Simply   stated, you call <strong>g.getFontMetrics()</strong> through the <strong>Graphics</strong> object <strong>g</strong>, then use the   returned <strong>FontMetrics</strong> object to dereference its various informational methods.</p>
+
+<pre>   FontMetrics metrics = g.getFontMetrics();
+   int ht = metrics.getHeight();
+   int asc = metrics.getAscent();
+   int  ldg = metrics.getLeading();
+   int Q_width = metrics.charWidth('Q');
+   int i_width = metrics.charWidth('i');
+</pre>
+
+	<p align="left">There are other methods you can research if you are interested.   We actually only need the last method <strong>charWidth() </strong>because we will use   that to figure out where to start drawing our text.&nbsp; Of course, every   character has a different width, so we have to pick a typical character, which,   for our program, turns out to be the numeral '4'.</p>
+	<p align="left"> <img src="./CS 1B Module 6B Section 3_files/cs_B_common_29.JPG" alt="european speed limit sign" width="200" height="300" hspace="9" vspace="9" border="0" align="right">If we want to draw the string "90210", centered, we need to find   the center of the <strong>JPanel</strong>, then back up half the width of the string "90201"</p>
+	<h4 align="left">Here is the plan. </h4>
+	<ol>
+		<li> Find the x-coordinate of the center of the JPanel by   	dividing the width of the panel by 2 (width/2)		</li>
+		<li> Find out the width in pixels of the typical number, '4' (<strong>numWidth</strong>).		</li>
+		<li> multiply <strong>numWidth</strong> by half the number of characters in our   	string - that's how far we have to back up.		</li>
+		<li> subtract the result of 3, from the result from 1.		</li>
+	</ol>
+	<p align="left">If you feel like you are doing your taxes, don't worry. You   don't need to memorize any of this.&nbsp; It' just to help you understand the   code below.&nbsp; This will draw a string horizontally centered but slightly   higher than the middle of the <strong>JPanel</strong>:</p>
+
+<pre>   Dimension d;
+   FontMetrics metrics;
+   int mid, numWidth, pixelsFromMid;
+   String numStr = "90210";
+
+   d = getSize();
+   mid = d.height/2;
+ 
+   metrics = g.getFontMetrics();
+   numWidth = metrics.charWidth('4');
+   pixelsFromMid = (int)( (numStr.length()/2.) * numWidth );
+   g.drawString(numStr, d.width/2 - pixelsFromMid, mid );
+</pre>
+
+	<p align="left">Notice mid will be the exact vertical center of the <strong>JPanel</strong>,   so if we want to write it lower, we would <em>add</em> to that number, and if we   want to write higher we would <em>subtract</em> from it.&nbsp; (Remember we   measure from the upper left of the panel.)</p>
+	<h2 align="left">6B.3.3 The RationalNumber Class</h2>
+	<p align="left">We return to our problem of writing the GUI program for rational   numbers.&nbsp; If you want to follow along, start new Java project called   Rational Number GUI.&nbsp; Create three classes in three separate .java files:</p>
+	<ol>
+		<li> Foothill in Foothill.java. This will be the main class.		</li>
+		<li> RationalNumber in RationalNumber.java.&nbsp; This will be   	the class that handles the arithmetic. </li>
+		<li> MyCanvas in MyCanvas.java.&nbsp; This will be the derived   	JPanel. </li>
+	</ol>
+	<p align="left">The next page contains the complete listing of these three   files.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

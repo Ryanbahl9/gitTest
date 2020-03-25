@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_3b_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 3B Section 3</title>
+<link href="./CS 1B Module 3B Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 3 - Ragged 2-D Arrays</h1>
+	<h2>3B.3.1&nbsp; A College of Courses</h2>
+	<p>We now use a <em><strong>ragged array</strong></em> approach, in which each row of the 2-D array might   be a different length from every other row.&nbsp; Here is the setting:&nbsp; We   have a college that contains several courses.&nbsp; Each course will have a   different number of students (or maximum seats).&nbsp; We will get information   from the user about the number of courses and the number of students in each   course and create a <em><strong>ragged 2-D array</strong></em> of <strong>Strings</strong> based on his responses.</p>
+	<p>Our basic data type is a 2-D array reference, but we can't do any   instantiation without first consulting the user.</p>
+
+<pre>   String[][] courseRoster;
+</pre>
+
+	<p>We ask the user the first question:&nbsp; "How many courses?" and get <strong>numCourses</strong> as a result.&nbsp;   We will allocate our main array of "rows":</p>
+
+<pre>   System.out.print("How many courses do you want to load: ");
+   userChoice = input.nextLine();
+   numCourses = Integer.parseInt(userChoice);
+   courseRoster = new String[numCourses][];</pre>
+
+	<p>Notice how this is done.  You place the number <strong>numCourses</strong> into   the first brackets, indicating that you know how many rows you want, but you are not   allocating any <strong>Strings</strong> for those rows.&nbsp; You are, strictly speaking,   allocating an empty <strong>String[]</strong> for each element in the array, only. Each element in this 1-D array of references is nothing other than an <em> un-instantiated reference</em> to an, as yet, non-existent <strong>String</strong> array).</p>
+	<p>Next, we go into a loop, getting the number of students for each course, and   allocate as we go:</p>
+
+<pre>   for (int k = 0; k &lt; numCourses; k++)
+   {
+      System.out.print("Number of students in course " + k + ": ");
+      userChoice = input.nextLine();
+      numStudents = Integer.parseInt(userChoice);
+      courseRoster[k] = new String[numStudents];
+   }</pre>
+
+	<p>At that point we have a 2-D array of ... what?&nbsp; <strong>String</strong> <em><strong>references</strong></em>.&nbsp; <em>Un-instantiated</em> String references, to be precise. So I will then go into a double loop   (the kind that we always use for 2-D arrays) filling each <strong>String</strong> reference with   a value.</p>
+
+<pre>  for ( course = 0; course &lt; courseRoster.length; course++)
+  {
+     for ( student = 0; student &lt; courseRoster[course].length; 
+           student++)
+        courseRoster[course][student] = "lily" + student 
+           + " obrien" + course;
+     System.out.println();
+  }</pre>
+
+	<p>The thing you have to be careful about is this:&nbsp; With <strong>Strings</strong>, we get   the false impression that we are dealing with primitive data types like <strong>doubles</strong> or <strong>ints</strong>.&nbsp; In reality, the assignment statements are pointing the references   to allocated String values - a form of instantiation.&nbsp; With more abstract   user-defined types, we would have to use <strong>new</strong> to create the elements.</p>
+	<h2>3B.3.2 A Sample of the Run</h2>
+	<p>Here is what we are after:</p>
+
+<pre>How many courses do you want to load: 3
+Number of students in course 0: 2
+Number of students in course 1: 3
+Number of students in course 2: 4</pre>
+
+	<p>and then the console result:</p>
+
+<pre>Course #0 -------------
+  [lily0 obrien0]   [lily1 obrien0]
+Course #1 -------------
+  [lily0 obrien1]   [lily1 obrien1]   [lily2 obrien1] 
+Course #2 -------------
+  [lily0 obrien2]   [lily1 obrien2]   [lily2 obrien2]   [lily3 obrien2]</pre>
+
+	<h2>3B.3.3 The Listing</h2>
+	<p>Here is the full program.&nbsp; I have added some safety to it by embedding   the user input/response with input filter loops to be sure we were getting valid   numbers from the user.&nbsp; This is something you should always do.</p>
+
+<pre>import java.util.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      String[][] courseRoster;
+      int  numCourses, numStudents, course, student;
+      Scanner input = new Scanner(System.in);
+      String userChoice;
+
+      // part 1: get the number of courses
+      while(true)
+      {
+         System.out.print("How many courses do you want to load: ");
+         userChoice = input.nextLine();
+         try
+         {
+            numCourses = Integer.parseInt(userChoice);
+            break;
+         }
+         catch (NumberFormatException e)
+         {
+            continue;
+         }
+      }
+      // an array of size numCourses, where each element is an empty String[] 
+      courseRoster = new String[numCourses][];
+		
+      // part 2: get the size of each course
+      for (int k = 0; k &lt; numCourses; k++)
+      {
+         while(true)
+         {
+            System.out.print("Number of students in course " + k + ": ");
+            userChoice = input.nextLine();
+            try
+            {
+               numStudents = Integer.parseInt(userChoice);
+               courseRoster[k] = new String[numStudents];
+               break;
+            }
+            catch (NumberFormatException e)
+            {
+               continue;
+            }
+         }
+      }
+     
+      // part 3: fill roster with bogus names
+      for ( course = 0; course &lt; courseRoster.length; course++)
+      {
+         for ( student = 0; student &lt; courseRoster[course].length; 
+               student++)
+            courseRoster[course][student] = "lily"+ student 
+                  + " obrien" + course;
+         System.out.println();
+      }   
+
+      // part 4: show the rosters
+      for ( course = 0; course &lt; courseRoster.length; course++)
+      {
+         System.out.println("Course #" + course + " -------------");
+         for ( student = 0; student &lt; courseRoster[course].length; 
+               student++)
+            System.out.print("  [" + courseRoster[course][student] 
+                  + "] ");
+         System.out.println();
+      } 
+      input.close();
+   }
+ }</pre>
+
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

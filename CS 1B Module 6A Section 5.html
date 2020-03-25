@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_6a_5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 6A Section 5</title>
+<link href="./CS 1B Module 6A Section 5_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 5 - The Drawing on JPanels</h1>
+	<h2>6A.5.1 Drawing on JPanels</h2>
+	<p>There are two types of colored light that radiate off GUI applications:</p>
+	<ol>
+		<li><em><strong>Controls</strong></em> (buttons, labels, text areas, etc.)</li>
+		<li>Unstructured drawing (or just <em><strong>drawing</strong></em>).</li>
+	</ol>
+	<p><em><strong>Controls</strong></em> are objects and therefore have lots of structure to them.&nbsp;   We can set font styles, background colors, sizes, text properties, visibility   states, etc.</p>
+	<p><em><strong>Unstructured drawing</strong></em> represents graphical operations that have no associated objects. We simply <em>grab</em> a <strong>Graphics</strong> object, <strong>g</strong>, and use it to invoke various   drawing methods (<strong>g.drawString(), g.fillRect()</strong>, etc.).</p>
+	<p><em><strong>Drawing</strong></em> is a lot more chaotic, but a lot more fun.&nbsp;   Everything from sketching applications to 3-D game simulation involves drawing.</p>
+	<p>The way we draw is to establish a <strong>JPanel</strong> in our program, place it somewhere   on the <strong>JFrame</strong>, and then draw inside that <strong>JPanel</strong>. The <strong>JPanel</strong> can fill up the   entire <strong>JFrame</strong> if we wish, but usually we leave room for other non-drawing <strong>JPanels</strong> in the frame that can hold objects like buttons, text   fields, menus or other <strong>Controls</strong> for the user to select.</p>
+	<p>In order to draw on a <strong>JPanel</strong>, you must derive your own <strong>JPanel</strong> subclass and   override the <strong>paintComponent() </strong>instance method.&nbsp; Here are the key   things to know about this process.</p>
+	<ol>
+		<li>Whenever the <strong>JPanel</strong> is created, resized, or damaged, the <strong>paintComponent()</strong> method is automatically called.</li>
+		<li>Whatever drawing commands you put into the <strong>paintComponent()</strong> method will   	be executed each time the panel needs to be refreshed per item 1, above.</li>
+		<li><strong>JPanel</strong> receives a graphics context, known as a <em> <strong>Graphics object</strong></em>, as a   	parameter.&nbsp; We usually call this <strong>g</strong>.</li>
+		<li>The various graphics methods use <strong>g</strong> as a means of dereference.&nbsp; In   	fact, most of the  drawing functions are <em>instance methods</em> of the <strong>Graphics</strong> class, which is why <strong>g</strong> is used to get to them.</li>
+	</ol>
+	<p>Enough talk, here is an example of a properly extended <strong>JPanel</strong> class with a <strong>paintComponent()</strong> method overridden:</p>
+
+<pre>class DrawingPanel extends JPanel
+{
+   protected void paintComponent( Graphics g )
+   {
+      super.paintComponent(g);   // always do this!
+      int reasonableWidth, reasonableHeight;
+      
+      // We'll draw object at 90% size of this JPanel
+      reasonableWidth = (int) (getWidth() * .9);
+      reasonableHeight = (int) (getHeight() * .9);
+      
+      // draw some things in various colors
+      g.setColor(new Color(120, 221, 90));
+      g.drawOval(5, 5, reasonableWidth, reasonableHeight); 
+      
+      g.setColor(new Color(255, 255, 255));
+      g.drawString(
+            "This is going to be wild!", 5, reasonableHeight/2);
+      
+      g.setColor(new Color(39, 210, 255));
+      g.fillRect(reasonableWidth/2, reasonableHeight/2, 30, 30);
+   }
+}
+</pre>
+
+	<p>The above panel can be instantiated and placed anywhere in your main   application.&nbsp; Here is an example where we place it in the center section of   a <strong>JFrame</strong> organized as <strong>BorderLayout</strong>:</p>
+	<div class="picCenter"><img src="./CS 1B Module 6A Section 5_files/pic_1b6_9.jpg" alt="GUI shot" width="300" height="200" border="0"></div>
+	<p>Here is what we see, looking at the code and the screen shot (focus only on   the center JPanel):</p>
+	<ul>
+		<li>We are calling <strong>super()</strong> to get at the base class version of the <strong>paintComponent()</strong> method.&nbsp; This is essential, as it clears the <strong>JPanel</strong> so   	we can write on a clean slate.</li>
+		<li>If we want drawing to be proportional to the size of the <strong>JPanel</strong>,   	we must retrieve the <em>width</em> and <em>height</em> through the <strong>getWidth() </strong>and<strong> getHeight() </strong>methods.&nbsp; These two methods can be dereferenced through   	any component to get the dimensions of that component.&nbsp; Calling them   	without dereference uses the implied this to get the dimensions of the   	object whose method we are in -- in this case a <strong>JPanel</strong>.</li>
+		<li>We call <strong>g.setColor()</strong> to establish the drawing color.&nbsp; This   	can be changed as often as we want.&nbsp; It affects any future drawing, not   	what has already been drawn.&nbsp; The Color constructor (seen here as an   	anonymous object call inside <strong>setColor()</strong>) It take red-green-blue components from 0   	to 255.&nbsp; black is (0,0,0).&nbsp; White is (255, 255, 255).&nbsp; The   	first number indicates the brightness of red, the second, green, and the   	third, blue.</li>
+		<li>The <strong>draw() </strong>routines usually take x and y as two parameters.&nbsp;   	(x, y) represents the coordinates where the   	rectangle, oval, text, etc. is to be anchored .&nbsp; X is the horizontal distance   	in pixels from the upper left corner of the <strong>JPanel</strong> and y is the   	vertical distance in pixels from that same point.</li>
+	</ul>
+	<p>An example is </p>
+
+<pre>   fillRect( int x, int y, int w, int h)
+</pre>
+
+	<p>where <strong>x, y</strong> is the upper left position of the filled rectangle to be drawn and <strong>w, h </strong>are the <em>width</em> and <em>height</em> of that same rectangle.&nbsp; In the above example   I used 90% of the width and height of the <strong>JPanel</strong> for the parameters <strong>w </strong>and<strong> h</strong>.&nbsp;   I set the <strong>x-y</strong> position of each of the three drawing methods at different   locations.</p>
+	<h2>6A.5.2 The Entire Listing</h2>
+	<p>Here is the whole program.&nbsp; It is structured much like our previous <strong> JFrame</strong> GUI applications.&nbsp; I have created a GUI for the various <strong> JComponents</strong> including the <strong> JPanel</strong>, and have drawn using the <strong>JPanel</strong> subclass I defined above.&nbsp;   However, the <strong>JButtons</strong> are as-of-yet, non-functional.&nbsp; They are placed there   in preparation of some event handling that we will do shortly.</p>
+	<p>But before we do that extraordinarily exciting step, you have to understand <strong>JPanels</strong> and the way to draw on them.&nbsp; So study this program, try it   and modify it.</p>
+
+<pre>import javax.swing.*;
+import java.awt.*;
+   
+public class Foothill
+{
+   public static void main(String[] args)
+   {
+      // establish main frame in which program will run
+      GraphicsFrame myGraphicsFrame = 
+         new GraphicsFrame("Graphics Thing");
+      myGraphicsFrame.setSize(300, 200);
+      myGraphicsFrame.setLocationRelativeTo(null);
+      myGraphicsFrame.setDefaultCloseOperation(
+            JFrame.EXIT_ON_CLOSE);
+      
+      // show everything to the user
+      myGraphicsFrame.setVisible(true);
+   }
+}
+
+// GraphicsFrame class is derived from JFrame class
+class GraphicsFrame  extends JFrame
+{
+   private JButton btnLine, btnOval, btnRectangle;
+   private JPanel pnlButtonPanel;
+   DrawingPanel pnlDrawingPanel;
+   private JLabel lblMyLabel;
+   
+   // constructor
+   public GraphicsFrame(String title)
+   {
+      // pass the title up to the JFrame constructor
+      super(title);
+      
+      // set layout
+      BorderLayout layout = new BorderLayout(15, 2);          
+      setLayout(layout);
+      
+      // title goes on NORTH of layout
+      lblMyLabel = new JLabel("Push a button and have some fun.");
+
+      // create buttons to go on south panel
+      btnLine = new JButton("Line"); 
+      btnOval = new JButton("Oval"); 
+      btnRectangle = new JButton("Rectangle"); 
+      
+      // create button panel and add buttons
+      pnlButtonPanel = new JPanel();
+      pnlButtonPanel.setLayout( 
+            new FlowLayout(FlowLayout.CENTER, 10, 8));
+      pnlButtonPanel.add(btnLine);
+      pnlButtonPanel.add(btnOval);
+      pnlButtonPanel.add(btnRectangle);
+      
+      // create  drawing panel
+      pnlDrawingPanel = new DrawingPanel();
+      pnlDrawingPanel.setBackground(new Color(200, 43, 79));
+      
+      add(lblMyLabel, BorderLayout.NORTH);
+      add(pnlDrawingPanel, BorderLayout.CENTER);
+      add(pnlButtonPanel, BorderLayout.SOUTH);    
+   }
+}
+
+class DrawingPanel extends JPanel
+{
+   protected void paintComponent( Graphics g )
+   {
+      super.paintComponent(g);   // always do this!
+      int reasonableWidth, reasonableHeight;
+      
+      // We'll draw object at 90% size of this JPanel
+      reasonableWidth = (int) (getWidth() * .9);
+      reasonableHeight = (int) (getHeight() * .9);
+      
+      // draw some things in various colors
+      g.setColor(new Color(120, 221, 90));
+      g.drawOval(5, 5, reasonableWidth, reasonableHeight); 
+      
+      g.setColor(new Color(255, 255, 255));
+      g.drawString(
+            "This is going to be wild!", 5, reasonableHeight/2);
+      
+      g.setColor(new Color(39, 210, 255));
+      g.fillRect(reasonableWidth/2, reasonableHeight/2, 30, 30);
+   }
+}
+</pre>
+
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

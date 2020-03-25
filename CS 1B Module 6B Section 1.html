@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_6b_1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 6B Section 1</title>
+<link href="./CS 1B Module 6B Section 1_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 1 - Guarded Code</h1>
+	<h2>6B.1.1 Exceptions Thrown By Java</h2>
+	<p>What happens if we run this program?</p>
+
+<pre>import java.util.*;
+
+public class Foothill
+{
+   public static void main(String[] args)
+   {
+      int a = 0, b = 0, result;
+
+      a = 10;
+      result = a / b;
+      System.out.println(result);
+
+      b = -5;
+      result = a / b;
+      System.out.println(result);
+   }
+}
+</pre>
+
+	<p>Don't be afraid.&nbsp; Paste it into your project and try it out. </p>
+	<p>The problem, of course, is that we cannot divide by 0.&nbsp; There is no   answer.&nbsp; Furthermore, once the first div. by 0 error occurs, the program   doesn't know what to do next, and must abort with:</p>
+	<div class="picCenter"><img src="./CS 1B Module 6B Section 1_files/pic_1b6_13.jpg" alt="console shot" width="570" height="121" border="0"></div>
+	<p>Java is<em><strong> throwing an exception</strong></em> and we are not <em><strong>catching it</strong></em>.&nbsp;   That means, inside the / operator implementation, Java decided that we asked it   to do something that it cannot possibly do, and there is no way for it to   signify that safely and continue to execute our program.&nbsp; So it<strong><em> throws an exception, </em></strong> puts out a cryptic message on the console window (which most of the time is not   visible in actual applications) and returns.&nbsp; If our client does not <em><strong>catch the exception</strong></em>, the program terminates.&nbsp; So how do we catch   it?&nbsp; With a <em><strong>try/catch block</strong></em>.</p>
+	<p align="center"> <img src="./CS 1B Module 6B Section 1_files/cs_B_common_33.JPG" alt="cop car" width="300" height="200" border="0"></p>
+	<h2>6B.1.2 Try/Catch Blocks</h2>
+	<p>The beauty of exceptions is that you don't have to test the result of a   dangerous method call at the instant you call it.&nbsp; Let's say functions, <strong> SkyDive(), RideMotorcycles() </strong>and<strong> Smoke10PacksADay() </strong>are all functions   that could generate errors, and each has a <strong>boolean</strong> return type to report   back the status of the call.&nbsp;&nbsp;&nbsp; The ugly code to call these methods from the   client would look a little like this:</p>
+
+<pre>   if (!SkyDive())
+   {
+      // handle errors
+   }
+   else
+   {
+      // do normal stuff
+   }
+   if (!RideMotorcycles())
+   {
+      // handle errors
+   }
+   else
+   {
+      // do normal stuff
+   }
+   if (!Smoke10PacksADay())
+   {
+      // handle errors
+   }
+   else
+   {
+      // do normal stuff
+   }
+</pre>
+
+	<p>With a<em><strong> try/catch block </strong></em>we write the code, instead like this:</p>
+
+<pre>   try
+   {
+      SkyDive();
+      // do normal stuff
+      RideMotorcycles();
+      // do normal stuff
+      Smoke10PacksADay();
+      // do normal stuff
+   }
+   catch(Exception ex)
+   {
+      // handle errors
+   }
+</pre>
+
+	<p>The section inside the try block is called the <em><strong>try clause</strong></em> or a <em><strong>guarded section of code</strong></em>.&nbsp;&nbsp; If an <strong>exception</strong> is thrown from   inside any one of these methods, normal program flow stops and control passes to   the start of the <em><strong>catch block</strong></em>, or the <em><strong>exception handler</strong></em>.&nbsp;   If no <strong>exceptions</strong> are <em><strong>thrown</strong></em> anywhere inside the<em><strong> try   clause</strong></em>, the <em><strong>catch clause </strong></em>is skipped and control continues   after it.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

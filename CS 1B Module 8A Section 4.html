@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8a_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8A Section 4</title>
+<link href="./CS 1B Module 8A Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 4 - A Full List of Floats</h1>
+	<h2>8A.4.1 A Sorted List of Floats</h2>
+	<p>We now show how a fully general linked-list can be derived from the generic   base class <strong>List</strong>.&nbsp; We assume you have the <strong>FloatNodes</strong> defined and   working.&nbsp; We are going to derive a class from List called <strong>FloatList</strong>.&nbsp;&nbsp;   Here is an overview of the class:</p>
+
+<pre>class FloatList extends List
+{
+   public void insert(double x){ ... }  // insert in increasing numerical order
+   public boolean remove(double x) { ... }  // remove the first occurrence from list
+}
+</pre>
+
+	<p>This is very nice if you think about it.&nbsp; We can create a <strong>FloatList</strong>,   then start inserting (and or removing) <strong>floats</strong> into/from it.&nbsp; Every   time we call <strong>myList.insert(some_float) </strong>the float <strong>some_float</strong> will be   inserted into the list in its correct numerical location, that is, as we build   the list it will always be in increasing order.&nbsp;&nbsp;&nbsp; There are no <strong>Nodes</strong>, <strong>FloatNodes</strong> or other techno-babbly data types for our client   to deal with.&nbsp; The client just <em><strong>inserts</strong></em> <strong>floats </strong> (remember, really <strong>doubles</strong>) into the list, and <em> <strong> removes</strong></em> them whenever he wants to.&nbsp; The list deals with finding the   correct place for the <strong>floats</strong>.</p>
+
+	<p>Here is a graphic illustration of how insert() should work.&nbsp; Let's say the   state of the list at some point in time is:</p>
+&nbsp;&nbsp;&nbsp; &nbsp;
+<pre>0 → 3.5 → 93.2 → 153 → 200 → 300 → 400 → 436.1 → null </pre>
+<p>Then we call<strong> myList.insert (250)</strong>.&nbsp; The list becomes:</p>
+&nbsp;&nbsp;&nbsp; &nbsp;
+<pre>0 → 3.5 → 93.2 → 153 → 200 → <strong>250</strong> → 300 → 400  → 436.1 → null </pre>
+<p>After calling <strong>myList.Delete(200)</strong>, the list should be:</p>
+&nbsp;&nbsp;&nbsp; &nbsp;
+<pre>0 → 3.5 → 93.2 → <strong>153 → 250</strong> → 300 → 400 → 436.1 → null </pre>
+
+	<h2>8A.4.2 Implementation of <strong>FloatList.insert()</strong> and <strong>FloatList.remove()</strong></h2>
+	<p><strong>insert(double x) </strong>is a tricky method.&nbsp; We have to</p>
+	<ol>
+		<li>Create a new <strong>FloatNode</strong> to house the <strong>double x</strong>.</li>
+		<li>Enter a loop that starts at the head of the list and compares the data   	for each node in the list with <strong>x.</strong></li>
+		<li>If <strong>x</strong> &gt;= the current node's data, then we move forward one node</li>
+		<li>If <strong>x</strong> &lt; the current node's data, we have found the place in the list to   	insert x (before the current node).</li>
+		<li>If we reach the end of the list before item 4 above, then we place x at   	the end of the list (it was larger than all the items.)</li>
+	</ol>
+	<p>The thing that makes this tricky is item 4.&nbsp; Notice if <strong>x</strong> <em>is   less than</em> the current   node's data we have to place <strong>x</strong> <em>BEFORE</em> that node.&nbsp; But there is no method to   insert a new node <em>BEFORE</em> a node in a list.&nbsp; There is only <strong>insertAfter(), </strong>no<strong> insertBefore()</strong>.&nbsp; This is not a matter of semantics.&nbsp;   With only one <strong>next</strong> pointer included in each <strong>Node</strong> it is impossible to write an <strong>insertBefore()</strong> method even if we wanted to do so.&nbsp; To solve this   dilemma, we stand back one node (like holding a dog on a long leash) and test   the node two in front of our current position.&nbsp; That way, when we find the   correct place to insert the <strong>double x</strong>,   we are still far enough behind it to do an<strong> insertAfter()</strong> on the correct node.</p>
+	<p>Despite my considerable skill at explaining things, you'll just have to read   the logic and use a pencil and paper, drawing arrows and crossing out values, as   you read the code.&nbsp; If you trace through the logic you will see how it   works.</p>
+	<p>Here is the implementation of <strong>FloatList;</strong></p>
+
+<pre>class FloatList extends List
+{
+   // insert in increasing numerical order
+   public void insert(double x)
+   {
+      Node np;
+      FloatNode fp;
+      // create a new FloatNode
+      FloatNode newfp = new FloatNode(x);
+      
+      // always stay one node behind the node you are testing
+      for (resetCurrent(); (np = getCurrent()) != null ; iterate() )
+      {
+         if (np.getNext() == null)
+            break; // pointing to last node in list
+      
+         // if x &gt; current then we continue to search
+         fp = (FloatNode)(np.getNext());
+         if ( x &lt;= fp.getData() )
+            break;   // found the exact place for this float
+      }
+      np.insertAfter(newfp);
+   }
+   
+   // remove the first occurance from list
+   boolean remove(double x)
+   {
+      Node np;
+      FloatNode fp;
+
+      // always stay one node behind the node you are testing
+      for (resetCurrent(); (np = getCurrent()) != null ; iterate() )
+      {
+         if (np.getNext() == null)
+            return false; // end of list and not found
+
+         // if f == current then we found match
+         fp = (FloatNode)(np.getNext());
+         if ( x == fp.getData() )
+         {
+            np.removeAfter();
+            return true;   // we found, we removed, we return
+         }
+      }
+      return false;
+   }
+}
+</pre>
+
+	<h3>Discussion of insert()</h3>
+	<p>As you read <strong>insert()</strong>, remember that <strong>resetCurrent()</strong> is inherited from the <strong>List</strong> class, and it sets <strong>current = head</strong>.&nbsp; Also, <strong>iterate()</strong> takes a step forward in   the list by the simple statement <strong>current = current.next.</strong>&nbsp; Remember   that we have a <em><strong>header node </strong></em>at the front of the list which has no meaningful <strong>float</strong> data in it, yet it is absolutely essential to the logic here, so don't   ignore it.</p>
+	<p>Finally, because<strong> np.getNext()</strong> returns a simple <strong>Node</strong>, we have to type cast to <strong>FloatNode</strong> so we can access the <strong>float,</strong> <strong>data</strong>.</p>
+	<p>I'll rephrase the confusing part again, this time in the language of the   above code.&nbsp; Our comparison is between the float passed in, <strong>x</strong>, and <strong>np.next.data</strong>.&nbsp; That way, if <strong>x </strong><em>IS LESS THAN</em> <strong>np.next.data,</strong> we know that <strong>x</strong> goes <em>BEFORE</em> <strong>np.next</strong>.&nbsp; That means <strong>x</strong> goes <em>BETWEEN</em> <strong>np</strong> and <strong>np.next</strong>.&nbsp; So we can call <strong>np.insertAfter()</strong> and place the new <strong>float</strong> before <strong>np.next,</strong> as desired.&nbsp; These   comparisons require using the accessor method since data is private to   FloatNode.</p>
+	<p>Once you understand <strong>insert()</strong>, it will be easy to understand <strong>remove()</strong>. Here it is:</p>
+
+<pre>   // remove the first occurrence from list
+   boolean remove(double x)
+   {
+      Node np;
+      FloatNode fp;
+
+      // always stay one node behind the node you are testing
+      for (resetCurrent(); (np = getCurrent()) != null ; iterate() )
+      {
+         if (np.getNext() == null)
+            return false; // end of list and not found
+
+         // if f == current then we found match
+         fp = (FloatNode)(np.getNext());
+         if ( x == fp.getData() )
+         {
+            np.removeAfter();
+            return true;   // we found, we removed, we return
+         }
+      }
+      return false;
+   }
+}
+</pre>
+
+	<p>This is the complete implementation of <strong>FloatList</strong> which is derived from <strong>List</strong>.&nbsp; Because this same logic works for any data type, it is   essential that you understand it.&nbsp; To make sure you do, I'll want you to   create a <strong>StringNode</strong> (or even <strong>CardNode</strong>) and <strong>StringList</strong> (<strong>CardList</strong>)   class, so that you will have the methods that will insert <strong>Strings</strong> (or <strong> Cards</strong>) in a list in increasing order.&nbsp; It should be easy to copy the   code above and make the minor changes.</p>
+	<p>The next page has a sample run and the full listing.</p>
+</div>
+</div>
+
+
+</body></html>

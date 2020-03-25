@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_6b_5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 6B Section 5</title>
+<link href="./CS 1B Module 6B Section 5_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 5 - Rationals WITH Exceptions</h1>
+	<h2>6B.5.1 Designing Your Own Exceptions</h2>
+	<p>Sometimes you feel like throwing an exception, but none of the built-in Java   exceptions describe the sort of error you want to express.&nbsp; We do this by   deriving a class from the base class Exception defined in the package   java.lang.Exception.&nbsp; In fact, you only have to extend this class -- you   don't even need to override any methods!</p>
+
+<pre>import java.lang.Exception
+
+class FeetSmellBad extends Exception
+{
+   // nothing needed!
+}</pre>
+
+
+	<p> Done.&nbsp; You can include this in your file and start throwing <strong>FeetSmellBad</strong> exceptions.&nbsp; You actually don't even need to change your client - you can   test for the more general <strong>Exception</strong>, like we did earlier.&nbsp; However,   there wouldn't be much point in having a special custom-made Exception if you   weren't going to test for it and take a unique action if it was caught:</p>
+
+<pre>   try
+   {
+      CallMethodThatThrowsFSBException();
+   }
+   catch(FeetSmellBad ex)
+   {
+      JOptionPane.showMessageDialog(null, 
+         "sniff ... hmm.  Someone needs a bath.", "Exception Window",
+         JOptionPane.ERROR_MESSAGE); 
+   }
+</pre>
+
+<div class="picCenter"><img src="./CS 1B Module 6B Section 5_files/pic_1b6_24.jpg" alt="GUI shot" width="284" height="116" border="2"></div>
+	<p>Sometimes, your client will expect to get an informational String from   the <strong>Exception</strong>, itself, rather than producing literal Strings like we did   above with the <em>"sniff... "</em> comment above.&nbsp; That is accomplished by   adding a constructor to your custom Exception:</p>
+
+<pre>import java.lang.Exception
+
+class FeetSmellBad extends Exception
+{
+   public FeetSmellBad ()
+   {
+      super("Please take hygienic action on lower extremities");
+   }
+}
+</pre>
+
+	<p>The client can then use ex.toString() in place of the "sniff ... " literal.&nbsp;   Or, if you want to let the client set the String when it throws the exception,   you would add an overloaded constructor that takes a <strong>String</strong> and passes it   to <strong>super()</strong>.<br>
+	</p>
+	<h2>6B.5.2 Throwing Your Own Exceptions</h2>
+	<p>We can throw an exception in any of our methods for use by the client.&nbsp;   Here are the decisions we have to make:</p>
+	<ul>
+		<li>Are we going to <em><strong>throw</strong></em> a built-in Java exception like <strong> NumberFormatException</strong> or do we need a custom exception?</li>
+		<li>Which methods within our class, if any, will handle (<em><strong>catch</strong></em>)   	the exceptions we throw?</li>
+	</ul>
+	<p>The second question might puzzle you, but remember our methods can call   others methods of our class.&nbsp; The client calls our <strong>methodA() </strong>which   calls our <strong>methodB()</strong>.&nbsp; If <strong>methodB()</strong> throws an exception , <strong> MethodA() </strong>will have the opportunity to catch it before returning to our   client.</p>
+	<div class="important"> RULE #1
+		<p> Any method that throws an exception   	must declare that it will throw the exception in its method header (and   	specify a type). </p>
+	</div>
+	<div class="important"> <strong>RULE #2</strong>
+		<p> Any method that might receive an   	exception but doesn't wish to handle it, must <em>also</em> declare that it will throw the exception in its method header (and specify a   	type).</p>
+	</div>
+	<p>Let's throw our own custom exception, which we'll call a <strong>ZeroDenominatorException</strong>.&nbsp; We   must define it - and do so with no frills:</p>
+
+<pre>class ZeroDenominatorException extends Exception
+{
+}
+</pre>
+
+	<p>Next, revise&nbsp; <strong>RationalNumber</strong> class to throw this baby.&nbsp; Unchanged code   is omitted:</p>
+
+<pre>// RationalNumber class ---------------------------
+public class RationalNumber
+{
+   private long num;
+   private long den;
+ 
+   RationalNumber(long n, long d)
+      <span style="background-color: #00FFFF">throws ZeroDenominatorException</span>
+   {
+      num = n; 
+      setDen(d);
+   }
+        
+   <span style="background-color: #FFFFCC">//  Several unchanged methods omitted here ...</span>
+      
+   public void  setDen(long d) // sets the denominator
+      <span style="background-color: #00FFFF">throws ZeroDenominatorException</span>
+   {
+      if (d == 0)
+         <span style="background-color: #00FFFF">throw new ZeroDenominatorException();</span>
+      den = d;
+      reduce();
+   } 
+}
+</pre>
+
+	<p>As you see, the constructor chose not to catch the exception that <strong>setDen()</strong> throws, so it declared in its header that it would throw that up to the client.</p>
+	<h2>6B.5.3 Catching Our Exceptions</h2>
+	<p>If you make these changes, only, Eclipse will flag errors in your client   where uncaught exceptions appear.&nbsp; That is where you need to supply a <em><strong>try/catch block</strong></em>.&nbsp; Both places are inside <strong>RationalFrame()</strong> methods.&nbsp; In   the first case, we catch silently, that is, we do nothing.&nbsp; That's because   we can see from the context that no exception is possible there (we are supplying   the data, not the client, and we see that it's good).&nbsp; In the second case   we are dealing with the client typing a 0 denominator. That one is being dealt   with carefully.</p>
+
+<pre>// RationalFrame constructor
+public RationalFrame(String title)
+{
+   super(title);
+ 
+   <span style="background-color: #FFFFCC">// unrelated code omitted ...</span>
+  
+   <span style="background-color: #00FFFF">try</span>
+   {
+      theNumber = new RationalNumber(0, 1);
+      drawingCanvas.set(theNumber);
+   
+      numeratorIn.setText("0");
+      denominatorIn.setText("1");
+      
+      // prepare to respond to text entry
+      EnterListener myHander = new EnterListener();
+      numeratorIn.addActionListener( myHander );
+      denominatorIn.addActionListener( myHander );
+   }
+   <span style="background-color: #00FFFF">catch (ZeroDenominatorException ex)</span>
+   {
+      // nothing to do - the way called, no exception possible
+   }
+   
+   drawingCanvas.repaint();
+}
+ 
+public void setRationalNumber()
+{
+   long num, den;
+   
+   num = Integer.parseInt(numeratorIn.getText());
+   den = Integer.parseInt(denominatorIn.getText());
+   <span style="background-color: #00FFFF">try</span>
+   {
+      theNumber = new RationalNumber(num, den);
+      drawingCanvas.set(theNumber);
+   }
+   <span style="background-color: #00FFFF">catch(ZeroDenominatorException ex)</span>
+   {
+      // don't change current text input, just show error
+      JOptionPane.showMessageDialog(null, 
+         "0 denominator not allowed.", "Bad Rational",
+         JOptionPane.ERROR_MESSAGE); 
+   }
+}</pre>
+
+
+	<p>We leave the bad values for the user to fix in the <strong>JTextFields</strong> and&nbsp; issue a nice <strong>JOptionPane</strong> error message.&nbsp; Notice the use of the flag <strong>JOptionPane.ERROR_MESSAGE</strong> to   help make it look like an error.</p>
+	<p>Here's what happens if we follow a good number by a bad one:</p>
+<img src="./CS 1B Module 6B Section 5_files/pic_1b6_19.jpg" alt="GUI shot" width="300" height="200" border="0">&nbsp; try   →  &nbsp; <img src="./CS 1B Module 6B Section 5_files/pic_1b6_20.jpg" alt="GUI shot" width="300" height="200" border="0">→&nbsp; <img src="./CS 1B Module 6B Section 5_files/pic_1b6_21.jpg" alt="GUI shot" width="268" height="116" border="0"> →&nbsp; <img src="./CS 1B Module 6B Section 5_files/pic_1b6_20.jpg" alt="GUI shot" width="300" height="200" border="0">
+<h2>6B.5.4 Catching Java Exceptions</h2>
+	<p>We still have a potential for problems:&nbsp; If the user types in a bad   number, like <strong>23dx4</strong>, we will get a <strong>NumberFormatException</strong> which we are still not   catching.&nbsp; This happens when we read the text from the <strong>JTextFields</strong> and   convert then to numbers using <strong>parseInt():</strong></p>
+
+<pre>   <span style="background-color: #00FFFF">num = Integer.parseInt(numeratorIn.getText());  </span>
+   <span style="background-color: #00FFFF">den = Integer.parseInt(denominatorIn.getText());</span>
+   try
+   {
+      theNumber = new RationalNumber(num, den);
+      drawingCanvas.set(theNumber);
+   }
+</pre>
+
+	<p>Oops.&nbsp; It looks like these two statements belong in the try clause as   well, and then we can handle all the exceptions after it.&nbsp; Here is how to   do that:</p>
+
+<pre>   public void setRationalNumber()
+   {
+      long num, den;
+      
+      try
+      {
+         num = Integer.parseInt(numeratorIn.getText());
+         den = Integer.parseInt(denominatorIn.getText());
+         theNumber = new RationalNumber(num, den);
+         drawingCanvas.set(theNumber);
+      }
+      catch(ZeroDenominatorException ex)
+      {
+         // don't change current text input, just show error
+         JOptionPane.showMessageDialog(null, 
+               "0 deonimator not allowed", "bad rational",
+               JOptionPane.ERROR_MESSAGE); 
+      }
+      catch(NumberFormatException  ex)
+      {
+         String s;
+         // reset input fields to old number and just show status
+         s = (new Long(theNumber.getNum())).toString();
+         numeratorIn.setText(s);
+         s = (new Long(theNumber.getDen())).toString();
+         denominatorIn.setText(s);
+         JOptionPane.showMessageDialog(null, 
+               "Numbers only please!", "bad rational",
+               JOptionPane.ERROR_MESSAGE); 
+      }
+   }
+</pre>
+
+	<p>We are placing the last known good values into the user text fields in the   case of non-numeric data, while simultaneously ignoring any attempt to divide by   0 (done inside the <strong>setDen() </strong>method).&nbsp; Also, we are issuing a nice <strong>JOptionPane</strong> error message in either case.&nbsp; This shows the variety of actions we can take upon   receiving an exception.&nbsp; Here is a sample of the NumberFormatException in   action:</p>
+<img src="./CS 1B Module 6B Section 5_files/pic_1b6_22.jpg" alt="GUI shot" width="300" height="200" border="0"> → <img src="./CS 1B Module 6B Section 5_files/pic_1b6_23.jpg" alt="GUI shot" width="300" height="200" border="0">→<img src="./CS 1B Module 6B Section 5_files/pic_1b6_18.jpg" alt="GUI shot" width="268" height="122" border="0">  → <img src="./CS 1B Module 6B Section 5_files/pic_1b6_22.jpg" alt="GUI shot" width="300" height="200" border="0">
+	<p>And that's the colorful story of exceptions.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

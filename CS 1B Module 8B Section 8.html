@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8b_8.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8B Section 8</title>
+<link href="./CS 1B Module 8B Section 8_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 8 - Raw Types</h1>
+	<h2>8B.8.1 Raw Types</h2>
+	<p>We conclude (finally) by showing an example of something called a "raw type".&nbsp;   This term refers to a Generic Framework Implementation that is not handed a <em> <strong>type   parameter</strong></em>.&nbsp; For example, say we want a linked list, but want it to contain   a menagerie of object types (some <strong>Dogs</strong>, some <strong>Stars</strong>, some <strong>Pizzas</strong>, etc.).&nbsp;&nbsp;   We can actually do this:</p>
+
+<pre>   LinkedList  mixedList = new LinkedList();
+</pre>
+
+	<p>and all we'll get from the compiler is a slap on the wrist - a <em>warning</em> that   we are instantiating a <em><strong>raw type</strong></em> and uses <em><strong>unchecked or unsafe operations</strong></em>.&nbsp;   This means that the compiler won't be able to tell us if we are adding a valid   object to this list since we haven't told it what kind of object we are planning   to add.&nbsp; But, of course, that's the point.&nbsp; We want to add multiple   types.</p>
+	<p>We can get around this warning by feeding the beast the type <em><strong>Object</strong></em>.&nbsp; This doesn't really make the program any safer, but at least it   shuts up the compiler warnings.&nbsp; It will still be our responsibility to   figure out what kind of objects we are removing or returning from the list.&nbsp;   In some cases, this doesn't matter.&nbsp; In the example below, we are using the   list to store a multi-type bunch of things (numbers and Strings), and we will   only make use of the <strong>toString() </strong>method which is included in most classes,   meaning we can apply it to any object we take off the list:</p>
+
+<pre>import java.util.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      LinkedList&lt;Object&gt;  mixedList = new LinkedList&lt;Object&gt;();
+      ListIterator&lt;Object&gt;  p;
+      
+      mixedList.add(37);
+      mixedList.add("Hi Mom");
+      mixedList.add("Hey - Who's In Charge Here?");
+      mixedList.add(-45);
+      
+      String aString = "Something to Delete";
+      mixedList.add(aString);
+    
+      System.out.println("----------- Original List -------- ");    
+      for (p = mixedList.listIterator(); p.hasNext(); )
+         System.out.println(p.next().toString()); 
+      
+      mixedList.remove(aString);
+         
+     System.out.println("----------- Updated List -------- ");    
+     for (p = mixedList.listIterator(); p.hasNext(); )
+         System.out.println(p.next().toString());
+   }
+ }
+
+/* --------------- Sample Run ----------------------
+
+----------- Original List -------- 
+37
+Hi Mom
+Hey - Who's In Charge Here?
+-45
+Something to Delete
+----------- Updated List -------- 
+37
+Hi Mom
+Hey - Who's In Charge Here?
+-45
+
+------------------------------------------------- */
+</pre>
+
+	<p>You'll notice that along with the dumbed-down raw-like <strong>LinkedList</strong>, we   are also creating raw-like <strong>Iterator</strong>.&nbsp; If you want to use this sort of list with your own objects (and you will),   you would need to implement <strong>toString()</strong> in any class that you send to the list.</p>
+	<p>If you wanted to do something special with the items that you were taking off   the list, you would have to know what kind of item you had.&nbsp; A clunky, but   valid, way to do this is through use of <strong>instanceof</strong>:</p>
+
+<pre>   genericObj = p.next();
+   if ( genericObj instanceof PizzaOrder )
+   {
+      pizzaOrder = (PizzaOrder)genericObj;
+      pizzaOrder.DisplayPizza();
+   }
+</pre>
+
+	<p>And, that's all.</p>
+</div>
+</div>
+
+
+</body></html>

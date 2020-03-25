@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8b_5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8B Section 5</title>
+<link href="./CS 1B Module 8B Section 5_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 5 - Queues, Stacks and Java Deques</h1>
+	<h2>8B.5.1 A Review of our Custom Stack</h2>
+	<p>Previously, we used inheritance to create re-usable <em><strong>stacks</strong></em> and <em><strong>lists</strong></em> by using   ordinary class inheritance and deriving classes from a generic <strong>Node</strong> class and <strong>List</strong> class. In one case, we created a <strong>FloatStack</strong> class in this manner.&nbsp;   There is nothing wrong with this approach - it produces a very robust and   predictable design that is extensible to many data types.&nbsp;   However, we want to see how we could use the <em><strong>Java Collections Framework</strong></em> to circumvent much of   our development and get right into the client application.&nbsp; </p>
+	<p>First, let's review our earlier client (which assumes that we have laid   the groundwork by defining the <strong>Node</strong>, <strong>Stack</strong>, <strong>FloatNode</strong> and <strong>FloatStack</strong> classes).&nbsp; I have renamed <strong>FloatStack's pushFloat()</strong> to just <strong>push()</strong>.&nbsp;   This effectively <em><strong>overrides</strong></em> the base class <strong>push()</strong>.&nbsp; We   cannot similarly replace <strong>popFloat()</strong> with <strong>pop()</strong> because the return   types cannot differ in overridden methods.</p>
+
+<pre>import java.util.*;
+import java.text.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      FloatStack fstk = new FloatStack();
+      float f;
+
+      fstk.push(1.1F);
+      fstk.push(2.2F);
+      fstk.push(3.3F);
+      fstk.push(4.4F);
+      
+      for (int k = 0; k &lt; 5; k++)
+         if ( (f = fstk.popFloat()) != FloatStack.STACK_EMPTY)
+            System.out.print( f + " ");
+         else
+            System.out.print("(empty stack) ");
+      System.out.println();
+   }
+ }
+
+/* ----------------- Program Run -------------------
+
+4.4 3.3 2.2 1.1 (empty stack) 
+
+-------------------------------------------------- */
+
+</pre>
+
+	<p> We will see how we can get the same result without any of the   pre-development by exploiting the existing <strong>Java Collections Framework</strong>.</p>
+	<h2> 8B.5.2&nbsp; Java Stacks</h2>
+
+<img src="./CS 1B Module 8B Section 5_files/cs_B_common_43.JPG" alt="scenic boats and bridge" width="300" height="200" hspace="10" vspace="5" border="2" align="right">
+
+	<p> As we saw, a <strong><em>stack</em></strong> is a <em><strong>LIFO</strong></em> data structure.&nbsp;   In Java the <strong><em> collection</em></strong> that behaves like a <strong>stack</strong> is, shockingly, called <strong>"Stack"</strong>.&nbsp;   Although it has been <em>deprecated</em>, and replaced by the more general <strong> ArrayDeque</strong>, you can   still use it, and we do so here to demonstrate how easy collection classes are   used.&nbsp; In a moment, we'll use the updated <strong>ArrayDeque </strong>to solve this   same problem using the newer idiom, but   first, we show how one can easily instantiate a <strong>float</strong> stack:</p>
+
+<pre>   Stack&lt;Float&gt; fstk = new Stack&lt;Float&gt;();
+</pre>
+
+	<p>Once defined, you can use <strong>fstk</strong> much like did in our older schema,   through member methods <strong> push()</strong> and <strong>pop()</strong>.&nbsp; The method <strong>size()</strong> works as it did with the <strong>ArrayList</strong> collection, although we don't have,   nor do we need, <strong>ArrayList'</strong>s <strong>add()</strong> or <strong>remove()</strong>.&nbsp; A very   useful method you will find in most Framework classes is <strong>boolean isEmpty()</strong> which tells you if the collection is empty.</p>
+	<p>Here is a simple example of the use of <strong>Stack</strong>.&nbsp; As with all <em><strong> Java collections</strong></em>, you have to <em><strong>import</strong></em> <strong>java.util.*</strong> if   you wish to use the classes or interfaces without their full package names.   You'll also see that because of the nature of what a <strong>Stack</strong> is, we don't need the   stack <em><strong>iterator</strong></em> in order to write useful code for a <strong>Stack</strong>:&nbsp; <strong>push()</strong>,  and<strong> pop() </strong>provide enough functionality to do what we need.</p>
+
+<pre>// Demo of Java Collections' Stack (compare with our custom FloatStack)
+import java.util.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      Stack&lt;Float&gt; fstk = new Stack&lt;Float&gt;();
+
+      fstk.push(1.1F);
+      fstk.push(2.2F);
+      fstk.push(3.3F);
+      fstk.push(4.4F);
+      
+      for (int k = 0; k &lt; 5; k++)
+         if ( !fstk.isEmpty() )
+            System.out.print( fstk.pop() + " ");
+         else
+            System.out.print("(empty stack) ");
+      System.out.println();
+   }
+ }
+
+/* ----------------- Program Run -------------------
+
+4.4 3.3 2.2 1.1 (empty stack)
+
+-------------------------------------------------- */
+</pre>
+
+	<p> As you can see, you can save a lot of time by using <em><strong>Java   Collections'</strong></em> <strong>Stack</strong> if it has enough functionality to meet your needs.&nbsp;&nbsp;   Creating a <strong>Stack</strong> of "anythings" can be as easy as this, without all the   custom design we did earlier.</p>
+	<h2> 8B.5.3 Java Deques</h2>
+	<p> There is a newer <em><strong>Framework</strong></em> class called <strong>ArrayDeque</strong> that also has<strong> push()</strong>, <strong>pop()</strong> and <strong>isEmpty()</strong> which we will soon see can be used instead of the older <strong>Stack</strong>.&nbsp; However <strong>ArrayDeque</strong> has other methods that enable it to be used as a <em><strong> FIFO</strong></em> data structure as well.&nbsp; <strong>add()</strong> places elements onto the <font color="#0000FF"> <em> back</em></font> of the underlying <strong>collection</strong> while&nbsp; <strong>remove()</strong> removes   them from the <font color="#0000FF"> <em>front</em></font>.&nbsp; An <strong>ArrayDeque</strong> can be instantiated on any class or   non-primitive type and   behaves otherwise just like a a <em><strong>stack</strong></em> or a <em><strong>queue</strong></em>, depending on which methods we   use to access it. </p>
+	<p> Here we create a <em><strong>queue</strong></em> using <strong>ArrayDeque</strong> by calling <strong>add()</strong> and <strong>remove()</strong> in   the obvious places.</p>
+
+<pre>// Demo of Java Collections' ArrayDeque to make a queue of objects --&gt; Floats
+import java.util.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      ArrayDeque&lt;Float&gt; fq = new ArrayDeque&lt;Float&gt;();
+
+      fq.add(1.1F);
+      fq.add(2.2F);
+      fq.add(3.3F);
+      fq.add(4.4F);
+      
+      for (int k = 0; k &lt; 5; k++)
+         if ( !fq.isEmpty() )
+            System.out.print( fq.remove() + " ");
+         else
+            System.out.print("(empty queue) ");
+      System.out.println();
+   }
+ }
+
+/* ----------------- Program Run -------------------
+
+1.1 2.2 3.3 4.4 (empty queue) 
+
+-------------------------------------------------- */
+</pre>
+
+	<p> As promised, we can use a <strong>ArrayDeque</strong> to implement the above <strong>stack</strong> by applying the   methods <strong>push()</strong> and <strong>pop()</strong> in place of <strong>add()</strong> and <strong>remove()</strong>.</p>
+
+<pre>// Demo of Frameworks' ArrayDeque that acts like a stack (compare with deprecated Stack)
+import java.util.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      ArrayDeque&lt;Float&gt; fstk = new ArrayDeque&lt;Float&gt;();
+
+      fstk.push(1.1F);
+      fstk.push(2.2F);
+      fstk.push(3.3F);
+      fstk.push(4.4F);
+      
+      for (int k = 0; k &lt; 5; k++)
+         if ( !fstk.isEmpty() )
+            System.out.print( fstk.pop() + " ");
+         else
+            System.out.print("(empty stack) ");
+      System.out.println();
+   }
+ }
+
+/* ----------------- Program Run -------------------
+
+4.4 3.3 2.2 1.1 (empty stack)
+
+-------------------------------------------------- */
+</pre>
+
+	<p> Since both <em><strong>stacks</strong></em> and <em><strong>queues</strong></em> can be   implemented with the class <strong>ArrayDeque</strong>, Java provides a small set of   methods that makes sense for either <em><strong>stacks</strong></em> <em>or</em> <em><strong>queues</strong></em> while having a   consistent vocabulary.&nbsp; <strong>ArrayDeques</strong> give the balanced terminology <strong> addFirst(), addLast()</strong> and <strong>removeFirst(), removeLast()</strong> which can be   used to add or remove elements to or from either end of the <strong>ArrayDeque</strong>.&nbsp;   To make this clear, you can substitute the calls <strong>fstk.push()</strong> and <strong> fstk.pop()</strong> with calls <strong>fstk.addFirst() </strong>and<strong> removeFirst()</strong> in the   code above and it will not change the behavior.&nbsp; To confirm your   understanding of this, change both the <em><strong>stack</strong></em> and the <em><strong>queue</strong></em> samples above so that they use the four new methods in place of the older ones.</p>
+	<h2> 8B.5.4 Deque Error Reporting with Offer/Poll vs. Add/Remove</h2>
+	<p> <strong>ArrayDeque</strong> is one of a few class implementations of the <em><strong> Framework</strong></em> interface <strong>Deque</strong>.&nbsp; All such implementations inherit   a flexible error reporting mechanism from that interface.</p>
+	<p> Some programmers prefer to indicate errors by <em><strong>throwing exceptions</strong></em>.&nbsp;   Others like to return a <strong>boolean</strong> (and possibly set an error flag at the   same time).&nbsp; The <em><strong>Frameworks</strong></em> interface <strong>Deque</strong> acknowledges this by providing two sets of accessors and mutators that obey   these two styles.&nbsp; The method with names like <strong>add</strong><em>XYZ</em><strong>()</strong> and <strong>remove</strong><em>XYZ</em><strong>() </strong> return<strong> void</strong>,<strong> </strong>throwing a variety of exceptions if the <strong> ArrayDeque</strong>&nbsp; (or any implementation of <strong>Deque</strong>) cannot complete   the operation, while two corresponding method categories <strong>offer<em>XYZ</em>() </strong>and <strong>peek<em>XYZ</em>() </strong>&nbsp;use the <strong> boolean</strong> return mechanism.</p>
+	<p> <strong>ArrayDeque</strong> and all classes that implement the interface <strong>Deque</strong> provide this flexibility.&nbsp; Here is a table that compares the basic available   methods in this interface.&nbsp; The links take you directly to the Java pages   where all the details can be found.</p>
+	<div class="wideTable">
+		<table>
+			<tbody><tr>
+				<th>&nbsp;</th>
+				<th colspan="2">First Element (Head)</th>
+				<th colspan="2">Last Element (Tail)</th>
+
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td align="center"><em>Throws exception</em></td>
+				<td align="center"><em>Special value</em></td>
+				<td align="center"><em>Throws exception</em></td>
+				<td align="center"><em>Special value</em></td>
+				</tr>
+			<tr>
+				<td><strong>Insert</strong></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#addFirst%28E%29"> <code>addFirst(e)</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#offerFirst%28E%29"> <code>offerFirst(e)</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#addLast%28E%29"> <code>addLast(e)</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#offerLast%28E%29"> <code>offerLast(e)</code></a></td>
+				</tr>
+			<tr>
+				<td><strong>Remove</strong></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#removeFirst%28%29"> <code>removeFirst()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#pollFirst%28%29"> <code>pollFirst()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#removeLast%28%29"> <code>removeLast()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#pollLast%28%29"> <code>pollLast()</code></a></td>
+				</tr>
+			<tr>
+				<td><strong>Examine</strong></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#getFirst%28%29"> <code>getFirst()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#peekFirst%28%29"> <code>peekFirst()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#getLast%28%29"> <code>getLast()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#peekLast%28%29"> <code>peekLast()</code></a></td>
+				</tr>
+		</tbody></table>
+	</div>
+	<p>As a demonstration of these two styles, compare the two equivalent code   fragments based on the above <strong>ArrayDeque</strong> implementation of a stack</p>
+	<h4>Exception   Error Reporting</h4>
+
+<pre>   for (int k = 0; k &lt; 5; k++)
+   {
+      try 
+      {
+         System.out.print( fstk.removeFirst() + " ");
+      }
+      catch( Exception e)
+      {
+         System.out.print("(empty stack) ");
+      }
+   }
+</pre>
+
+	<h4>Boolean Error Reporting</h4>
+
+<pre>   Float flt;
+   for (int k = 0; k &lt; 5; k++)
+     if ( (flt =  fstk.pollFirst()) != (Float)null )
+        System.out.print( flt + " ");
+     else
+        System.out.print("(empty stack) ");
+</pre>
+
+	<p>Because <em><strong>Collection</strong></em> classes must be built upon <em><strong>wrapper</strong></em> types such as <strong>Float</strong> and <strong>Integer</strong> as opposed to <em><strong>primitives</strong></em> like <strong>float</strong> and <strong>int</strong>, you sometimes have to <u>explicitly declare</u> a <em><strong>wrapper</strong></em> object like we did above, with <strong>Float flt</strong>.&nbsp;   Often, however, you can use the primitives and allow <strong><em>auto-boxing</em></strong> (a.k.a. <strong><em>automatic promotion</em></strong>) of primitives. Rather than trying to   remember when <em>auto-boxing</em> works, I use the primitive first and if I get   an error, I replace the primitive with its corresponding a wrapper object.</p>
+	<h2>8B.5.5 Java Version Correspondences and Equivalent Methods</h2>
+	<p>The <strong>Deque</strong> interface (and <strong>ArrayDeque</strong> implementation by association) extends the <strong>Queue</strong> interface.&nbsp; The   methods inherited from <strong>Queue</strong> are equivalent to <strong>Deque</strong> methods as follows:</p>
+	<div class="narrowTable">
+		<table>
+			<tbody><tr>
+				<th>Queue Method</th>
+				<th>Equivalent Deque Method</th>
+				</tr>
+			<tr>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Queue.html#add%28E%29"> <code>add(e)</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#addLast%28E%29"> <code>addLast(e)</code></a></td>
+				</tr>
+			<tr>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Queue.html#offer%28E%29"> <code>offer(e)</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#offerLast%28E%29"> <code>offerLast(e)</code></a></td>
+				</tr>
+			<tr>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Queue.html#remove%28%29"> <code>remove()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#removeFirst%28%29"> <code>removeFirst()</code></a></td>
+				</tr>
+			<tr>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Queue.html#poll%28%29"> <code>poll()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#pollFirst%28%29"> <code>pollFirst()</code></a></td>
+				</tr>
+			<tr>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Queue.html#element%28%29"> <code>element()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#getFirst%28%29"> <code>getFirst()</code></a></td>
+				</tr>
+			<tr>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Queue.html#peek%28%29"> <code>peek()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#peek%28%29"> <code>peekFirst()</code></a></td>
+				</tr>
+		</tbody></table>
+	</div>
+	<p>When <strong>Deque</strong> implementations such as <strong>ArrayDeque</strong> are used to simulate <em><strong>stack</strong></em> behavior, we can correspond the newer methods with the   equivalent <strong>Stack</strong> methods   as follows:</p>
+	<div class="narrowTable">
+		<table>
+			<tbody><tr>
+				<th>Stack Method</th>
+				<th>Equivalent Deque Method</th>
+				</tr>
+			<tr>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#push%28E%29"> <code>push(e)</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#addFirst%28E%29"> <code>addFirst(e)</code></a></td>
+				</tr>
+			<tr>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#pop%28%29"> <code>pop()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#removeFirst%28%29"> <code>removeFirst()</code></a></td>
+				</tr>
+			<tr>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#peek%28%29"> <code>peek()</code></a></td>
+				<td><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/java/util/Deque.html#peekFirst%28%29"> <code>peekFirst()</code></a></td>
+				</tr>
+		</tbody></table>
+	</div>
+	<p>Before leaving this page, take a moment to reflect that the collections we   have created here using <strong>Float</strong> elements will apply to <em>any</em> class   regardless of its complexity. You should try this out with your own favorite   class.&nbsp; Of course, the client (<strong>main()</strong>) that we used here to test all   this does <em><strong>print</strong></em> the <em>popped</em> or <em>removed</em> elements under   the assumption that the underlying class overrides a <strong>toString()</strong> method.&nbsp;   This is true of most classes and lists that Java provides, but you are   responsible for overriding<strong> toString()</strong> in your own classes.</p>
+</div>
+</div>
+
+
+</body></html>

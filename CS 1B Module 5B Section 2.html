@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5b_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5B Section 2</title>
+<link href="./CS 1B Module 5B Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 2 - A Discriminating GUI</h1>
+	<h2>5B.2.1 Filtering out Bad User Names</h2>
+	<p>Now that the hard work is done, we can have some fun. We use what we know   about the language and mix in a couple useful built-in Java methods like <strong> isLetter()</strong>, a <em><strong>static class method </strong></em>of the class <strong>Character</strong>,   and <strong>length() </strong>and<strong> charAt()</strong>,<em><strong> instance methods</strong></em> of class <strong>String</strong>.&nbsp; I also made the <strong>TranspoFrame</strong> data <strong>private</strong> since there was no need for it to have default access.</p>
+	<p>First, an example of our program rejecting an unacceptable name from the   user:</p>
+	<div class="picCenter"><img src="./CS 1B Module 5B Section 2_files/pic_1a10_21.jpg" alt="GUI shot" width="429" height="261" border="2"></div>
+	<p>Here is the source.&nbsp; Run the program yourself and stand back!</p>
+
+<pre>import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+   
+public class Foothill 
+{
+ 
+   public static void main(String[] args)
+   {
+      // establish main frame in which program will run
+      TranspoFrame myTranspoFrame 
+            = new TranspoFrame("Transporter Room");
+      myTranspoFrame.setSize(300, 200);
+      myTranspoFrame.setLocationRelativeTo(null);
+      myTranspoFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      
+      // show everything to the user
+      myTranspoFrame.setVisible(true);
+   }
+}
+
+// TranspoFrame class is derived from JFrame class
+class TranspoFrame  extends JFrame
+{
+   private JButton btnMyButton;
+   private JTextField txtMyTextArea;
+   private JLabel lblMyLabel;
+   
+   // TranspoFrame constructor
+   public TranspoFrame(String title)
+   {
+      // pass the title up to the JFrame constructor
+      super(title);
+      
+      // set up layout which will control placement of buttons, etc.
+      FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 5, 20); 
+      setLayout(layout);
+      
+      // 3 controls: a label, a text field and a button
+      lblMyLabel = new JLabel("Friend's Name: ");
+      txtMyTextArea = new JTextField(10);
+      btnMyButton = new JButton("Press Here to See Friend"); 
+      add(lblMyLabel);
+      add(txtMyTextArea);
+      add(btnMyButton);
+      btnMyButton.addActionListener( new SeeFriendListener() );
+   }
+   
+   // inner class for JButton Listener
+   class SeeFriendListener implements ActionListener
+   {
+      // event handler for JButton
+      public void actionPerformed(ActionEvent e)
+      {
+         String strFriendName;
+         
+         strFriendName = txtMyTextArea.getText();
+         if (strFriendName != null &amp;&amp; strFriendName.length() &gt;=2)
+         {
+            char first = strFriendName.charAt(0);
+            if (Character.isLetter(first))
+            {
+               // good friend's name.  Now confirm
+               JOptionPane.showMessageDialog(null, 
+                  "Please wait while we locate " + strFriendName);
+               return;
+            }
+         }
+         
+         // if we fall through they have unacceptable friend's name
+         JOptionPane.showMessageDialog(null, 
+            "Name must be at least two chars and start with letter.");
+         return;
+      }
+   } // end inner class SeeFriendListener
+} // end class TranspoFrame
+
+</pre>
+
+	<p>How is the logic inside the event handler reacting to good or bad data?&nbsp;   What constitutes good or bad data?&nbsp; Should we make this more restrictive?&nbsp;   If so, how?</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

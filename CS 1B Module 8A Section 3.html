@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8a_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8A Section 3</title>
+<link href="./CS 1B Module 8A Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 3 - Deriving a Float Class</h1>
+	<h2>8A.3.1 Building From a Base Class</h2>
+	<p>Let's say we wish to create a real, useful list of <strong>floats</strong> (actually <strong> doubles</strong>)&nbsp; from our generic   list of "nothings".&nbsp; As with the <strong>StackNodes</strong> and <strong>Stack</strong> data   structure, we first create a new node called <strong>FloatNode</strong>.&nbsp; <strong>FloatNode</strong> will be derived from <strong>Node</strong> and therefore will not   have to duplicate any data or linking methods.&nbsp; It only has to add the <strong>double</strong> data to it.&nbsp; That's what deriving classes is all about.</p>
+	<p>This is exactly as we did when we extended the <strong>StackNode</strong> class, but   here we are extending our more general <strong>Node</strong> class.&nbsp; Here is the <strong> FloatNode</strong> class. </p>
+	<div class="parenthetical">Note: I'm actually using <strong>doubles</strong> rather than <strong>floats</strong>.&nbsp; Often we use <strong>doubles</strong>, but informally call them <strong><em>floats</em></strong>, since <strong>double</strong> is a floating point data type.</div>
+<pre>// imports go at the top of whatever .java file this appears.
+import java.util.*;
+import java.text.*;
+
+class FloatNode extends Node
+{
+   // additional data for subclass
+   private double data;
+   
+   // constructor
+   public FloatNode(double x)
+   {
+      super();  // constructor call to base class
+      data = x;
+   }
+   
+   // overriding show()
+   public void show()
+   {
+      NumberFormat tidy = NumberFormat.getInstance(Locale.US);
+      tidy.setMaximumFractionDigits(4);
+      
+      System.out.print("[" + tidy.format(data) + "] ");
+   }
+   
+   // accessor and mutator
+   public double getData()
+   {
+      return data;
+   }
+   
+   public boolean setData(double usrData)
+   {
+      // if there were a viable limitation we would test and return false if bad
+      data = usrData;
+      return true;
+   }
+}
+</pre>
+
+	<p>To repeat what I said several lessons before, it is derived from <strong>Node</strong>.&nbsp;   It has only one member, the <strong>double</strong> <strong>data</strong>.&nbsp; It has one constructor,   the usual accessors, and it overrides the <strong>show() </strong>method of the base class.&nbsp;&nbsp; I added some   fancy number formatting just to make sure the floats are printed out neatly, and   that could be omitted, to make the class even simpler.&nbsp; Notice how you have to   know absolutely NOTHING about the base class nodes.&nbsp; You only add the float data   and methods that manipulate that. <br>
+	</p>
+	<h2>8A.3.2 An Instant List of Floats</h2>
+	<p>Guess what?&nbsp; We don't have to derive any other classes to start using a <strong>float</strong> list.&nbsp; We can use what we have immediately. Keep in mind this is   still a little unrealistic because the client below uses <strong>FloatNodes</strong> rather than   simple <strong>floats</strong> (the client shouldn't have to be bothered with the   existence of such esoteric types as <strong>FloatNodes</strong>), but it will be a good   test for your understanding of derived classes.</p>
+	<p>In what follows, I assume the same multi-file project that we used with the <strong>StackNode</strong> and <strong>Stack</strong> examples.&nbsp; In other words I added classes   (and .java files) Node and List to the project and placed the code for <strong>Node</strong> and <strong>List</strong> into Node.java and List.java, respectively.</p>
+	<p>Here is the main <strong>Foothill.java</strong> file, containing the derived class <strong> FloatNode</strong>, and a main that tests its functionality.</p>
+
+<pre>import java.util.*;
+import java.text.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      FloatNode fp;
+      List myList = new List();
+      int k;
+
+      // build a data-less list by inserting 10 nodes at front
+      for (k = 0; k &lt; 10; k++)
+      {
+         fp = new FloatNode(k);
+         myList.insertAfterHead(fp);
+      }
+      myList.showList();
+
+      // remove 5 nodes
+      for (k = 0; k &lt; 5; k++)
+         myList.removeAfterHead();   
+      myList.showList();
+   }
+ }
+
+class FloatNode extends Node
+{
+   // additional data for subclass
+   private double data;
+   
+   // constructor
+   public FloatNode(double x)
+   {
+      super();  // constructor call to base class
+      data = x;
+   }
+   
+   // overriding show()
+   public void show()
+   {
+      NumberFormat tidy = NumberFormat.getInstance(Locale.US);
+      tidy.setMaximumFractionDigits(4);
+      
+      System.out.print("[" + tidy.format(data) + "] ");
+   }
+   
+   // accessor and mutator
+   public double getData()
+   {
+      return data;
+   }
+   
+   public boolean setData(double usrData)
+   {
+      // if there were a viable limitation we would test and return false if bad
+      data = usrData;
+      return true;
+   }
+}
+</pre>
+
+	<p>Output:</p>
+	<div class="picCenter"><img src="./CS 1B Module 8A Section 3_files/pic_1b8_2.jpg" alt="console shot" width="734" height="294" border="0"></div>
+	<p>We are using a <strong>FloatNode</strong> reference, fp to create the nodes that go into the   list because that is how we add actual numbers.</p>
+	<p>You should be enjoying the magic of <strong><em>inheritance </em></strong>now.&nbsp; Without modifying the <strong>showList() </strong> method, our list of <strong>FloatNodes</strong> was printed to the screen.</p>
+	<p>Study this example before going on to the next section (which has even cooler   things in it).</p>
+</div>
+</div>
+
+
+</body></html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5a_5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5A Section 5</title>
+<link href="./CS 1B Module 5A Section 5_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+    <h1>Section 5&nbsp; - The Controls</h1>
+    <h2>5A.5.1 Buttons, Labels and Text Fields<img src="./CS 1B Module 5A Section 5_files/pic_1a10_17.jpg" alt="image" width="300" height="200" hspace="9" border="0" align="right"></h2>
+    <p>Our next group of statements is dedicated to creating the three controls   that we see on the screen.&nbsp; The text <strong>Friend's Name</strong> is called a <em> <strong>label</strong></em>, and for that we need to create an object of the class <strong> JLabel</strong>.&nbsp; The text box to the right of that label is called a <strong> JTextField</strong>.&nbsp; And the button at the bottom is called a <strong>JButton</strong>.</p>
+    <p>Here is how one creates these three controls:</p>
+
+<pre>   // 3 controls: a label, a text field and a button
+   JLabel lblMyLabel = new JLabel("Friend's Name: ");
+   JTextField txtMyTextArea = new JTextField(10);
+   JButton btnMyButton = new JButton("Press Here to See Friend");
+</pre>
+    
+    <p>I'll skip the comment line, since you should know what this does by now.&nbsp;   Let's look at the first of these three lines:</p>
+
+<pre>   JLabel lblMyLabel = new JLabel("Friend's Name: ");
+</pre>
+    
+    <p>This uses syntax similar to what we've seen so far.&nbsp; It creates a <strong>JLabel</strong> object called <strong>lblMyLabel</strong> and places the text "Friend's Name: " on the <strong>Label</strong>.&nbsp;   By the 10th week, you should be able to expand this shortened statement into two longer ones that   perform the same task,  stepwise.&nbsp; Normally, of course, we don't want to make things longer, but you do need to understand that this is a combination of two statements. </p>
+    <p>The next line is:</p>
+
+<pre>   JTextField txtMyTextArea = new JTextField(10);
+</pre>
+    
+    <p>That line creates the text input area, called a <strong>JTextField</strong>.&nbsp; We   name that field <strong>txtMyTextArea</strong> and we make sure that it has space for 10   letters in it.</p>
+    <p>The last line is:</p>
+<pre>   JButton btnMyButton = new JButton("Press Here to See Friend");  </pre>
+    
+    <p>That line creates a <strong>JButton</strong> .&nbsp; We name that <strong>JButton</strong> <strong>btnMyButton</strong> and we put some text on the button.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

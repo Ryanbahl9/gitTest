@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_6a_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 6A Section 4</title>
+<link href="./CS 1B Module 6A Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 4 - The Font Class</h1>
+	<h2>6A.4.1 RPN Weakness</h2>
+	<p>Before we go any further, there is something that's been bugging me.&nbsp; I   have been itching to fix one thing about our RPN applet.&nbsp; Look at it again:</p>
+	<div class="picCenter"><img src="./CS 1B Module 6A Section 4_files/pic_1b6_7.jpg" alt="GUI shot" width="250" height="301" border="0"></div>
+	<p>What's wrong with this picture?&nbsp; Maybe it will help if I fix what's   wrong and you can compare:</p>
+	<div class="picCenter">&nbsp;&nbsp;&nbsp;&nbsp; <img src="./CS 1B Module 6A Section 4_files/pic_1b6_8.jpg" alt="GUI shot" width="250" height="300" border="0"></div>
+<p>A little better?&nbsp; Okay, here's how we do it.</p>
+	<h2>6A.4.2 The Component Class</h2>
+	<p>Swing Components like<strong> JButtons</strong>, <strong>JTextFields</strong> and <strong>J<em>EverythingElse</em></strong> are classes derived from <strong>JComponent</strong> which is derived from <strong>Component</strong>.&nbsp;   (<strong>Component</strong> is a class in the original <em>AWT Toolkit,</em> and is one of   many <em>AWT</em> classes still in frequent use, even though <strong>Swing</strong> has replaced some of them.)&nbsp;   One of the instance methods in the <strong>Component</strong> class is <strong>setFont()</strong>. As you can tell   by the name, this allows you to set the text font of that <strong>Component</strong>.&nbsp;   That means that every Component on your canvas can have its own <strong>Font</strong>, if   that's what you want! When   you <strong>setFont()</strong> for a particular <strong>Component</strong>, all text drawn on it will appear in the font specified.&nbsp;   It's that simple.</p>
+	<p>In our <strong>Calculator</strong> constructor, when we set up all of the <strong>JComponents</strong>, we have   the opportunity to set the font of any of them. That's where we'll do it:</p>
+
+<pre>   // Calculator constructor
+   public Calculator(String title)
+   {
+     // pass the title up to the JFrame constructor
+      super(title);
+<span style="background-color: #00FFFF">      Font font = new Font("Serif", Font.BOLD, 40);</span>
+      
+      // unrelated code omitted ...
+
+      // set up the components for the pnlButtons Panel
+      btnPlus = new JButton("+");
+      btnMinus = new JButton("-");
+      btnMult = new JButton("*");
+      btnDiv = new JButton("/");
+
+
+<span style="background-color: #00FFFF">      // change the font       
+      btnPlus.setFont(font);   
+      btnMinus.setFont(font);  
+      btnMult.setFont(font);   
+      btnDiv.setFont(font);    </span>
+
+      // add components to pnlTextEnter Panel ...
+   }
+</pre>
+
+	<h2>6A.4.3 The Font Class</h2>
+	<p>As you see, we first create a <strong>Font</strong> object which consists of the <strong> Font</strong> <em><strong>name</strong></em>, <em><strong>style</strong></em> and <em><strong>size</strong></em> (in   points).&nbsp; 10 point font is usually the smallest that is used, although you   can go smaller if you need to.&nbsp; 10 and 12 points are the most typical sizes   for paragraph text.&nbsp; </p>
+	<p>The <em><strong>names</strong></em> of the<em> font faces</em> are system dependent, but   there are five virtual font face styles that Java is always allowed to use:</p>
+	<ul>
+		<li>Serif</li>
+		<li>Monospaced</li>
+		<li>SansSerif</li>
+		<li>Dialog</li>
+		<li>DialogInput</li>
+	</ul>
+	<p>These will always be mapped into the what the system thinks are the best   fits.&nbsp; (There is an instance method <strong>getAllFonts()</strong> of the <strong> GraphicsEnvironment</strong> class (in <em>AWT</em>) but that is often not worth it   when you are just trying to set a reasonable font face and style.)&nbsp; Pass any   one of these five face names as a <strong>String</strong> (in quotes) to the first   parameter of the <strong>Font</strong> constructor, as I did above. </p>
+	<p>The style is one or more of:</p>
+	<ul>
+		<li>Font.PLAIN</li>
+		<li>Font.ITALIC</li>
+		<li>Font.BOLD</li>
+	</ul>
+	<p>What I mean by "or more" is that you can use the combine ITALIC and   BOLD like this: <strong>&nbsp;Font.ITALIC   + Font.BOLD</strong> in the second parameter position.</p>
+	<p>Once you have a <strong>Font</strong>, you can pass it to the <strong>setFont()</strong> method   of any <strong>Component</strong> on your <strong>JFrame</strong>.&nbsp; If there is only one <strong>Component</strong> whose <strong>Font</strong> you wish to change, you can use an <em>anonymous</em> <strong>Font</strong> object   created directly in the <strong>setFont()</strong> method call:</p>
+
+<pre>  myPanel.setFont( new Font( "SansSerif", 
+      Font.ITALIC + Font.BOLD, 14) );
+</pre>
+
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_7a_1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 7A Section 1</title>
+<link href="./CS 1B Module 7A Section 1_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 1 - Introduction to Abstract Classes</h1>
+	<h2>7A.1.1 Introduction</h2>
+	<p><img src="./CS 1B Module 7A Section 1_files/cs_B_common_42.JPG" alt="pretty pastry" width="300" height="200" border="2"></p>
+	<p>This week we learn&nbsp; new   Java programming concepts: <em><strong>abstract classes</strong></em> and <em><strong>interfaces</strong></em>.&nbsp;   We then apply this to some specific built-in interfaces, <strong>Comparable</strong> and <strong>Cloneable</strong>.&nbsp;Finally, study about <em><strong>boolean functions</strong></em> and apply many of our skills to bear on a classic logic application, the <em><strong>seven segment display</strong></em>.</p>
+	<h2>7A.1.2 Abstract Classes</h2>
+<p>Let's say that we want to create a  messaging client, but don't want to   commit to only written messages. Some messages might be video or audio. Nevertheless, there are certain functions that our fundamental message class   should provide. One is <em>sending a message</em> and another is <em>delivering a message</em>. </p>
+<p>To this end, we will create a class for our system but not   commit to a definition of either <em>sending</em> or <em>delivering</em>.   Here's the class: </p>
+
+<pre>   abstract class Message
+   {
+      protected String theMessage;
+    
+      public abstract void deliver();
+      public abstract void send();
+   }</pre>
+
+<p>The keyword <strong>abstract</strong> appears in three places. It precedes the class   name, and it is also repeated before the two method names. Furthermore, both   methods are missing  definition bodies.&nbsp; They are just method <em>prototypes</em>,   that is, method headers terminated by a semicolon.</p>
+<p>What we are doing is creating an <em><strong>abstract class.</strong></em> This is a   class intended as a basis for <em><strong>subclassing</strong></em>. In fact, we can only <strong> extend</strong> from this class: we cannot create a <strong>Message</strong> object directly.   If you try, you will get a compiler error. So what good is it? </p>
+<p><strong>Message</strong> is meant to be a base for our various styles of messages:   written and verbal. Here is how we might extend <strong>Message</strong> to the written   variety: </p>
+
+<pre>class WrittenMessage extends Message
+{  
+   private JTextField composeBox, receiveBox;
+   JFrame parent;
+    
+   WrittenMessage(JFrame a)
+   {
+      parent = a;
+   }
+   
+   public void init()
+   {
+      composeBox = new JTextField (50);
+      receiveBox = new JTextField (50);
+      parent.add(composeBox);
+      parent.add(receiveBox);
+   }
+  
+   public void deliver()
+   {
+       composeBox.setText(theMessage);
+   }
+  
+   public void send()
+   {
+       theMessage = composeBox.getText();
+   }
+}
+</pre>
+
+<p>The <strong>WrittenMessage</strong> is a class that refers to a <strong>parent</strong> <strong>JFrame</strong>,   and we won't go into that aspect here. We are only concerned with two things: </p>
+<ol>
+	<li>That it <em><strong>extends</strong></em> Message. </li>
+	<li>That it defines both <em><strong>abstract</strong></em> methods <strong>send(</strong>) and <strong> deliver(</strong>). </li>
+</ol>
+<p>Whenever you <em><strong>extend</strong></em> an <strong><em>abstract class</em></strong> you must   (unless you declare the extension also abstract) give definitions to all of the   methods contained in the base class. This is considered a good thing: You cannot   extend an <em><strong>abstract class</strong></em> and forget to define a crucial method. </p>
+<p>Any methods that are not declared <em><strong>abstract</strong></em> in the base class   will not need to be <em><strong>overridden</strong></em>. For one thing, the base class will   have their definitions already. It is only <em><strong>abstract</strong></em> methods for   which you can and do omit the definitions in the base class and which therefore   must be defined in the derived class. </p>
+<p><em><strong>Abstract classes</strong></em> need not have <em><strong>abstract methods</strong></em>.   If a class is declared as <em><strong>abstract</strong></em>, but none of its methods is   declared abstract, one cannot instantiate an object of the class: a subclass   must first be derived and then instantiation of the subclass can be done. This   is less useful than an abstract class that has at least one abstract method, but   it is not inconceivable for someone to want this class to always be <em> subclassed</em> before an object is created. </p>
+<p>A class that has an <em><strong>abstract method</strong></em> must be declared <em><strong> abstract</strong></em>. </p>
+<p><strong>Question:</strong> Why does the keyword <strong>protected</strong> appear before the   instance variable&nbsp; <strong>theMessage</strong>? </p>
+<div class="important"> <strong>Protected</strong>:
+	<p><strong>Protected</strong> is a way of making data off-limits to most classes, much   	as the keyword <strong>private</strong> makes such members inaccessible. However <strong> protected</strong> is a bit more permissible: It allows any of the subclasses   	which <em><strong>extend</strong></em> class Message to have direct access to the data,   	as we would expect they will need. All other classes will not be able to   	modify or even access this data.</p>
+</div>
+	</div>
+<!-- end .container --></div>
+
+
+</body></html>

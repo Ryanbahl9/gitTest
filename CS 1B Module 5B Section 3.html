@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5b_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5B Section 3</title>
+<link href="./CS 1B Module 5B Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 3 - GUI Calculator with Panels and Layouts</h1>
+	<h2>5B.3.1 Overview of RPN Calculator</h2>
+	<p>We won't go any further with our transporter GUI, as this was mostly review from CS 1A. However, we will reinforce these concepts by writing another GUI, this time one that you   can really use.&nbsp; We will create a GUI-based calculator...but   not just any calculator: an <em><strong>RPN</strong></em> calculator. </p>
+	<p><strong><em>RPN, </em></strong>or <strong></strong><em><strong>Reverse Polish Notation,</strong></em> was invented by Jan Lukasiewicz in the   1920s. It allowed complex mathematical expressions to be represented without   parentheses. For example the (infix notation) expression </p>
+<pre><strong><font size="4">(4 + 5) × 6</font></strong></pre>
+	
+	<p>is expressed in <em><strong>RPN</strong></em> as </p>
+<pre><strong><font size="4">4 5 + 6 ×</font></strong></pre>
+	
+	<p>Hewlett Packard based a generation of calculators on this principle because   it is very efficient for scientists and engineers (once you get used to it).&nbsp;&nbsp;   This week, we'll just write the interface, but next week will build a stack data   structure (which we will call <strong>MyStack)</strong> to turn this GUI into an <em><strong>RPN</strong></em> calculator.</p>
+	<p>The GUI we are going to create will look like   this: </p>
+	<div class="picCenter"><img src="./CS 1B Module 5B Section 3_files/pic_1b5_1.jpg" alt="GUI shot" width="250" height="301" border="0"></div>
+	<br>
+<div class="parenthetical">Please overlook the reference to the old course number CIS 27B in this, and other screen shots. It would be CS 1B if you compiled and ran the code in this module.</div>
+	<h2>5B.3.2 A New Project: RPN Calculator</h2>
+	<p> We'll   come back to the stack class in a little bit.&nbsp; Right now it's time to start   designing the <em><strong>GUI</strong></em> for our <strong>RPN</strong> Calculator.</p>
+	<p>Start a New Java project called <em> <strong>RPN Calculator</strong></em>, and add a main class   to it called <strong>RPN</strong>.&nbsp; This is done exactly as you have every other   project in the course.</p>
+	<p>Now we have to figure out how to create the control placement as you see in   the screen shot.</p>
+	<h2>5B.3.3 BorderLayout</h2>
+	<p>We are going to let <strong>RPN</strong> be our main class, then create a secondary   class called <strong>Calculator</strong>.&nbsp; <strong>Calculator</strong> will be the class that,   like our earlier <strong>Transporter</strong> class, extends the <strong>JFrame</strong> class.</p>
+	<p>In the past, we used <strong>FlowLayout</strong>, which is the simplest.&nbsp; In <strong> FlowLayout</strong>, whenever you add a new component, it just appears to the right   of the previous one in the frame, and when there is no room, it goes on the next   line.&nbsp; This is just like ordinary typing with word wrap.</p>
+	<div class="picCenter"><img src="./CS 1B Module 5B Section 3_files/pic_1b5_2.JPG" alt="GUI shot" width="250" height="301" hspace="20" vspace="10" border="0" align="left"></div>
+	<p>In <strong>BorderLayout</strong>, there are up to five sections of the frame: <strong>NORTH,   SOUTH, EAST, WEST </strong>and<strong> CENTER</strong>.&nbsp; You can look in the text for pictures   of the placement of each of these, but I think they are generally pretty   intuitive.&nbsp; The only thing to note is that you can leave out a section   and, if you do, some other section will stretch out to take its place.</p>
+	<p>In our current program, we are going to imbue our <strong>Calculator </strong>class   with <strong>BorderLayout</strong>, but only use <strong>NORTH, CENTER, </strong>and<strong> SOUTH</strong>.&nbsp;   The main part of our <strong>Calculator </strong>will occur in the <strong>CENTER </strong>and <strong>NORTH</strong> sections, while the <strong>SOUTH</strong> section simply has a text label in it</p>
+	<p>Look at how this is done in the code (we are in the constructor of the <strong> Calculator </strong>class):</p>
+
+<pre>//Calculator class is derived from JFrame class
+class Calculator  extends JFrame
+{
+   // only look at three main components for this code snippet
+   private JLabel lblInstructions;
+   private JPanel pnlButtons, pnlTextEnter;
+
+   
+   // Calculator constructor
+   public Calculator(String title)
+   {
+      // pass the title up to the JFrame constructor
+      super(title);
+      
+      // set up main components for the JFrame
+      pnlTextEnter = new JPanel( new GridLayout(1, 2, 10, 10));
+      pnlButtons = new JPanel( new GridLayout(2, 2, 20, 20));
+      lblInstructions = new JLabel("Use Reverse Polish Noatation");
+
+      // use border layout and put three above components in frame
+      setLayout (new BorderLayout(20, 10));
+      add(pnlTextEnter, BorderLayout.NORTH );
+      add(pnlButtons, BorderLayout.CENTER);
+      add(lblInstructions, BorderLayout.SOUTH);
+
+      // more to come in a few moments ...
+   }
+}
+</pre>
+
+	<p>We can almost understand this.&nbsp; </p>
+	<h4>Here are the missing details:</h4>
+	<ul>
+		<li>We're not sure what a <strong>JPanel</strong> is, but whatever it is, we are   	creating one called <strong>pnlButtons</strong> and placing it&nbsp; in the large center   	area of the main frame, and another called <strong>pnlTextEnter</strong> and placing   	it on the top area.. </li>
+		<li>We created both <strong>JPanels</strong> by passing something called a <strong>GridLayout</strong> object to their constructors.&nbsp; We'll see what that means in the next section. </li>
+		<li>When we set the layout, using<strong> setLayout()</strong>. In addition to seeing   	a <strong>BorderLayout</strong> constructor call in the <strong>setLayout</strong> argument   	lists, we see two numbers, <strong>(20, 10)</strong> passed to the constructor.&nbsp; These are <em><strong>padding values</strong></em> (in   	pixels) describing the gaps between components.&nbsp; We are asking for 20 pixels   	horizontally and 10 pixels vertically to be placed between the components. </li>
+		<li>When we <strong>add()</strong> components to a <strong>BorderLayout</strong> container, we   	have to specify <strong>NORTH</strong>, <strong>CENTER</strong>, etc.&nbsp; I'll bet you can figure   	out what that syntax is:&nbsp; <strong>BorderLayout.SOUTH </strong>must be a<em><strong> public   	static member</strong></em> of the <strong>BorderLayout</strong> class.&nbsp; Since it is a   	constant, it's probably also <strong>final</strong>.&nbsp; This is not essential to your   	understanding this program, but it is important to be able to identify such   	syntax. </li>
+	</ul>
+	<h2>5B.3.4 JPanels and GridLayout</h2>
+	<p> <img src="./CS 1B Module 5B Section 3_files/pic_1b5_3.JPG" alt="GUI shot" width="250" height="301" hspace="20" vspace="20" border="0" align="right">I can't keep the secret any longer.&nbsp; A <strong>JPanel</strong> is an invisible&nbsp;   rectangular container in which we place other components. We created one called <strong>pnlButtons</strong> in our code above and placed it in the <strong>CENTER</strong> of the above <strong>(BorderLayout)</strong> <strong>JFrame</strong> because we wanted to add lots of stuff to it.&nbsp; Now   it's time to add that stuff. </p>
+	<p>Whenever we add things to any container, like a <strong>JFrame</strong> or a <strong>JPanel</strong>,   we have to do so using a layout manager.&nbsp; This time we are going to use a <strong> GridLayout</strong>.&nbsp; <strong>GridLayout</strong> allows you to break the frame or panel into a   rectangular grid:&nbsp; 2 x 2, 3 x 5, 10 x 10, whatever.&nbsp; In this situation we want   four main sub-areas, so we'll create a 2 x 2 grid.&nbsp; This was actually done when   we instantiated the <strong>pnlButtons</strong> <strong>JPanel</strong>, and in that instantiation, we saw not only the   2 x 2 numbers, but also 20, 20.&nbsp; Those 20s were the horizontal and vertical gaps,   again, padding the components.&nbsp; So the layout for the <strong>JPanel</strong> was done   when we instantiated it.</p>
+	<p>Now, we are going to place four buttons inside this <strong>Panel</strong>.&nbsp;   I'll circle them so you can see the layout.&nbsp; </p>
+	<p>Once we declare this layout to be <strong>GridLayout</strong> and specify 2 x 2 (two rows,   two columns) we can then add exactly four items to the <strong>JPanel</strong>,   understood to be placed from left to right, top to bottom, as you read   (English!).&nbsp; Here is the code:</p>
+
+<pre>   // defined outside the constructor at class level
+   private JButton btnPlus, btnMinus, btnMult, btnDiv;
+
+   // set up the components for the pnlButtons Panel
+   btnPlus = new JButton("+");
+   btnMinus = new JButton("-");
+   btnMult = new JButton("*");
+   btnDiv = new JButton("/");
+     
+   // add components to pnlButtons Panel
+   pnlButtons.add(btnPlus);
+   pnlButtons.add(btnMinus);
+   pnlButtons.add(btnMult);
+   pnlButtons.add(btnDiv);
+</pre>
+
+	<p>We do the same thing with the <strong>pnlTextEnter</strong> <strong>JPanel</strong>, except for that we only   want two fields, one <strong>JTextField</strong> and one <strong>JButton</strong>.&nbsp; Here is that code:</p>
+
+<pre>   // defined outside the constructor at class level
+   private JButton btnEnter;
+   private JTextField txtNumber;
+
+   // set up the components for the pnlTextEnter Panel 
+   btnEnter = new JButton("Enter");
+   txtNumber = new JTextField("0.0", 15);
+  
+   // add components to pnlTextEnter Panel
+   pnlTextEnter.add(txtNumber);
+   pnlTextEnter.add(btnEnter); 
+</pre>
+
+	<h2>5B.5.5 Panel Borders</h2>
+	<p>I said that <strong>JPanels</strong> were invisible.&nbsp; But you can make them visible by   doing one of two things (or both): </p>
+	<ul>
+		<li>Placing components in them (which we did) </li>
+		<li>Putting borders around them (which we do now) </li>
+	</ul>
+	<p>Here's how to put a border around the panels:</p>
+
+<pre>  // place borders around three sub-panels
+  pnlTextEnter.setBorder(new TitledBorder("Entry and Result"));
+  pnlButtons.setBorder(new TitledBorder("Operator Buttons"));
+</pre>
+
+	<p>As you can see, we're <em><strong>instantiating</strong></em> <em><strong>anonymous</strong></em> <strong> TitledBorder</strong> <em><strong>objects</strong></em> to pass to the <strong>setBorder()</strong> <em><strong> instance method</strong></em> of the <strong>JPanel</strong> class.&nbsp; (That's actually a good   statement for you to analyze.)&nbsp; We need a new import to deal with <strong>JPanel</strong> borders, import <strong>javax.swing.border.*.</strong></p>
+	<p>Next we put it all into our Calculator constructor and watch it work.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

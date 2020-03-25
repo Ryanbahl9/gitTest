@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_3b_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 3B Section 4</title>
+<link href="./CS 1B Module 3B Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 4 - Array-Based Stacks</h1>
+	<h2>3B.4.1 An Array-Based Stack</h2>
+	<p><img src="./CS 1B Module 3B Section 4_files/cs_A_common_20.JPG" width="280" height="420" alt="scenic skyscraper"></p>
+	<p>A <em><strong>stack</strong></em> satisfies these rules: </p>
+	<ul>
+		<li>It stores data for us; if we have a <em><strong>stack</strong></em> object, say <strong>s</strong>,   	then when we want <strong>s</strong> to store a <em><strong>String</strong></em>, say   	"hotdog", we <em><strong>push</strong></em> it onto the stack with a call: <strong> s.push("hotdog")</strong>. "hotdog" is then placed into the <em><strong>stack</strong></em> <strong>s</strong> and then joins the other items that were on the <em><strong>stack</strong></em>. </li>
+		<li>Whenever we go to retrieve data (called <em><strong>popping</strong></em>) from the   	stack, the item we get will always be the <em> most recent item</em> that we <em><strong>pushed</strong></em>. So if we call <strong>s.pop()</strong> right after the above <em> <strong>push</strong></em>, the item   	returned by the <strong>pop() </strong>method would be "hotdog". This also has the   	effect of removing "hotdog" from the <em><strong>stack</strong></em>, so it is no longer there. </li>
+	</ul>
+	<p>Notice that in the last paragraph, we said "the item returned by <strong>pop()</strong>."&nbsp;   That means <strong>pop(</strong>) returns a value to the client - it <em>does not</em> make an   independent decision to, say, print the <em><strong>popped</strong></em> item to the screen.&nbsp; </p>
+	<div class="important"> Note
+		<p><strong>pop(</strong>)   should not do any output - it should just return the popped value as a <em><strong>functional return</strong></em>.&nbsp;</p>
+	</div>
+<p>Let's say that we have defined a <em><strong>Stack</strong></em> class, and we have   instantiated a <em><strong>Stack</strong></em> object, <strong>s</strong>.&nbsp; Then, using <strong>s</strong>,   if we push three times:</p>
+
+<pre>   s.push("four");
+   s.push("nine");
+   s.push("two");
+</pre>
+
+	<p>Then the <strong><em>Stack</em> s</strong> looks like this: </p>
+
+
+<pre>  top →
+         "two"
+         "nine"
+         "four"
+</pre>
+
+	
+	<p>If you then <strong>pop()</strong> once, the "two" is returned from the <em> <strong>stack</strong></em> and it will then   contain: </p>
+
+<pre>  top →
+         "nine"
+         "four"
+</pre>
+
+	<p>If you <strong>push()</strong> another item:</p>
+
+
+<pre>   s.push("7.3");
+</pre>
+
+	<p>the <em><strong>stack</strong></em> becomes: </p>
+
+<pre>  top →
+         "7.3"
+         "nine"
+         "four"
+</pre>
+
+	<p>If you <strong>pop()</strong> now, the "7.3" will be returned and if you <strong> pop()</strong> immediately after   that, the "nine" will be returned, leaving only the "four" on the stack. I think   you get the idea. </p>
+	<p>Since <strong>s</strong> is an object of class <strong>Stack</strong>, we should be able to   instantiate more than one <strong>Stack</strong> at a time, say <strong>s1</strong> and <strong>s2</strong>,   and <strong>push()</strong> and <strong>pop()</strong> from them independently.&nbsp; </p>
+	<h2>3B.4.2 A Stack Example</h2>
+	<p>This example defines the <strong>Stack</strong> class using techniques we have already   learned.&nbsp; This   example is based on <strong>doubles</strong>. You'll have to compare the output to the source code   carefully so you can associate the pops with the output that results.</p>
+
+<pre>// ------------- Class Foothill -------------- 
+public class Foothill
+{ 
+   // -------  main --------------
+   public static void main(String[] args)
+   {    
+      MyStack stk1 = new MyStack();
+      MyStack stk2 = new MyStack();
+      int k;
+      double result;
+      final double STACK_EMPTY = Double.MIN_VALUE;
+   
+      // Test the Stack - there should be nothing on it -----
+      if ( !stk1.testStack(1) )
+         System.out.println("empty stack; cannot pop");
+   
+      // push too much intentionally
+      for (k = 0; k &lt; 11; k++)
+         if ( ! stk1.push( k * 1.1 ) )
+            System.out.println("stack stk1 full; cannot push");
+   
+      for (k = 0; k &lt; 5; k++)
+         if ( ! stk2.push( k * 9 ) )
+            System.out.println("stack stk2 full; cannot push");
+   
+      // pop too much intentionally 
+      System.out.println("\n--------- First Stack ---------");
+      for (k = 0; k &lt; 11; k++)
+         if ( stk1.testStack(1) )
+            System.out.println( stk1.pop() + " : " );
+         else
+            System.out.println("empty stack; cannot pop");
+      System.out.println();
+       
+      // pop too much intentionally 
+      System.out.println("\n--------- Second Stack ---------");
+      for (k = 0; k &lt; 11; k++)
+         if ( stk2.testStack(1) )
+            System.out.println( stk2.pop() + " : " );
+         else
+            System.out.println("empty stack; cannot pop");
+      System.out.println();
+   } 
+} // end of class Foothill ---------------------
+
+// ------------- Class MyStack -------------- 
+class MyStack 
+{
+   final private static int SIZE = 10;
+   private double stck[];
+   private int tos;
+    
+   // ---------------------------------------------------
+   public  MyStack()
+   {
+      tos = 0;
+      stck = new double[SIZE];
+   }
+     
+   // ---------------------------------------------------
+   public boolean push( double item )
+   {
+      if (tos == SIZE)
+         return false;
+      stck[tos++] = item;
+      return true;
+   }
+     
+   // ---------------------------------------------------
+   public double pop()
+   {
+      if (tos == 0)
+         return Double.MIN_VALUE;  // non-optimal way to flag error
+          
+      return stck[--tos];
+   }
+   //---------------------------------------------------
+   // returns true if at least num_needed items are on the stack
+   public boolean testStack( int num_needed )
+   {
+      if (tos &gt;= num_needed)
+         return  true;
+      else
+         return  false;
+   }
+} // end of class MyStack -------------------------
+</pre>
+
+	<p> And the output:</p>
+
+<pre>empty stack; cannot pop
+stack stk1 full; cannot push
+
+--------- First Stack ---------
+9.9 : 
+8.8 : 
+7.700000000000001 : 
+6.6000000000000005 : 
+5.5 : 
+4.4 : 
+3.3000000000000003 : 
+2.2 : 
+1.1 : 
+0.0 : 
+empty stack; cannot pop
+
+
+--------- Second Stack ---------
+36.0 : 
+27.0 : 
+18.0 : 
+9.0 : 
+0.0 : 
+empty stack; cannot pop
+empty stack; cannot pop
+empty stack; cannot pop
+empty stack; cannot pop
+empty stack; cannot pop
+empty stack; cannot pop
+</pre>
+
+	<p>What's up with a few of those strange (7.700000000000001) numbers?&nbsp; <strong> Double</strong> math sometimes results in unexpected round-off errors within the   tolerance of the data type.&nbsp; In Java if you are within .000000000000001 of   a number, you <em><strong>are</strong></em> the number.&nbsp; If you recall, we provided a   solution to this problem earlier in the course. I didn't incorporate the   formatting code into the example above, because I wanted to keep the logic   simple.</p>
+	<p>Notice that when we have more than one class in a single source file (as I   often do), only one class can be declared <strong>public</strong>.&nbsp; In a single file   project this would be your main class, that is, the one that contains the <strong> main()</strong> method.&nbsp; In our current example, the <strong>Foothill</strong> class is   the main class, and is declared <strong>public</strong>, while the <strong>MyStack</strong> class   has default access (no modifier in front of the class name).</p>
+	<h2>3B.4.3 There are Stacks And Then There Are Stacks</h2>
+	<p>You may have used built-in stack data structures in a collections or   container framework in the past.&nbsp; You will certainly do so in the future.&nbsp;   Be careful to read the API of the class carefully because each implementation is   slightly different.&nbsp; Some stacks have a <strong>pop()</strong>  that   removes but does not return the top of the stack, leaving the return to another   function, often named <strong>top()</strong>.&nbsp; Other   implementations don't have <strong>pop()</strong> or <strong>push()</strong> but, instead, use names   like <strong>popBack()</strong> and <strong>pushBack()</strong>.&nbsp; While the ideas are   universal, the details are not, so don't assume anything when you encounter a   new stack class.</p>
+
+	</div>
+<!-- end .container --></div>
+
+
+</body></html>

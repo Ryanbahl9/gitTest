@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8a_1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8A Section 1</title>
+<link href="./CS 1B Module 8A Section 1_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 1 - Introduction to Linked Lists</h1>
+	<h2>8A.1.1 Overview</h2>
+	<h3>ADTs and Our Old Stack</h3>
+	<p>In a prior week, you learned what a <em><strong>stack</strong></em> data structure was, and how to build one using inheritance. A <em><strong>stack</strong></em> is a kind of  <strong><em>abstract data type</em></strong>, or <em><strong>ADT</strong></em>, since the pictures and operations that involve a <em><strong>stack</strong></em> can be described without reference to any particular language. <strong><em>Pushing</em></strong> to and <em><strong>popping</strong></em> from a <em><strong>stack</strong></em> are well understood no matter what programming language we decide to implement them in.  So the <em><strong>stack</strong></em> was our first <strong><em>ADT</em></strong>.</p>
+	<div class="parenthetical">One might argue that an <em><strong>array</strong></em> was also a kind of <em><strong>ADT</strong></em>, and one would have a point. <strong><em>Arrays</em></strong> are usually called <em><strong>vectors</strong></em>, informally, when discussed in terms of <em><strong>ADT</strong></em>s, but we'll wait a few minutes before we introduce the <em><strong>vector</strong></em> vocabulary, so just put that thought aside for the moment.</div>
+	<h3>A New ADT: the List</h3>
+	<div class="picCenter"><img src="./CS 1B Module 8A Section 1_files/cs_B_common_28.JPG" alt="scenic duck art" width="300" height="200" hspace="10" vspace="7" border="0" align="left"></div>
+	
+	<p>In the first part of the week, we will meet our second, formal <em><strong>ADT</strong></em>, the <em><strong>linked list</strong></em>, or simply <strong><em>list</em></strong>. Lists are ubiquitous in computer science, so mastering their implementation and use is essential. We'll do this in the first lesson and do so in a way that parallels how we used inheritance to implement queues, enabling the ADT to be used for a variety of data types.</p>
+	<h3>Java Collections</h3>
+	<p>In the second half of the week, we move forward to  the <strong>Java <em>collection classes</em></strong>.&nbsp; These  <em><strong>collections</strong></em><strong></strong>, found in <strong>java.util</strong>, allow us to use certain built-in data structures (<em><strong>ADT</strong></em>)s, which are pre-designed; each <em><strong>ADT</strong></em> implemented in Java is called a <em><strong>class generic</strong></em>. The exciting thing about these<em> <strong>generic</strong></em><strong>s</strong> is that they are type-neutral. We can use them to create, say, a stack of <strong>ints</strong>, a stack of <strong>Cards</strong> or a stack of <strong>Lizards</strong>, and do so in a <em>single statement</em>: no new classes or methods to write. Nothing to extend or inherit. As long as there is a stack template available for us, we can use it immediately. </p>
+	<h3>Reference for Java ArrayLists and other Collection class "Generics"</h3>
+	<p>Here is a link from the first weeks, reprised for easy access. Scroll down to the <strong>java.util</strong> link and take it.</p>
+	<div class="picCenter"><a target="_blank" href="http://docs.oracle.com/javase/7/docs/api/index.html">http://docs.oracle.com/javase/7/docs/api/index.html</a> → java.util
+	</div>
+
+
+
+<h2>8A.1.2 The Node Class</h2>
+<p>Here is the implementation of the list node class (which we   will wisely call simply <strong>Node</strong>, because we can use it for more than just <strong> Lists</strong>).&nbsp; We have made the <strong>next</strong> member of the <strong>Node</strong> class <strong>private</strong> to afford maximum protection.&nbsp; We provide an accessor (but   no mutator) for this critical datum.&nbsp;   Since we are going to be using this <strong>Node</strong> type to generate a "hot-linked"   list, (i.e., we will link up actual nodes passed in by clients, and not copies   of those nodes) we want to reduce the likelihood that a malicious client will   modify the <strong>next</strong> member of a node and thus destroy our list. </p>
+
+<pre>// Class Node ----------------------------------
+class Node
+{
+   // data
+   private Node next;
+
+   // constructor
+   public Node()
+   {
+      next = null;
+   }
+
+   // console display
+   public void show()
+   {
+      System.out.print("(generic node) ");
+   }
+
+   // insert after
+   public void insertAfter(Node newNode)
+   {
+      if (newNode == null)
+         return;
+      newNode.next = next;
+      next = newNode;
+   }
+
+   // remove after
+   public Node removeAfter()
+   {
+      Node temp = next;
+
+      if (temp != null)
+         next = temp.next;
+      return temp;
+   }
+
+   // returning the next member
+   public Node getNext()
+   {
+      return next;
+   }
+}
+</pre>
+
+<h2>8A.1.3 A Test Client and Run</h2>
+<p>To test the class we use this <strong>main()</strong>:</p>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      Node n1, n2, n3, np;
+      n1 = new Node();
+      n2 = new Node();
+      n3 = new Node();
+
+      n1.insertAfter(n2);  // insert n2 after n1
+      n2.insertAfter(n3);  // insert n3 after n2
+
+      for (np = n1; np != null; np = np.getNext())
+         np.show();
+   }
+ }
+</pre>
+
+<p>Which produces this result</p>
+<div class="picCenter"><img src="./CS 1B Module 8A Section 1_files/pic_1b8_1.jpg" alt="console shot" width="612" height="120" border="0"></div>
+</div>
+</div>
+
+
+</body></html>

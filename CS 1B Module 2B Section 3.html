@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_2b_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 2B Section 3</title>
+<link href="./CS 1B Module 2B Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 3 - Review of Sorting</h1>
+	<h2>2B.3.1 Sorting an Array of Strings</h2>
+	<p>To make the binary search algorithm work, we have to sort the array   of <strong>Students</strong> in alphabetical order.&nbsp; You should have had sorting in <span class="sectionOrAssignmentTitle">CS 1A</span>. If   so, you can skip this section.&nbsp; If you want the review, here is a separate   example that shows how to sort an array.&nbsp; In this case we are sorting based on <em><strong>name</strong></em> so we use the <strong>String</strong> instance method <strong>compareToIgnoreCase()</strong>:</p>
+
+<pre>   string1.compareToIgnoreCase( string2 )
+</pre>
+
+	<p>If we were sorting on a numeric key, we would use &lt;&nbsp; as the comparison.</p>
+	<p>The output would look like this:</p>
+
+<pre>-------- Before:  -------- 
+martin
+claudia
+sandra
+samuels
+terry
+jack
+clark
+palmer
+abraham
+Mike
+
+-------- After:  -------- 
+abraham
+clark
+claudia
+jack
+martin
+Mike
+palmer
+samuels
+sandra
+terry
+
+</pre>
+
+	<p>Here is the program. </p>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      String[] myArray = {"martin", "claudia", "sandra", "samuels",
+         "terry", "jack", "clark", "palmer", "abraham", "Mike"};
+      
+      printArray("Before: ", myArray);
+      arraySort(myArray);
+      printArray("After: ", myArray);
+   }
+   
+   // returns true if a modification was made to the array
+   public static boolean floatLargestToTop(String[] data, int top)
+   {
+      boolean changed = false;
+      String temp;
+      
+      // notice we stop at length -2 because of expr. k+1 in loop
+      for (int k = 0; k &lt; top; k++)
+         if (data[k].compareToIgnoreCase(data[k + 1]) &gt; 0)
+         {
+            temp = data[k];
+            data[k] = data[k + 1];
+            data[k + 1] = temp;
+            changed = true;
+         }
+      return changed;
+   }
+   
+    public static void arraySort(String[] array)
+    {
+       for (int k = 0; k &lt; array.length; k++)
+          if ( !floatLargestToTop(array, array.length-1-k) )
+             return;
+    }
+    
+   // print out array with string as a title for the message box
+   public static void printArray(String title, String[] data)
+   {
+      
+      System.out.println("-------- " + title + " -------- ");
+      for (int k = 0; k &lt; data.length; k++)
+         System.out.println(data[k]);
+      System.out.println();
+
+   }
+}
+
+</pre>
+
+	<p>Okay!&nbsp; We're ready to see it all.</p>
+  </div>
+  </div>
+<!-- end .container -->
+
+
+</body></html>

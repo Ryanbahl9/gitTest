@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8b_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8B Section 2</title>
+<link href="./CS 1B Module 8B Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 2 - Iterators</h1>
+	<h2>8B.2.1 Iterators</h2>
+	<p>Think about the various ways in which we looped through arrays, and compare   those loops to moving through linked lists.&nbsp; There was a common idea in   both: initialize, test, iterate, but the actual syntax was much trickier in the   lists.&nbsp; Besides <strong>ArrayLists</strong>, there are other <strong><em>collections</em></strong> in   java.util.*, notably general <strong>LinkedLists</strong>.&nbsp; Another   advantage of using <strong>ArrayLists</strong> and <strong>LinkedLists </strong>is that there is a   common technique for running through them, a technique whose syntax is identical   in both cases.&nbsp; This involves the use of things called <strong>Iterators</strong>.</p>
+	<p><em>Iterators</em> are defined alongside <strong>ArrayLists</strong> (or other <strong><em> collections</em></strong>).&nbsp;&nbsp; In fact, each <em>iterator</em> is   defined <em>within</em>, i.e., nested inside, its parent class.&nbsp;&nbsp; There   are two flavors, the "simpleton", <strong>Iterator</strong>, which has very limited   capabilities, and the more powerful <strong>ListIterator</strong>.&nbsp;&nbsp; They are used to run-through lists just like <strong>int</strong> indexes run through arrays.&nbsp; An <em>iterator</em> initially points to   the first element in the <em><strong>collection</strong></em> and can move forward or backward through the <em><strong>collection</strong></em> using its instance methods <strong>next() </strong>and <strong>previous().</strong>&nbsp;   It is associated with whatever collection   object it will access. To produce an <em>iterator</em>, you use the   collection object along with an instance method,<strong> iterator()</strong> or <strong> listIterator() </strong>depending on which kind of <em>iterator</em> you want.&nbsp; In the case of an <strong>ArrayList</strong>, we will   usually want the more powerful <strong>ListIterator</strong>:</p>
+
+<pre>   ListIterator&lt;Double&gt; p;
+   p = myDoubles.listIterator();
+</pre>
+
+	<p>This creates a <strong>ListIterator</strong> object, <strong>p</strong>, which can be used on <strong>myDoubles</strong>.&nbsp; You should declare the <strong>ListIterator</strong> using the   same type (<strong>Double</strong>, <strong>String</strong>, <strong>Card</strong>) as the collection it is   going to operate on.&nbsp; Above we created a <strong>Double</strong> version of <strong> ListIterator</strong> to make it compatible with <strong>myDoubles</strong>.</p>
+	<p>When constructed, <strong>p</strong> will initially point   (conceptually, not actually) to the first element in the collection.&nbsp; <strong> ArrayList iterators</strong> have useful <strong>hasNext(), hasPrevious(), next(), previous() and remove()</strong> instance methods.</p>
+	<ul>
+		<li><strong>hasNext() </strong>returns a <strong>boolean</strong> <strong>true</strong> if the <strong>iterator</strong> has not completed going through the list.</li>
+		<li><strong>next()</strong> returns the currently pointed-to object in the list, and   	iterates up the list to the next object.&nbsp; This is akin to the   	operations <strong>k++ </strong>or <strong>current = current.next </strong>you may have seen in this or other courses.</li>
+		<li><strong>hasPrevious()</strong> returns a <strong>boolean</strong> <strong>true</strong> if the <strong> iterator</strong> is not at the beginning of the list.</li>
+		<li><strong>previous()</strong>&nbsp; returns the  item just before the currently pointed-to object in the   	list, and iterates down the list to point to the element <em>PREVIOUS</em> to   	the current element.</li>
+		<li><strong>remove()</strong> removes the last element returned by <strong>next() </strong>or <strong> previous()</strong> from the list.</li>
+		<li><strong>set() </strong>replaces the last element returned by <strong>next() </strong>or <strong>previous()</strong> with the argument passed to <strong>set()</strong>.</li>
+	</ul>
+	<p>Here is a cute program that shows how to create an <strong>ArrayList</strong> of <strong>Strings</strong> and   run through it with an <strong>iterator</strong>.&nbsp; It demonstrates how easily we can move   through the list, modifying and inserting elements as we go.</p>
+
+<pre>import java.util.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      String[] words = {"When", "Harry", "Met", "Sally", 
+         "X", "Wild", "Beast", "X", 
+         "La", "Femme", "Nikita", "X", "Back", "To", 
+         "The", "Future", "X"};
+      
+      ArrayList&lt;String&gt; myStrings = new ArrayList&lt;String&gt;();
+      int k;
+      ListIterator&lt;String&gt; p;
+ 
+      // load up the list
+      for (k = 0; k &lt; words.length; k++)
+         myStrings.add(words[k]);
+     
+      // print the list
+      for (p = myStrings.listIterator(); p.hasNext();  )
+         System.out.print( p.next() + " " ); 
+      System.out.println();
+     
+      // replace the "X"s with "AA"
+      for (p = myStrings.listIterator(); p.hasNext();  )
+         if ( p.next().equals("X") )
+            p.set("AA");
+
+      // print the list
+      for (p = myStrings.listIterator(); p.hasNext();  )
+         System.out.print( p.next() + " " ); 
+      System.out.println();
+
+      // remove the "AA"s from the list
+      for (p = myStrings.listIterator(); p.hasNext();  )
+         if ( p.next().equals("AA") )
+            p.remove();
+
+      // print the list
+      for (p = myStrings.listIterator(); p.hasNext();  )
+         System.out.print( p.next() + " " ); 
+      System.out.println();
+
+      // print the list backwards (remember that p is
+      // now at the end from the last loop
+      while (p.hasPrevious())
+         System.out.print( p.previous() + " ");
+      System.out.println();
+     
+      // insert "24" into the list in position 3
+      myStrings.add(3, "24");
+ 
+      // print the list
+      for (p = myStrings.listIterator(); p.hasNext();  )
+         System.out.print( p.next() + " " ); 
+      System.out.println();
+   }
+}</pre>
+
+
+	<p>Run:</p>
+	<div class="picCenter"><img src="./CS 1B Module 8B Section 2_files/pic_1b8_4.jpg" alt="console shot" width="627" height="166" border="0"></div>
+</div>
+</div>
+
+
+</body></html>

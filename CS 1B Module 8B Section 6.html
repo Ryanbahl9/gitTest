@@ -1,0 +1,866 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8b_6.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8B Section 6</title>
+<link href="./CS 1B Module 8B Section 6_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 6 - List Collections (and a Sort Key Trick)</h1>
+	<h2> 8B.6.1&nbsp; Linked List Collections</h2>
+	<p> We now reproduce our <em><strong>linked list</strong></em> of <strong>floats</strong> using the <strong>list template</strong> to assist us.&nbsp; Before you   break open a bottle of champagne, I should tell you that there is no magic   method that works like our previous <strong>insert()</strong>, which places a new element   in its proper position in the list.&nbsp; We have to do a little work to get   that functionality, even with <em><strong>Collections Framework's Linked Lists</strong></em> so be forewarned.&nbsp; <strong>Lists</strong> only give us something similar to our <strong>insertAfter()</strong> and <strong>deleteAfter()</strong> (through the <strong>ListIterator</strong> methods <strong>add()</strong> and <strong>remove()</strong>). The logic of ordering   the list must be supplied by us.&nbsp; You might be thinking that (when we get   there, shortly) you can use <strong>PriorityQueue's   add() and remove().</strong>&nbsp; Sort-of.&nbsp; <strong>PriorityQueue</strong> is not really   putting anything into the list in order -- it is merely <em>removing</em> things   in order, which is a different idea.&nbsp;&nbsp; At any rate, our current   effort will help solidify <strong>ListIterators</strong> and moving through a <strong> LinkedList</strong>.</p>
+	<p> In short, we will declare a <strong>LinkedList</strong> of <strong>Floats</strong> (wrapper of <strong>float</strong>) in a single   statement.&nbsp;&nbsp; This will give us all the functionality of our custom <strong> FloatList</strong> class <font color="#FF0000"><em>except</em></font> for the powerful <strong>insert()</strong> and <strong>remove()</strong> methods.&nbsp; We will write two   global-scope methods <strong>insert()</strong> and <strong>remove()</strong> to accomplish this (and   also a global <strong>showList()</strong> for output).&nbsp; In the<strong> insert()</strong> and <strong> remove()</strong> (and <strong>showList()</strong>) we will naturally use <strong>ListIterators</strong> to help us run through the list.&nbsp;In practice, you would   encapsulate <strong>insert(), remove()</strong> and <strong>showList() </strong>in the proper class, but for now, let's put these methods into the client at pseudo-global scope (in the Foothill class as helpers). </p>
+
+<pre>// Demo of java.util Linkedlist of floats (c.f custom FloatList)
+import java.util.*;
+import java.text.*;
+
+public class Foothill
+{
+   static void showList(LinkedList&lt;Float&gt; myList)
+   {
+      NumberFormat tidy = NumberFormat.getInstance(Locale.US);
+      tidy.setMaximumFractionDigits(2);
+      ListIterator&lt;Float&gt; iter;
+      
+      System.out.println( "\n\n_____Here's the List_______\n" );
+      for (iter = myList.listIterator(); iter.hasNext(); )
+         System.out.print("[" + tidy.format(iter.next()) + "] ");
+      System.out.println( "\n\n_____That's all!_______\n" );
+   }
+   
+   static void insert(LinkedList&lt;Float&gt; myList, float x)
+   {
+      ListIterator&lt;Float&gt; iter;
+      float listX;
+
+      for (iter = myList.listIterator(); iter.hasNext(); )
+      {
+        listX = iter.next();
+        if (x &lt;= listX)
+        {
+           iter.previous(); // back up one
+           break;
+        }
+      }
+      iter.add(x);
+   }
+   
+   static boolean remove(LinkedList&lt;Float&gt; myList, float x)
+   {
+      ListIterator&lt;Float&gt; iter;
+
+      for (iter = myList.listIterator(); iter.hasNext(); )
+         if (iter.next() == x)
+         {
+            iter.remove();
+            return true;   // we found, we removed, we return
+         }
+      return false;
+   }
+   
+   public static void main (String[] args)
+   {
+      LinkedList&lt;Float&gt; myList = new LinkedList&lt;Float&gt;();
+      int k;
+      float x;
+
+      // build list of 10 floats, 2 at a time (1 random and 1 k*100)
+      for (k = 0; k &lt; 5; k++)
+      {
+         x = 1000 * (float)Math.random(); // float bet 0 and 1000
+         insert(myList, x);
+         insert(myList, k*100);
+         insert(myList, k*100);
+      }
+
+      // should be sorted
+      showList(myList);
+
+      // remove 5 nodes (and delete them!)
+      for (k = 0; k &lt; 5; k++)
+      {
+         x = k*100;
+         if (remove(myList, x))
+            System.out.println(x + " removed");
+         else 
+            System.out.println(x + " not found");
+     }
+     showList(myList);
+
+      if (!remove (myList, -10))  // should have no effect
+         System.out.println("-10 not in list as expected. \n");;
+      showList(myList);
+   }
+ }
+
+/* -------------- Run of Above ------------------
+
+_____Here's the List_______
+
+[0] [0] [31.74] [100] [100] [174.84] [200] [200] [300] [300] [400] [400] [514.41
+] [658.16] [694.21] 
+
+_____That's all!_______
+
+0.0 removed
+100.0 removed
+200.0 removed
+300.0 removed
+400.0 removed
+
+
+_____Here's the List_______
+
+[0] [31.74] [100] [174.84] [200] [300] [400] [514.41] [658.16] [694.21] 
+
+_____That's all!_______
+
+-10 not in list as expected. 
+
+
+
+_____Here's the List_______
+
+[0] [31.74] [100] [174.84] [200] [300] [400] [514.41] [658.16] [694.21] 
+
+_____That's all!_______
+
+--------------------- End Run ---------------------- */
+</pre>
+
+	<h4>Notes</h4>
+	<p>If you look carefully, you'll see that I intentionally added duplicates to the list so we could see that <strong>ListIterator</strong>'s<strong> remove()</strong> only deletes <em>one</em> element (the first it finds). This parallels our <strong>remove()</strong>'s intention.</p>
+	<p>In <strong>insert()</strong> we specify the <strong>ListIterator&lt;Float&gt;</strong> instead of   just <strong>ListIterator</strong> so that we can use the item   returned by the <strong>iter.next()</strong> as if it were a <strong>Float</strong> (and even better, through <em><strong>automatic un-boxing</strong></em>, we can use it as it if were a <strong>float</strong>). This can be seen in   these statements:</p>
+
+<pre>     float listX = iter.next();
+     if (x &lt;= listX)
+</pre>
+
+	<p>In the original incarnation of <strong>insert()</strong>, we "stood   back" one node so we could use <strong>insertAfter()</strong> and prevent our list pointer from   going too far ahead in the list (for details you can review those modules).&nbsp;   We have a better way to do that now - we can use the <strong>ListIterator's previous()</strong> method to back up one.&nbsp; That's just what we do.&nbsp; When we find the   position in the list, we have actually moved past it, so we simply back-up one:</p>
+
+<pre>     listX = iter.next();
+     if (x &lt;= listX)
+     {
+        iter.previous(); // back up one
+        break;
+     }
+</pre>
+
+	<ul>
+		<li><strong><font color="#808000">The Good News:</font></strong>&nbsp; This works just like our hard-fought custom <strong>FloatList</strong> class.&nbsp; We sacrificed nothing. (Compare the run with before -   	it's identical.)</li>
+		<li><font color="#808000"><strong>More Good News:</strong></font> The<strong> insert()</strong> and <strong>remove()</strong> methods were actually easier to write than before - we   	didn't need to stand back one node in anticipation of the awkard <strong>insertAfter()</strong> and <strong>deleteAfter()</strong> calls.</li>
+		<li><strong><font color="#FF0000">The Bad News:</font></strong> We had to write   	methods and do some work.&nbsp; Oh well.</li>
+	</ul>
+
+	<h2>8B.6.2 Multiple Sort Fields</h2>
+	<p>The above analysis of a sorted list assumes we have a <strong>&lt;= </strong>and<strong> == operator</strong> defined for the underlying   object type.&nbsp; With <strong>floats</strong> (and <strong>Floats</strong> via auto-unboxing) this is a no-brainer.&nbsp;  We can also use define and use a <strong>compareTo()</strong> if we prefer not to use operator overloading.</p>
+	<p> <em>However, when we have data that has <strong>multiple members</strong>, any one of   which we may want to use as a basis for our<strong> compareTo()</strong>, we have to decide which   one to use.</em>&nbsp;</p>
+	<p> If there is only one good choice,  the solution is easy.&nbsp;&nbsp;   But what if we want to order the list on different members in different clients?</p>
+	<h4>It works like this:</h4>
+	<ol>
+		<li>Define some <strong>public static final ints</strong> (or <strong>enums</strong>)&nbsp; that   	the client can use to describe what kind of sort it wants.&nbsp; For   	example, in an <strong>iTunesEntry</strong> class, these constants might be called:&nbsp; <strong>SORT_BY_TITLE</strong>,  <strong> SORT_BY_ARTIST</strong> and <strong>SORT_BY_TIME</strong>.&nbsp; This establishes the   	language for our solution.</li>
+		<li>Define a <strong>static private member sortKey</strong> which will be exactly one of   	the above constants at any time.&nbsp; For example, if we are going to sort by   	artist, then the value of <strong>nSortKey</strong> will be set to the  value <strong>SORT_BY_ARTIST</strong>.</li>
+		<li>Define a <em><strong>static mutator</strong></em> method called something like <strong>setSortType()</strong> which takes   	one of those constants as an argument and sets the <strong>sortKey</strong> member   	accordingly. A client would call
+		
+<pre> iTunesEntry.setSortType(iTunesEntry.SortType.SORT_BY_ARTIST);
+</pre>
+
+</li>
+		<li>Add a <strong>compareTo()</strong> method within the class (or outside as a <strong>Comparable</strong>) to work based on the selected <strong>sortKey</strong>.&nbsp; </li>
+	</ol>
+	<p>At any time you compare two objects using syntax like <span class="codeInLine">obj_1.compareTo(obj2)</span>,  it will give the answer based on the  active sort key.</p>
+	<h2>8B.6.3 iTunesEntry</h2>
+	<p>Here is a hypothetical class, <strong>iTunesEntry</strong>, that has the following members:</p>
+
+<pre>public class iTunesEntry implements Comparable&lt;iTunesEntry&gt;
+{
+   private String title, artist;
+   private int totalTime;
+   
+   // ... rest of class omitted
+}
+</pre>
+
+	<p> There are two <strong>Strings</strong> and one <strong>int</strong>, and we might want our list   sorted by the artist's name (<strong>artist</strong>) one day, on the title (<strong>title</strong>)   on another day and the play time (<strong>totalTime</strong>) on yet a third day.&nbsp;   Following the above plan, we first define the static int symbols and the private   static as in <em><strong>steps 1 and 2</strong></em>:</p>
+
+<pre>public class iTunesEntry implements Comparable&lt;iTunesEntry&gt;
+{
+   // ... various members, then
+   
+   public enum SortType { SORT_BY_TITLE, SORT_BY_ARTIST, SORT_BY_TIME };
+   
+   private static SortType sortKey = SortType.SORT_BY_ARTIST;
+      
+   // ... then the rest 
+};
+</pre>
+
+	<p> The static <strong>sortKey</strong> is the member that remembers what our sort key is   at any given moment.&nbsp; We could define our sort types using <strong>static private   int,</strong> but doing so with more than two or three constants is tedious.&nbsp;   Therefore, we often use the <strong>enum</strong> type, which accomplishes the exact same   thing - <strong>enums</strong> are <strong>ints</strong>.&nbsp; The above syntax for the <strong>enum</strong> <strong>SortType</strong> causes <strong>SORT_BY_TITLE = 0,   SORT_BY_ARTIST = 1,</strong> etc. We covered all this in the first week if you need a refresher.</p>
+	<p>We now know what to call the "idea" of wanting to sort by artist:&nbsp; we   call it <strong>iTunesEntry.SortType.SORT_BY_ARTIST</strong>.&nbsp; The client can use this same symbol   when it wants to talk to our class about the sort type it wishes to use.&nbsp;&nbsp;&nbsp;Note that we gave <strong>sortKey</strong>  an initial   value (a step you don't want to omit).</p>
+	<p>So far, so good.&nbsp; Next, <em><strong>step 3</strong></em>:&nbsp; define a <em><strong>static mutator</strong></em>.&nbsp;   This can be used by any client to change the value of <strong>sortKey</strong>.&nbsp;   Like any good <em><strong>mutator</strong></em>, it must filter bad data.</p>
+
+<pre>   public static boolean setSortType( SortType whichType )
+   {
+      switch (whichType)
+      {
+      case SORT_BY_TITLE:
+      case SORT_BY_ARTIST:
+      case SORT_BY_TIME:
+         sortKey = whichType;
+         return true;
+      default:
+         return false;
+      }
+   }
+</pre>
+
+	<p> <em><strong>Step 4</strong></em> completes the picture: we have to make sure this member is actually used when   we do a comparison.&nbsp; At a minimum, add a <strong>compareTo()</strong> method to the class (if you have access -- otherwise, you'll need either add this in a subclass or  create a <strong>Comparator</strong> as described in the next seection).</p>
+
+<pre>   public int compareTo(iTunesEntry other)
+   {
+      switch (sortKey)
+      {
+      case SORT_BY_TITLE:
+         return (title.compareToIgnoreCase(other.title));
+      case SORT_BY_ARTIST:
+         // get last name from string
+         // stack the last name before the first - no worries about trailing last
+         return (getArtistLastName() + artist).compareToIgnoreCase(
+            other.getArtistLastName() + other.getArtist() );
+
+      case SORT_BY_TIME:
+         return (totalTime - other.totalTime);
+      default:
+         return 0;
+      }
+   }
+</pre>
+
+	<p>A client would use this <strong>compareTo()</strong> in its sorts, list insertion searches, etc.</p>
+	<h3>equals()</h3>
+	<p>Finally, an important note about <strong>equals()</strong>. Typically, this is not about <em>ordering</em>, but about <em>member-by-member comparisons</em>. You should be well aware of this by now. Why bring it up in a discussion about ordering? On occasion, one might wish  <strong>equals() </strong>to be defined in terms of <strong>compareTo()</strong>, which is defined in terms of the <strong>sortKey</strong>. Understand that this is a weaker equality than member-wis e equality, and if you don't understand what I mean, think about it and discuss it in the forums.</p>
+	<p>Well, we now have set up our <strong>iTunesEntry</strong> class to have a totally flexible <strong>compareTo()</strong> mechanism.&nbsp;  After that, you can   build <strong>greater()</strong>, <strong>less()</strong>,  <strong>equalTo()</strong>, or even overload <strong>equals()</strong> on top of these methods.&nbsp;&nbsp; Typically, you can   get by with just  <strong>compareTo()</strong>.</p>
+	<p>The client changes the sort key using one simple statement:</p>
+
+<pre>	// set the sort key to song duration
+  iTunesEntry.setSortType(iTunesEntry.SortType.SORT_BY_TIME);
+</pre>
+
+	<p>Once this is done, we can apply any function or algorithm that uses the &lt;   operator, and it will be done based on time ordering.</p>
+	<h2>8B.6.4 iTunes Client With Multiple Sort Keys</h2>
+	<p>Here is an example client that uses the above technique.&nbsp;&nbsp; You can   ignore the first part that reads the <strong>iTunesEntry</strong> data from the file.&nbsp;   Concentrate on the methods that we have modified from the <strong>float</strong> version.&nbsp;   We made some minor adjustments so that they work now with <strong>iTunesEntry</strong> objects.</p>
+
+<pre>// Main file for iTunes project.  See Read Me file for details
+// CS 1C, Foothill College, Michael Loceff, creator
+
+import cs_1c.*;
+import java.util.*;
+
+//------------------------------------------------------
+public class Foothill
+{
+   // -------  main --------------
+   public static void main(String[] args) throws Exception
+   {
+      LinkedList&lt;iTunesEntry&gt; myList;
+
+      // some structures and file reading utilities not explained here
+      iTunesEntryReader tunesInput = new iTunesEntryReader("itunes_file.txt");
+      int arraySize;
+
+      // how we test the success of the read:
+      if (tunesInput.readError())
+      {
+         System.out.println("couldn't open " + tunesInput.getFileName()
+            + " for input.");
+         return;
+      }
+
+      myList = new LinkedList&lt;iTunesEntry&gt;();
+
+      // create an array of objects for our own use:
+      arraySize = tunesInput.getNumTunes();
+
+
+      // set the sort key to song duration
+      iTunesEntry.setSortType(iTunesEntry.SortType.SORT_BY_TIME);
+
+      // build the list.  It should automatically go in by song duration
+      for (int k = 0; k &lt; arraySize; k++)
+         insert(myList, tunesInput.getTune(k));
+      
+      // should be sorted by duration
+      showList(myList);
+
+      // now do it again by title
+      myList.clear();
+      iTunesEntry.setSortType(iTunesEntry.SortType.SORT_BY_TITLE);
+
+      // build the list.  It should automatically go in alphabetically by title
+      for (int k = 0; k &lt; arraySize; k++)
+         insert(myList, tunesInput.getTune(k));
+      
+      // should be sorted by title
+      showList(myList);
+   }
+
+// Global method definitions --------------------------
+   static void insert(LinkedList&lt;iTunesEntry&gt; myList, iTunesEntry x)
+   {
+      ListIterator&lt;iTunesEntry&gt; iter;
+      iTunesEntry listX;
+
+      for (iter = myList.listIterator(); iter.hasNext(); )
+      {
+        listX = iter.next();
+        if ( x.compareTo(listX) &lt;= 0 )
+        {
+           iter.previous(); // back up one
+           break;
+        }
+      }
+      iter.add(x);
+   }
+
+   boolean remove(LinkedList&lt;iTunesEntry&gt; myList, iTunesEntry x)
+   {
+      ListIterator&lt;iTunesEntry&gt; iter;
+
+      for (iter = myList.listIterator(); iter.hasNext(); )
+         if (iter.next() == x)
+         {
+            iter.remove();
+            return true;   // we found, we removed, we return
+         }
+      return false;
+   }
+
+   void removeAll(LinkedList&lt;iTunesEntry&gt; myList, iTunesEntry x)
+   {
+      while ( remove(myList, x) )
+         ;
+   }
+
+   static void showList(LinkedList&lt;iTunesEntry&gt; myList)
+   {
+      ListIterator&lt;iTunesEntry&gt; iter;
+      
+      System.out.println( "\n\n_____Here's the List_______\n" );
+      for (iter = myList.listIterator(); iter.hasNext(); )
+         System.out.println( "[" + iter.next() + "] ");
+      System.out.println( "\n\n_____That's all!_______\n" );
+   }
+}
+
+
+/* ------------------- run ------------------
+itunes_file.txt
+79
+Carrie Underwood | Cowboy Casanova |  3:56
+Carrie Underwood | Quitter |  3:40
+Rihanna | Russian Roulette |  3:48
+Foo Fighters | All My Life |  4:23
+Foo Fighters | Monkey Wrench |  3:50
+Eric Clapton | Pretending |  4:43
+Eric Clapton | Bad Love |  5:08
+Howlin' Wolf | Everybody's In The Mood |  2:58
+Howlin' Wolf | Well That's All Right |  2:55
+Reverend Gary Davis | Samson and Delilah |  3:36
+Reverend Gary Davis | Twelve Sticks |  3:14
+Roy Buchanan | Hot Cha |  3:28
+Roy Buchanan | Green Onions |  7:23
+Janiva Magness | I'm Just a Prisoner |  3:50
+Janiva Magness | You Were Never Mine |  4:36
+John Lee Hooker | Hobo Blues |  3:07
+John Lee Hooker | I Can't Quit You Baby |  3:02
+Snoop Dogg | That's The Homie |  5:43
+Snoop Dogg | Gangsta Luv |  4:17
+The Rubyz | Ladies and Gentleman |  3:21
+The Rubyz | Watch the Girl |  3:12
+Veggie Tales | Donuts for Benny |  3:04
+Veggie Tales | Our Big Break |  1:09
+Berliner Philharmoniker | Brahms: Symphony No. 1 in C Minor Op. 68 |  13:59
+Berliner Philharmoniker | Brahms: Symphony No. 4 in E Minor Op. 98 |  13:20
+Yo-yo Ma | Bach: Suite for Cello No. 1 in G Major Prelude |  2:21
+Yo-yo Ma | Simple Gifts |  2:34
+Ry Cooter | Alimony |  2:55
+Ry Cooter | France Chance |  2:48
+Aaron Watson | The Road |  3:24
+Terra Incognita | Clone |  4:58
+Terra Incogni | Lizard Skin |  4:30
+Blue Record | Bullhead's Psalm |  1:19
+Blue Record | Ogeechee Hymnal |  2:35
+Mastadon | Oblivion |  5:48
+Mastadon | The Bit |  4:55
+Sean Kingston | Fire Burning |  3:59
+Sean Kingston | My Girlfriend |  3:24
+T-Pain | Take Your Shirt Off |  3:48
+Lil Jon | Give It All U Got |  3:38
+Jay-Z | What We Talkin' About |  4:03
+Jay-Z | Empire State of Mind |  4:36
+Snoop Dog | Think About It |  3:37
+Snoop Dog | Lil' Crips |  3:15
+Jeff Golub | Shuffleboard |  3:30
+Jeff Golub | Goin' On |  5:56
+Jeff Golub | Fish Fare |  4:59
+Caraivana | Noites Cariocas |  4:12
+Caraivana | Tico-Tico No Fuba |  2:27
+John Patitucci | Monk/Trane |  7:14
+John Patitucci | Sonny Side |  7:25
+Nina Simone | Pirate Jenny |  6:42
+Nina Simone | The Other Woman |  3:06
+Nina Simone | Feeling Good |  2:57
+John Coltrane | A Love Supreme Part 1 |  7:42
+John Coltrane | In a Sentimental Mood |  4:16
+AOL Dejando Huellas | Dime Si te Vas Con El |  3:24
+AOL Dejando Huella | Te Amo Tanto |  3:12
+McCoy Tyner | Blues On the Corner |  6:07
+McCoy Tyner | Afro Blue |  12:22
+Kanye West | Stronger |  5:11
+Kanye West | Good Life |  3:27
+Steely Dan | Black Cow |  5:10
+Steely Dan | Kid Charlemagne |  4:38
+Steely Dan | Haitian Divorce |  5:51
+Herbie Hancock | Nefertiti |  7:31
+Herbie Hancock | Rockit |  5:25
+Herbie Hancock | Chameleon |  15:41
+Return to Forever | Medieval Overture |  5:13
+Suzanne Vega | Luka |  3:51
+Suzanne Vega | Small Blue Thing |  3:55
+Bonnie Raitt | Something to Talk About |  3:47
+Bonnie Raitt | I Can't Make You Love Me |  5:31
+Natalie Cole | This Will Be |  2:51
+Natalie Cole | Unforgettable |  3:31
+Jet | Timothy |  4:20
+Jet | Rip It Up |  3:20
+Was (Not Was) | Where Did Your Heart Go? |  5:47
+Was (Not Was) | I Blew Up The United States |  3:50
+
+Veggie Tales | Our Big Break |  1:09
+Blue Record | Bullhead's Psalm |  1:19
+Yo-yo Ma | Bach: Suite for Cello No. 1 in G Major Prelude |  2:21
+Caraivana | Tico-Tico No Fuba |  2:27
+Yo-yo Ma | Simple Gifts |  2:34
+Blue Record | Ogeechee Hymnal |  2:35
+Ry Cooter | France Chance |  2:48
+Natalie Cole | This Will Be |  2:51
+Howlin' Wolf | Well That's All Right |  2:55
+Ry Cooter | Alimony |  2:55
+Nina Simone | Feeling Good |  2:57
+Howlin' Wolf | Everybody's In The Mood |  2:58
+John Lee Hooker | I Can't Quit You Baby |  3:02
+Veggie Tales | Donuts for Benny |  3:04
+Nina Simone | The Other Woman |  3:06
+John Lee Hooker | Hobo Blues |  3:07
+The Rubyz | Watch the Girl |  3:12
+AOL Dejando Huella | Te Amo Tanto |  3:12
+Reverend Gary Davis | Twelve Sticks |  3:14
+Snoop Dog | Lil' Crips |  3:15
+Jet | Rip It Up |  3:20
+The Rubyz | Ladies and Gentleman |  3:21
+Aaron Watson | The Road |  3:24
+Sean Kingston | My Girlfriend |  3:24
+AOL Dejando Huellas | Dime Si te Vas Con El |  3:24
+Kanye West | Good Life |  3:27
+Roy Buchanan | Hot Cha |  3:28
+Jeff Golub | Shuffleboard |  3:30
+Natalie Cole | Unforgettable |  3:31
+Reverend Gary Davis | Samson and Delilah |  3:36
+Snoop Dog | Think About It |  3:37
+Lil Jon | Give It All U Got |  3:38
+Carrie Underwood | Quitter |  3:40
+Bonnie Raitt | Something to Talk About |  3:47
+Rihanna | Russian Roulette |  3:48
+T-Pain | Take Your Shirt Off |  3:48
+Foo Fighters | Monkey Wrench |  3:50
+Janiva Magness | I'm Just a Prisoner |  3:50
+Was (Not Was) | I Blew Up The United States |  3:50
+Suzanne Vega | Luka |  3:51
+Suzanne Vega | Small Blue Thing |  3:55
+Carrie Underwood | Cowboy Casanova |  3:56
+Sean Kingston | Fire Burning |  3:59
+Jay-Z | What We Talkin' About |  4:03
+Caraivana | Noites Cariocas |  4:12
+John Coltrane | In a Sentimental Mood |  4:16
+Snoop Dogg | Gangsta Luv |  4:17
+Jet | Timothy |  4:20
+Foo Fighters | All My Life |  4:23
+Terra Incogni | Lizard Skin |  4:30
+Janiva Magness | You Were Never Mine |  4:36
+Jay-Z | Empire State of Mind |  4:36
+Steely Dan | Kid Charlemagne |  4:38
+Eric Clapton | Pretending |  4:43
+Mastadon | The Bit |  4:55
+Terra Incognita | Clone |  4:58
+Jeff Golub | Fish Fare |  4:59
+Eric Clapton | Bad Love |  5:08
+Steely Dan | Black Cow |  5:10
+Kanye West | Stronger |  5:11
+Return to Forever | Medieval Overture |  5:13
+Herbie Hancock | Rockit |  5:25
+Bonnie Raitt | I Can't Make You Love Me |  5:31
+Snoop Dogg | That's The Homie |  5:43
+Was (Not Was) | Where Did Your Heart Go? |  5:47
+Mastadon | Oblivion |  5:48
+Steely Dan | Haitian Divorce |  5:51
+Jeff Golub | Goin' On |  5:56
+McCoy Tyner | Blues On the Corner |  6:07
+Nina Simone | Pirate Jenny |  6:42
+John Patitucci | Monk/Trane |  7:14
+Roy Buchanan | Green Onions |  7:23
+John Patitucci | Sonny Side |  7:25
+Herbie Hancock | Nefertiti |  7:31
+John Coltrane | A Love Supreme Part 1 |  7:42
+McCoy Tyner | Afro Blue |  12:22
+Berliner Philharmoniker | Brahms: Symphony No. 4 in E Minor Op. 98 |  13:20
+Berliner Philharmoniker | Brahms: Symphony No. 1 in C Minor Op. 68 |  13:59
+Herbie Hancock | Chameleon |  15:41
+
+
+Algorithm Elapsed Time: 0 seconds.
+
+------------- */
+</pre>
+
+	<h4>The Run</h4>
+
+<pre>
+_____Here's the List_______
+[Our Big Break", by Veggie Tales Duration: 69]
+[Bullhead's Psalm", by Blue Record Duration: 79]
+[Bach: Suite for Cello No. 1 in G Major Prelude", by Yo-yo Ma Duration: 141]
+[Tico-Tico No Fuba", by Caraivana Duration: 147]
+[Simple Gifts", by Yo-yo Ma Duration: 154]
+[Ogeechee Hymnal", by Blue Record Duration: 155]
+[France Chance", by Ry Cooter Duration: 168]
+[This Will Be", by Natalie Cole Duration: 171]
+[Well That's All Right", by Howlin' Wolf Duration: 175]
+[Alimony", by Ry Cooter Duration: 175]
+[Feeling Good", by Nina Simone Duration: 177]
+[Everybody's In The Mood", by Howlin' Wolf Duration: 178]
+[I Can't Quit You Baby", by John Lee Hooker Duration: 182]
+[Donuts for Benny", by Veggie Tales Duration: 184]
+[The Other Woman", by Nina Simone Duration: 186]
+[Hobo Blues", by John Lee Hooker Duration: 187]
+[Watch the Girl", by The Rubyz Duration: 192]
+[Te Amo Tanto", by AOL Dejando Huella Duration: 192]
+[Twelve Sticks", by Reverend Gary Davis Duration: 194]
+[Lil' Crips", by Snoop Dog Duration: 195]
+[Rip It Up", by Jet Duration: 200]
+[Ladies and Gentleman", by The Rubyz Duration: 201]
+[The Road", by Aaron Watson Duration: 204]
+[My Girlfriend", by Sean Kingston Duration: 204]
+[Dime Si te Vas Con El", by AOL Dejando Huellas Duration: 204]
+[Good Life", by Kanye West Duration: 207]
+[Hot Cha", by Roy Buchanan Duration: 208]
+[Shuffleboard", by Jeff Golub Duration: 210]
+[Unforgettable", by Natalie Cole Duration: 211]
+[Samson and Delilah", by Reverend Gary Davis Duration: 216]
+[Think About It", by Snoop Dog Duration: 217]
+[Give It All U Got", by Lil Jon Duration: 218]
+[Quitter", by Carrie Underwood Duration: 220]
+[Something to Talk About", by Bonnie Raitt Duration: 227]
+[Russian Roulette", by Rihanna Duration: 228]
+[Take Your Shirt Off", by T-Pain Duration: 228]
+[Monkey Wrench", by Foo Fighters Duration: 230]
+[I'm Just a Prisoner", by Janiva Magness Duration: 230]
+[I Blew Up The United States", by Was (Not Was) Duration: 230]
+[Luka", by Suzanne Vega Duration: 231]
+[Small Blue Thing", by Suzanne Vega Duration: 235]
+[Cowboy Casanova", by Carrie Underwood Duration: 236]
+[Fire Burning", by Sean Kingston Duration: 239]
+[What We Talkin' About", by Jay-Z Duration: 243]
+[Noites Cariocas", by Caraivana Duration: 252]
+[In a Sentimental Mood", by John Coltrane Duration: 256]
+[Gangsta Luv", by Snoop Dogg Duration: 257]
+[Timothy", by Jet Duration: 260]
+[All My Life", by Foo Fighters Duration: 263]
+[Lizard Skin", by Terra Incogni Duration: 270]
+[You Were Never Mine", by Janiva Magness Duration: 276]
+[Empire State of Mind", by Jay-Z Duration: 276]
+[Kid Charlemagne", by Steely Dan Duration: 278]
+[Pretending", by Eric Clapton Duration: 283]
+[The Bit", by Mastadon Duration: 295]
+[Clone", by Terra Incognita Duration: 298]
+[Fish Fare", by Jeff Golub Duration: 299]
+[Bad Love", by Eric Clapton Duration: 308]
+[Black Cow", by Steely Dan Duration: 310]
+[Stronger", by Kanye West Duration: 311]
+[Medieval Overture", by Return to Forever Duration: 313]
+[Rockit", by Herbie Hancock Duration: 325]
+[I Can't Make You Love Me", by Bonnie Raitt Duration: 331]
+[That's The Homie", by Snoop Dogg Duration: 343]
+[Where Did Your Heart Go?", by Was (Not Was) Duration: 347]
+[Oblivion", by Mastadon Duration: 348]
+[Haitian Divorce", by Steely Dan Duration: 351]
+[Goin' On", by Jeff Golub Duration: 356]
+[Blues On the Corner", by McCoy Tyner Duration: 367]
+[Pirate Jenny", by Nina Simone Duration: 402]
+[Monk/Trane", by John Patitucci Duration: 434]
+[Green Onions", by Roy Buchanan Duration: 443]
+[Sonny Side", by John Patitucci Duration: 445]
+[Nefertiti", by Herbie Hancock Duration: 451]
+[A Love Supreme Part 1", by John Coltrane Duration: 462]
+[Afro Blue", by McCoy Tyner Duration: 742]
+[Brahms: Symphony No. 4 in E Minor Op. 98", by Berliner Philharmoniker Duration:
+ 800]
+[Brahms: Symphony No. 1 in C Minor Op. 68", by Berliner Philharmoniker Duration:
+ 839]
+[Chameleon", by Herbie Hancock Duration: 941]
+
+_____That's all!_______
+
+
+_____Here's the List_______
+[A Love Supreme Part 1", by John Coltrane Duration: 462]
+[Afro Blue", by McCoy Tyner Duration: 742]
+[Alimony", by Ry Cooter Duration: 175]
+[All My Life", by Foo Fighters Duration: 263]
+[Bach: Suite for Cello No. 1 in G Major Prelude", by Yo-yo Ma Duration: 141]
+[Bad Love", by Eric Clapton Duration: 308]
+[Black Cow", by Steely Dan Duration: 310]
+[Blues On the Corner", by McCoy Tyner Duration: 367]
+[Brahms: Symphony No. 1 in C Minor Op. 68", by Berliner Philharmoniker Duration:
+ 839]
+[Brahms: Symphony No. 4 in E Minor Op. 98", by Berliner Philharmoniker Duration:
+ 800]
+[Bullhead's Psalm", by Blue Record Duration: 79]
+[Chameleon", by Herbie Hancock Duration: 941]
+[Clone", by Terra Incognita Duration: 298]
+[Cowboy Casanova", by Carrie Underwood Duration: 236]
+[Dime Si te Vas Con El", by AOL Dejando Huellas Duration: 204]
+[Donuts for Benny", by Veggie Tales Duration: 184]
+[Empire State of Mind", by Jay-Z Duration: 276]
+[Everybody's In The Mood", by Howlin' Wolf Duration: 178]
+[Feeling Good", by Nina Simone Duration: 177]
+[Fire Burning", by Sean Kingston Duration: 239]
+[Fish Fare", by Jeff Golub Duration: 299]
+[France Chance", by Ry Cooter Duration: 168]
+[Gangsta Luv", by Snoop Dogg Duration: 257]
+[Give It All U Got", by Lil Jon Duration: 218]
+[Goin' On", by Jeff Golub Duration: 356]
+[Good Life", by Kanye West Duration: 207]
+[Green Onions", by Roy Buchanan Duration: 443]
+[Haitian Divorce", by Steely Dan Duration: 351]
+[Hobo Blues", by John Lee Hooker Duration: 187]
+[Hot Cha", by Roy Buchanan Duration: 208]
+[I Blew Up The United States", by Was (Not Was) Duration: 230]
+[I Can't Make You Love Me", by Bonnie Raitt Duration: 331]
+[I Can't Quit You Baby", by John Lee Hooker Duration: 182]
+[I'm Just a Prisoner", by Janiva Magness Duration: 230]
+[In a Sentimental Mood", by John Coltrane Duration: 256]
+[Kid Charlemagne", by Steely Dan Duration: 278]
+[Ladies and Gentleman", by The Rubyz Duration: 201]
+[Lil' Crips", by Snoop Dog Duration: 195]
+[Lizard Skin", by Terra Incogni Duration: 270]
+[Luka", by Suzanne Vega Duration: 231]
+[Medieval Overture", by Return to Forever Duration: 313]
+[Monk/Trane", by John Patitucci Duration: 434]
+[Monkey Wrench", by Foo Fighters Duration: 230]
+[My Girlfriend", by Sean Kingston Duration: 204]
+[Nefertiti", by Herbie Hancock Duration: 451]
+[Noites Cariocas", by Caraivana Duration: 252]
+[Oblivion", by Mastadon Duration: 348]
+[Ogeechee Hymnal", by Blue Record Duration: 155]
+[Our Big Break", by Veggie Tales Duration: 69]
+[Pirate Jenny", by Nina Simone Duration: 402]
+[Pretending", by Eric Clapton Duration: 283]
+[Quitter", by Carrie Underwood Duration: 220]
+[Rip It Up", by Jet Duration: 200]
+[Rockit", by Herbie Hancock Duration: 325]
+[Russian Roulette", by Rihanna Duration: 228]
+[Samson and Delilah", by Reverend Gary Davis Duration: 216]
+[Shuffleboard", by Jeff Golub Duration: 210]
+[Simple Gifts", by Yo-yo Ma Duration: 154]
+[Small Blue Thing", by Suzanne Vega Duration: 235]
+[Something to Talk About", by Bonnie Raitt Duration: 227]
+[Sonny Side", by John Patitucci Duration: 445]
+[Stronger", by Kanye West Duration: 311]
+[Take Your Shirt Off", by T-Pain Duration: 228]
+[Te Amo Tanto", by AOL Dejando Huella Duration: 192]
+[That's The Homie", by Snoop Dogg Duration: 343]
+[The Bit", by Mastadon Duration: 295]
+[The Other Woman", by Nina Simone Duration: 186]
+[The Road", by Aaron Watson Duration: 204]
+[Think About It", by Snoop Dog Duration: 217]
+[This Will Be", by Natalie Cole Duration: 171]
+[Tico-Tico No Fuba", by Caraivana Duration: 147]
+[Timothy", by Jet Duration: 260]
+[Twelve Sticks", by Reverend Gary Davis Duration: 194]
+[Unforgettable", by Natalie Cole Duration: 211]
+[Watch the Girl", by The Rubyz Duration: 192]
+[Well That's All Right", by Howlin' Wolf Duration: 175]
+[What We Talkin' About", by Jay-Z Duration: 243]
+[Where Did Your Heart Go?", by Was (Not Was) Duration: 347]
+[You Were Never Mine", by Janiva Magness Duration: 276]
+
+_____That's all!_______
+
+Press any key to continue . . .
+</pre>
+
+    <p>Note that the first list is ordered by time, and the second by title, just as   we had expected.&nbsp; </p>
+    <p>Also notice that, besides changing the type parameter from float to <strong> iTunesEntry</strong>, we did not touch the<strong> insert()</strong> or <strong>remove()</strong> methods.&nbsp; So these can easily be turned into function templates and never   written again.&nbsp; Wow.</p>
+    <h3>A More  Complete Listing</h3>
+    <p>Here is the  listing for <strong>iTunesEntry</strong>, but I do not provide  the necessary class (<strong>iTunesEntryReader</strong>) that reads the data from a file, so you won't be able to run it, as is.  We'll run it in <span class="sectionOrAssignmentTitle">CS 1C</span>. However, this contains all the machinery necessary to do any potential assigned lab.</p>
+
+<pre>package cs_1c;
+
+//class iTunesEntry -----------------------------------------------------
+public class iTunesEntry implements Comparable&lt;iTunesEntry&gt;
+{
+   private String title, artist;
+   private int totalTime;
+
+   public static final int MIN_STR_LENGTH = 1;
+   public static final int MAX_STR_LENGTH = 300;
+   public static final int MAX_ENTRY_LENGTH = 10000;
+   public static final int MIN_PLAY_TIME_IN_SEC = 1;
+   public static final int MAX_PLAY_TIME_IN_SEC = 100000;
+   
+   public static final int DEFAULT_PLAY_TIME = 1;  // 1 second
+   public static final String DEFAULT_STRING = " (undefined) ";
+   
+   // comparable tools
+   public enum SortType { SORT_BY_TITLE, SORT_BY_ARTIST, SORT_BY_TIME };
+   
+   private static SortType sortKey = SortType.SORT_BY_ARTIST;
+   
+   // constructora
+   iTunesEntry()
+   {
+      title = DEFAULT_STRING;
+      artist = DEFAULT_STRING;
+      totalTime = DEFAULT_PLAY_TIME;
+   }
+   
+   iTunesEntry(String nm, String art, int tTime)
+   {
+      if ( !setTitle(nm) )
+         title = DEFAULT_STRING;
+      if ( !setArtist(art) )
+         artist = DEFAULT_STRING;
+      if ( !setTotalTime(tTime) )
+         totalTime = DEFAULT_PLAY_TIME;
+   }
+   
+   // accessors
+   public String getTitle()  { return title; }
+   public String getArtist()  { return artist; }
+   public int getTime()  { return totalTime; }   
+   
+   // mutators
+   public boolean setTitle(String ttl)
+   {
+      if (ttl.length() &lt; MIN_STR_LENGTH || ttl.length() &gt; MAX_STR_LENGTH)
+         return false;
+      title = ttl;
+      return true;
+   }
+   public boolean setArtist(String art)
+   {
+      if (art.length() &lt; MIN_STR_LENGTH || art.length() &gt; MAX_STR_LENGTH)
+         return false;
+      artist = art;
+      return true;
+   }
+   public boolean setTotalTime(int tTime)
+   {
+      if (tTime &lt; MIN_PLAY_TIME_IN_SEC || tTime &gt; MAX_PLAY_TIME_IN_SEC)
+         return false;
+      totalTime = tTime;
+      return true;
+   }
+   
+   public String getArtistLastName()
+   {
+      // search for first blank from end of string
+      // assume no trailing spaces
+      int k, length;
+
+      length = artist.length();
+      if ( length &lt; 1 )
+         return "";
+
+      for (k = length-1; k &gt;= 0; k--)
+      {
+         if (artist.charAt(k) == ' ')
+            break;
+      }
+
+      if (k &gt;= length-1 )
+         return "";
+
+      return artist.substring(k + 1, artist.length()-1);
+   }
+   
+   public String convertTimeToString() 
+   {
+      int minutes, seconds;
+      String strSeconds, strMinutes;
+
+      minutes = totalTime / 60;
+      seconds = totalTime % 60;
+
+      strMinutes = "" + minutes;
+      strSeconds = "" + seconds;
+
+      if (strSeconds.length() &lt; 2)
+         strSeconds = "0" + strSeconds;
+
+      return strMinutes + ":" + strSeconds;
+   }
+
+  
+   public static boolean setSortType( SortType whichType )
+   {
+      switch (whichType)
+      {
+      case SORT_BY_TITLE:
+      case SORT_BY_ARTIST:
+      case SORT_BY_TIME:
+         sortKey = whichType;
+         return true;
+      default:
+         return false;
+      }
+   }
+   
+   public int compareTo(iTunesEntry other)
+   {
+      switch (sortKey)
+      {
+      case SORT_BY_TITLE:
+         return (title.compareToIgnoreCase(other.title));
+      case SORT_BY_ARTIST:
+         // get last name from string
+         // stack the last name before the first - no worries about trailing last
+         return (getArtistLastName() + artist).compareToIgnoreCase(
+            other.getArtistLastName() + other.getArtist() );
+
+      case SORT_BY_TIME:
+         return (totalTime - other.totalTime);
+      default:
+         return 0;
+      }
+   }
+   
+   public String toString()
+   {
+      return "\"" + title + "\", by "
+         + artist + ", Duration "
+         + totalTime;
+   }
+}
+</pre>
+
+</div>
+</div>
+
+
+</body></html>

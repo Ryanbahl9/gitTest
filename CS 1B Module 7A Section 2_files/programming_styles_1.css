@@ -1,0 +1,545 @@
+<style type="text/css"> % for embedded pasting into html header
+
+@charset "utf-8";
+body {
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 1.2em;
+	line-height: 1.3em;
+}
+.picCenter
+{
+	width: 90%;
+	text-align: center;
+	overflow-x: scroll;
+	overflow: auto;
+	position: relative;
+	background-image: url(Untitled%20Notepad%20file%20with%20run%20pasted);
+}
+.picLeft {
+	width: 90%;
+	text-align: left;
+	overflow-x: scroll;
+	overflow: auto;
+	position: relative;
+}
+
+.picRight
+{
+	width: 90%;
+	text-align: right;
+	overflow-x: scroll;
+	overflow:auto;
+	position: relative;
+}
+
+/* ~~ This grouped selector gives the lists in the .content area space ~~ */
+.content ul, .content ol {
+	padding: 0 15px 15px 3em;
+	margin: 1em;
+	list-style: disc;
+	width: 75%;
+	border-bottom: thin #066;
+	border-right-color: #066;
+	border-left-color: #066;
+	border-top: thin #066;
+}
+.container .content ul li ol li
+{
+	list-style: decimal;
+}
+
+
+
+
+.container .content ul
+{
+
+}
+
+a img { /* this selector removes the default blue border displayed in some browsers around an image when it is surrounded by a link */
+	border: none;
+}
+
+/* ~~ Styling for your site's links must remain in this order - including the group of selectors that create the hover effect. ~~ */
+a:link {
+	color:#414958;
+	text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */
+}
+a:visited {
+	color: #4E5869;
+	text-decoration: underline;
+}
+
+p
+{
+	font-size: 1.2em;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	line-height: 1.3em;
+	color: #524;
+	position: relative;
+}
+a:hover, a:active, a:focus { /* this group of selectors will give a keyboard navigator the same hover experience as the person using a mouse. */
+	text-decoration: none;
+}
+
+/* ~~ this container surrounds all other divs giving them their percentage-based width ~~ */
+.container {
+	width: 96%;
+	min-width: 400px;
+	margin: 0 auto; /* the auto value on the sides, coupled with the width, centers the layout. It is not needed if you set the .container's width to 100%. */
+	font-family: Georgia, "Times New Roman", Times, serif;
+	line-height: 1.4em;
+}
+
+/* ~~ This is the layout information. ~~ 
+
+1) Padding is only placed on the top and/or bottom of the div. The elements within this div have padding on their sides. This saves you from any "box model math". Keep in mind, if you add any side padding or border to the div itself, it will be added to the width you define to create the *total* width. You may also choose to remove the padding on the element in the div and place a second div within it with no width and the padding necessary for your design.
+
+*/
+.content {
+	padding: 10px;
+}
+
+.container .content ol li
+{
+	list-style: decimal;
+	padding: 1em;
+	color: #524;
+	font-size: 1.1em;
+	line-height: 1.2em;
+}
+.container .content .question ul li ul li
+{
+	font-size: 1em;
+}
+
+.container .content .question ul li ul li ul li ul li
+{
+	font-size: 1em;
+}
+
+.container .content .question ul li ul li ul li
+{
+	font-size: 1em;
+}
+
+.container .content .question ul li
+{
+	font-size: 1em;
+}
+
+
+
+
+.container .content ul li
+{
+	list-style: square outside;
+	padding-top: 1em;
+	color: #524;
+	font-size: 1.1em;
+	line-height: 1.2em;
+}
+
+
+
+/* ~~ miscellaneous float/clear classes ~~ */
+.fltrt {  /* this class can be used to float an element right in your page. The floated element must precede the element it should be next to on the page. */
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { /* this class can be used to float an element left in your page. The floated element must precede the element it should be next to on the page. */
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { /* this class can be placed on a <br /> or empty div as the final element following the last floated div (within the #container) if the overflow:hidden on the .container is removed */
+	clear:both;
+	height:0;
+	font-size: 1px;
+	line-height: 0px;
+}
+.h1Etudes
+{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	text-align: center;
+	border-top-style: none;
+	border-right-style: none;
+	line-height: 1em;
+	float: none;
+	position: relative;
+	border-bottom: thick solid #036;
+	left: 28%;
+	background: #CC9966;
+	font-size: 1.8em;
+	width: 40%;
+	padding: 3px 5px 6px;
+	margin-bottom: 1em;
+	margin-top: 1em;
+}
+h1
+{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	text-align: center;
+	border-top-style: none;
+	border-right-style: none;
+	line-height: 1em;
+	float: none;
+	position: relative;
+	border-bottom: thick solid #036;
+	left: 28%;
+	background: #CC9966;
+	font-size: 1.8em;
+	width: 40%;
+	padding: 3px 5px 6px;
+	margin-bottom: 1em;
+	margin-top: 1em;
+}
+h2
+{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	float: none;
+	text-align: left;
+	font-size: 1.6em;
+	background: #CC9;
+	line-height: 1em;
+	position: relative;
+	width: 90%;
+	padding: 6px 3px 8px 15px;
+	border-top: 1px solid #036;
+	border-right-color: #036;
+	border-bottom-color: #036;
+	border-left-color: #036;
+	margin-top: 2em;
+	z-index: 1;
+}
+
+h3
+{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	float: none;
+	text-align: left;
+	font-size: 1.2em;
+	background: #CC9;
+	position: relative;
+	width: 40%;
+	padding: 2px 3px 2px 15px;
+	margin-top: 2em;
+}
+h4
+{
+	background: #ffffff;
+	font-weight: normal;
+	border-bottom-style: double;
+	font-size: 1.2em;
+	width: 50%;
+	border-color: #036;
+	color: #012;
+	margin-top: 2em;
+}
+
+
+
+pre
+{
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 1.2em;
+	white-space: pre;
+	border-width: 1px;
+	position: relative;
+	left: 40px;
+	width: 90%;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	background: rgb(227,227,227);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	overflow-y: scroll;
+	overflow-x: scroll;
+	max-height: 200px;
+	overflow: auto;
+	padding-left: 1em;
+	z-index: 2;
+}
+.preWithoutBorder
+{
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 1.2em;
+	white-space: pre;
+	position: relative;
+	left: 40px;
+	width: 90%;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	overflow-y: scroll;
+	overflow-x: scroll;
+	max-height: 200px;
+	overflow: auto;
+	padding-left: 1em;
+	z-index: 2;
+}
+p pre
+{
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 1.2em;
+	white-space: pre;
+	position: relative;
+	left: 40px;
+	width: 90%;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	overflow-y: scroll;
+	overflow-x: scroll;
+	max-height: 200px;
+	overflow: auto;
+	padding-left: 1em;
+	z-index: 2;
+}
+
+
+img
+{
+	z-index: 3;
+	position: relative;
+}
+.container .content ol li pre
+{
+	width: 80%;
+	font-size: 1.1em;
+}
+.question
+{
+	background: #FFFFCC;
+	border-width: 2px;
+	border-style: solid;
+	padding: 1em;
+	font-family: Verdana, Geneva, sans-serif;
+	margin-top: 2em;
+	margin-bottom: 0.7em;
+}
+
+
+
+
+
+.h2Etudes
+{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	float: none;
+	text-align: left;
+	font-size: 1.6em;
+	background: #CC9;
+	line-height: 1em;
+	position: relative;
+	width: 90%;
+	padding: 6px 3px 8px 15px;
+	border-top: 1px solid #036;
+	border-right-color: #036;
+	border-bottom-color: #036;
+	border-left-color: #036;
+	margin-top: 2em;
+}
+
+
+.h3Etudes
+{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	float: none;
+	text-align: left;
+	font-size: 1.2em;
+	background: #CC9;
+	position: relative;
+	width: 40%;
+	padding: 2px 3px 2px 15px;
+}
+
+.h4Etudes
+{
+	background: #ffffff;
+	font-weight: normal;
+	border-bottom-style: double;
+	font-size: 1.2em;
+	width: 50%;
+	border-color: #036;
+	color: #012;
+}
+.important
+{
+	padding: 1.8em;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color: #500;
+	margin: 2em;
+	border: 2px solid #F00;
+	background: #FC6;
+	font-weight: bold;
+	font-variant: normal;
+	font-size: 1.3em;
+}
+
+.content p
+{
+
+}
+
+.important p
+{
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color: #500;
+	font-weight: normal;
+	text-transform: none;
+	font-size: 1em;
+}
+.sectionOrAssignmentTitle
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #036;
+}
+
+.codeInLine
+{
+	font-family: "Courier New", Courier, monospace;
+	font-weight: bold;
+	font-size: large;
+}
+
+.math {
+	/* [disabled]font-family: "Times New Roman", Times, serif; */
+	font-size: 1.4em;
+	position: relative;
+}
+
+.parenthetical
+{
+	color: #445566;
+	background: #dddddd;
+	width: 90%;
+	position: relative;
+	border-right: 5px solid #667788;
+	border-left: 5px solid #667788;
+	margin-left: 1em;
+	margin-right: 1em;
+	padding: 1em;
+}
+
+
+.windows
+{
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-weight: bolder;
+	color: #993333;
+}
+
+.mac
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-weight: bold;
+	color: #333399;
+}
+
+
+.narrowTable
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	margin: 0px 30% 0%;
+	padding: 1em;
+	position: relative;
+	color: #014;
+	background: #6F9;
+	float: none;
+}
+.wideTable
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	margin: 0px 7% 0%;
+	padding: 1em;
+	position: relative;
+	color: #014;
+	background: #6F9;
+	float: none;
+}
+
+
+.container .content .narrowTable table tr td
+{
+	position: relative;
+	text-align: center;
+	padding-top: 1em;
+}
+.container .content .wideTable table tr td
+{
+	position: relative;
+	text-align: left;
+	padding: 1em;
+	border-bottom-style: none;
+	border-bottom-width: 1px;
+}
+.workDue
+{
+	color: #000;
+	background: #FF9;
+}
+
+
+
+
+.container .content .narrowTable table tr th
+{
+	font-size: 1.1em;
+	font-weight: normal;
+	padding: 2em 1em 1em;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	position: relative;
+}
+.container .content .wideTable table tr th
+{
+	font-size: 1.1em;
+	font-weight: normal;
+	padding: 2em 1em 1em;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	position: relative;
+}
+
+
+.container .content .narrowTable table caption
+{
+	font-weight: bold;
+	border-bottom-width: 3px;
+	border-bottom-style: solid;
+}
+
+.container .content .wideTable table caption
+{
+	font-weight: bold;
+	border-bottom-width: 3px;
+	border-bottom-style: solid;
+}
+
+.content h2 .codeInLine {
+	font-size: x-large;
+}
+
+</style> % for embedded pasting into html 

@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_7b_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 7B Section 3</title>
+<link href="./CS 1B Module 7B Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 3 - Implementing a Pseudo-Datamatrix Optical Writer/Reader (Optional)</h1>
+  	<div class="parenthetical"> <strong>This section is optional</strong><strong></strong>. Ultimatly, it will be replaced by sections <strong>7B.5</strong> through <strong>7B.7</strong>. You may proceed directly to those if you wish. </div>
+	<h2>7B.3.1 The Groundwork:&nbsp; An Interface and an Image Class</h2>
+	<p>Our goal is to provide a toolkit for barcode reader/writer development --   tools that our company can use for its internal hardware and software products,   and tools that we can sell to other companies as APIs (application programming   interfaces).</p>
+	<h2>7B.3.2 BarcodeIO Interface</h2>
+	<p>We begin by defining an interface that will contain the requisite method   signatures needed by any barcode reader/writer class that future programmers   might design. Like all interfaces, we do not define the behavior of the methods. We only provide their names and some documentation in order to guide  implementers  as to their intended effect.</p>
+	<p>The basic idea is this:&nbsp; The interface will proclaim that the   implementing class has two fundamental read operations, one for scanning an   image (clearly intended for later translation into a text string), and another   for reading some text (intended for later conversion to an image label that will be   printed).&nbsp; This represents both halves of the read process.&nbsp; Sometimes we   want to <em>create</em> a label, so we ask for a string to encode.&nbsp; Other times we   want to <em>read</em> a label so we scan in an image.&nbsp; </p>
+	<h4>We have two   methods signatures for these two operations: </h4>
+	<ul>
+		<li><strong>public boolean scan(BarcodeImage bc);</strong></li>
+		<li><strong>public boolean readText(String text);</strong></li>
+	</ul>
+	<p>Next, the interface requires two output methods, one for reporting the text   message and another for "printing" a label.&nbsp; </p>
+	<h4>These will be called </h4>
+	<ul>
+		<li><strong>public void displayTextToConsole()</strong> ;</li>
+		<li><strong>public void displayImageToConsole();</strong></li>
+	</ul>
+	<p>Finally, we will add two methods that bridge the gap between the two   extremes.&nbsp; These will cause the translation of a text message to and from   the image data.&nbsp; They don't have any input/output impact, but do represent   a change in the state of the object, allowing us to be certain that the text we   just read-in has been converted to a barcode image, or conversely, that the   image we just scanned has been translated into some text. </p>
+	<h4>These methods   are:</h4>
+	<ul>
+		<li><strong>public boolean generateImageFromText()</strong>;</li>
+		<li><strong>public boolean translateImageToText();</strong></li>
+	</ul>
+	<p>We will call the interface <strong>BarcodeIO</strong>, and, in summary, here is a complete   specification for the interface:</p>
+	<h3>BarcodeIO</h3>
+	<p>Any   class that <strong><em>implements</em></strong> <strong>BarcodeIO</strong> is expected to store some version of an image   and some version of the text associated with that image.&nbsp; I will describe   each method signature here because it will make the spec of the implementing class   shorter.&nbsp; However, descriptions in an interface don't pack any punch in   practice.&nbsp; For us, though, they should be considered "spec": </p>
+	<ul>
+		<li><strong>public boolean scan( BarcodeImage bc )</strong> - accepts some image,   	represented as a <strong>BarcodeImage</strong> object to be described below, and stores a copy of this   	image.&nbsp; Depending on the sophistication of the implementing class, the   	internally stored image might be an exact clone of the parameter, or a   	refined, cleaned and processed image.&nbsp;   	Technically, there is no requirement that an implementing class use a <strong>BarcodeImage</strong> object internally, although we will do so.&nbsp; For the basic <strong>DataMatrix</strong> option,   	it will be an exact clone.&nbsp; Also, no <strong><em>translation</em></strong> is done here - i.e., any   	text string that might be part of an implementing class is not touched,   	updated or defined during the scan. </li>
+		<li><strong>public boolean readText( String text )</strong> - accepts a text string to   	be eventually encoded in an image. No translation is done here - i.e., any <strong>BarcodeImage</strong> that might be part of an implementing class is not touched,   	updated or defined during the reading of the text.</li>
+		<li><strong>public boolean generateImageFromText()</strong> - Not technically an I/O   	operation, this method looks at the internal text stored in the implementing class   	and produces a companion <strong>BarcodeImage</strong>, internally (or an image in   	whatever format the implementing class uses).&nbsp; After this is   	called, we expect the implementing object to contain a fully-defined image   	and text that are in agreement with each other.</li>
+		<li><strong>public boolean translateImageToText()</strong> - Not technically an I/O   	operation, this method looks at the internal image stored in the implementing   	class, and produces a companion text string, internally.&nbsp; After this is   	called, we expect the implementing object to contain a fully defined image   	and text that are in agreement with each other.</li>
+		<li><strong>public void displayTextToConsole()</strong> - prints out the text string   	to the console.</li>
+		<li><strong>void displayImageToConsole() </strong>- prints out the image to the   	console.&nbsp; In our implementation, we will do this in the form of a dot-matrix of blanks and asterisks, e.g., 
+		
+<pre>------------------------------------
+|* * * * * * * * * * * * * * * * * |
+|*                                *|
+|****   * ***** **** **** ******** |
+|*   *** ***************** ********|
+|*  * **  *   *   *  *    * **     |
+|* *       * *  **    * * *    ****|
+|*     *   *    ** * *  *  *  ** * |
+|** * *** *****  **     * *      **|
+|****  *   **** ** *   *   *  * *  |
+|**********************************|
+------------------------------------
+</pre>
+
+</li>
+	</ul>
+	<h2>7B.3.3 BarcodeImage Class for Holding Images</h2>
+	<p>Next we want to define a data   structure that will be used to store, internally, an image.&nbsp; Let's be clear   about what we are doing. This class is not the ultimate <strong>DataMatrix</strong> class that is   going to implement <strong>BarcodeIO</strong> and do the translation between text and graphics.&nbsp;&nbsp;   This current class is only about the graphics data, and doesn't even really have   to be used for barcodes.&nbsp; We could have called it <strong>TwoDimImage</strong>, for example.&nbsp;&nbsp;   Come to think of it, I did this a few days ago for you.&nbsp; What a   coincidence.</p>
+	<p>The intended use of this class is to be used as a member object in our   ultimate class, <strong>DataMatrix</strong>.&nbsp; Make sure you are clear on this.&nbsp; We are   not going to subclass from this, we are going to use it as one small part, a <strong> <em>member object,</em></strong> of the   target class <strong>DataMatrix</strong>.</p>
+	<p>We will call this image class <strong>BarcodeImage</strong>.&nbsp; Because <strong>BarcodeImage</strong> will, just   like our friend <strong>TwoDimImage</strong>, contain deep data, it must <strong><em>implement</em></strong> the Java   interface <strong>Cloneable</strong>.&nbsp; The data is described very simply as a 2D array of <strong>booleans</strong> (along with a couple static finals that indicate the dimensions of that   array).</p>
+	<h4>&nbsp;&nbsp; Data for BarcodeImage</h4>
+	<ul>
+	  <li><strong>public static final int MAX_HEIGHT = 30;&nbsp;&nbsp;&nbsp;public static final int MAX_WIDTH = 65</strong>;&nbsp;&nbsp;&nbsp; These   	constants represent the maximum allowable dimensions of externally passed arrays   	and the <strong><em>exact</em></strong> internal dimensions of 2D data.&nbsp; These   	finals are required,   	but the values are up to you.&nbsp; </li>
+		<li><strong>private boolean imageData[][];&nbsp; </strong>Here is your payload.&nbsp;   	Instantiate the amount described using the above constants every time, even   	if an in-coming image is not that large.&nbsp; If the in-coming data is too   	large, instantiate memory anyway, but leave it blank (white).&nbsp; This data will be <strong>false</strong> for elements that are white (or blank), and <strong>true</strong> for elements that are   	anything else, particularly '*'s.</li>
+	</ul>
+	<p>Let's talk about how we are going to use<strong> imageData[][]</strong> to hold our image,   internally.&nbsp;&nbsp; Let's say we have a very small 3x3 image:</p>
+	
+<pre><span style="background-color: #99CCFF">* *</span>
+<span style="background-color: #99CCFF"> * </span>
+<span style="background-color: #99CCFF">***</span>
+</pre>
+
+	<p>(That's my attempt at an image of the face of a student, hungry for   knowledge.)</p>
+	<p>Now, our internal <strong>imageData[][] </strong>is a large (<strong>30</strong> tall by <strong>65</strong> wide)   array.&nbsp; Where do we place this small 3x3 array within <strong>imageData[][]</strong>?&nbsp;   We will place it in the lower-left corner.&nbsp; All "signal" (the blanks and asterisks of this little 3×3 image) will be placed  into that corner.&nbsp; Here is the   positioning of this "signal":</p>
+
+<pre>
+    Col# -&gt; |0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ... -&gt; ... 63 64
+            |
+Row #       |
+-----       |-----------------------------------------------------------------------
+ 0          |
+ 1          |
+ 2          |     example: imageData[2][19] is here ----&gt;   <span style="background-color: #99CCFF">X</span>
+ 3          |
+ 4          |
+ 5          |
+ 6          |
+ 7          |
+ 8          |
+ 9          |
+10          |
+11          |
+12          |
+13          |
+14          |
+15          |
+16          |
+17          |
+18          |
+19          |    (everything above and to the right of the signal is white = false)
+20          |
+21          |
+22          |
+23          |
+25          |
+26          |
+27          |<span style="background-color: #99CCFF">*   *</span>
+28          |<span style="background-color: #99CCFF">  *  </span>    &lt;--- actual "signal" is packed lower left, row <b>MAX_HEIGHT-1 </b>and up
+29          |<span style="background-color: #99CCFF">* * *</span>          
+             ------------------------------------------------------------------------
+
+</pre>
+
+	<p>Of course, I am using '*' to   mean <strong>true</strong>, and blank ' '   to mean <strong>false</strong>.&nbsp; The array is completely <strong>false</strong> except for a   few elements in the lower-left.&nbsp;&nbsp; The   color is only used to help you see the actual <strong><em>signal</em></strong>, not   meant to indicate <strong>true</strong> or <strong>false</strong>.&nbsp; One final, important   observation:&nbsp; the signal is not stored in the <strong>imageData[][]</strong> in such a way   that the interesting part, the signal, starts with<strong> imageData[0][0]</strong>.&nbsp; <font color="#FF0000"><em>If   you place data there, you will not get the program to work.&nbsp;</em></font> The above   picture tells you <em>everything you need to know in order to store, read and   write the image</em>.&nbsp; </p>
+	<p>One thing that any downstream method looking just at this large <strong>imageData[]</strong> matrix cannot know, based only on what it contains, is where the actual   signal <em>ends</em>.&nbsp; (Maybe a few rows of white (<strong>false</strong>) above or to the right of   the last black (*) are signal.)&nbsp;&nbsp; That kind of information will be   dealt with elsewhere.&nbsp; All we need to do here, in this class, is to know   what to do with a rectangular image that we get (in a constructor, for example)   that might be <em>smaller than </em>the full <strong>30</strong> x <strong>65</strong> internal array:&nbsp; we pack   it into the lower left.&nbsp; But when we display it (if we were to do so in this   class), or do anything else, we'll   treat the entire <strong>30</strong> x <strong>65</strong> element array as valid data.&nbsp; </p>
+	<h3> &nbsp;&nbsp; Methods   for BarcodeImage</h3>
+	<ul>
+		<li>Constructors.&nbsp; Two minimum, but you could have others:
+			<ul>
+				<li><strong>Default Constructor </strong>-&nbsp; instantiates a 2D array (<strong>MAX_HEIGHT</strong> × <strong>MAX_WIDTH</strong>) and stuffs it all with blanks (<strong>false</strong>).</li>
+				<li><strong>BarcodeImage( String[] str_data )</strong> - an easy-to-use (but harder   		to implement) constructor that takes a 1D array of <strong>Strings</strong> and converts   		it to the internal 2D array of <strong>booleans</strong>.&nbsp; See the sample   		below and diagram above, for clarity on this.
+				</li>
+			</ul>
+			
+<div class="important"> HINT
+						<p>This constructor is a little tricky because the incoming image is not the necessarily same size as the internal matrix.&nbsp; So, you have to pack it into the lower-left corner, causing a bit of stress if you don't like 2D counting.&nbsp; This is good 2D array exercise.</p>
+</div>
+
+		</li><li><em><strong>Accessor</strong></em> and <em><strong>mutator</strong></em> for each bit in the image:&nbsp; <strong>boolean   	getPixel( int row, int col )</strong> and <strong>boolean setPixel( int row, int col,   	boolean value )</strong>;&nbsp; For the <strong>getPixel()</strong>, you can use the return   	value for both the actual data and also the error condition -- so that we   	don't "create a scene" if there is an error; we just return <strong>false</strong>.</li>
+		<li>A <strong>clone() </strong>method that overrides the method of that name in class <strong>Object</strong>.&nbsp; This is covered in detail in the modules.</li>
+		<li>A <strong>display()</strong> method that shows the object in a border, with <em> blanks</em>, <strong>' '</strong>, representing white/false and <em>asterisks</em>, <strong> '*'</strong> representing black/true.&nbsp; This is meant mostly for debugging   	and development purposes since <strong>BarcodeImage</strong> is supposedly independent   	of <em>I/O</em>.&nbsp; We include it as a corresponding method for our <strong> TwoDimImage</strong>'s <strong>display()</strong> function.</li>
+		<li>There may be others -- these are the crucial ones.</li>
+	</ul>
+	<p>Notice that the "money" constructor takes a <strong>String</strong> array, as input.&nbsp;   Usually, a constructor takes data identical to the internal data.&nbsp; However   a 2D array of <strong>booleans</strong> is really a pain to write out, while an array of <strong>Strings</strong> is a breeze.&nbsp;&nbsp; An example that shows how you would   create and display a <strong>BarcodeImage</strong> using this constructor and <strong>display()</strong> follows:</p>
+
+<pre>public class Foothill
+{
+   public static void main(String[] args)
+   {
+      String[] sImageIn = 
+      { 
+         "                                      ",
+         "                                      ",
+         "                                      ",
+         "* * * * * * * * * * * * * * * * *     ",
+         "*                                *    ",
+         "**** * ****** ** ****** *** ****      ",
+         "* ********************************    ",
+         "*    *   *  * *  *   *  *   *  *      ",
+         "* **    *      *   **    *       *    ",
+         "****** ** *** **  ***** * * *         ",
+         "* ***  ****    * *  **        ** *    ",
+         "* * *   * **   *  *** *   *  * **     ",
+         "**********************************    "
+      };
+      
+      BarcodeImage bc = new BarcodeImage(sImageIn);
+      bc.display();
+   }   
+}
+</pre>
+
+	<p> Here is the output of a successful run:</p>
+	<div class="picCenter"><img src="./CS 1B Module 7B Section 3_files/pic_1b7_1.jpg" alt="console shot" width="623" height="658" border="1"></div>
+	<p> This example anticipates a couple things.&nbsp; First, it looks like <em> Datamatrix</em> format (why?).&nbsp;   Second, the writer of this example chose to "pack" the signal in the lower-left   of the <strong>String</strong> array.&nbsp; That might not have been the case - there is   no law requiring the client to <em>not</em> have spaces below, or to the left of, the   signal.&nbsp; Even if we were using <em>Datamatrix</em>, the image might not be   left-lower pre-packed!&nbsp; But, in the simple program we write in our lab, we   will see one option where we expect the client to give us a <strong>String</strong> array   with this lower-left justification.&nbsp; This expectation makes writing the   class methods easier.</p>
+	<p> Oh, and by the way, don't be lulled into a false sense of complacency.&nbsp;   The lower-left packing of this <strong>String sImageIn</strong> array by the client does   very little to help us translate the data to a lower-left packing of the<strong> boolean imageData[][]</strong> array.&nbsp; We will need very careful and meticulous   counting in order to make this translation.&nbsp; That's why we are making the   big bucks.</p>
+	<h2>7B.3.4 Steps in Implementing BarcodeImage</h2>
+	<p>As you know, <strong>BarcodeImage</strong> is very similar to <strong>TwoDimImage</strong> which   I have completely implemented for you.&nbsp; Here are the key differences.</p>
+	<ul>
+		<li>The <strong>int data[][]</strong> of the <strong>TwoDimImage</strong> is an <strong>int</strong> matrix, while the <strong>bool&nbsp; imageData[][]</strong> of <strong>BarcodeImage</strong> is a <strong>boolean</strong> matrix.</li>
+		<li>When you <strong>display()</strong> your <strong>BarcodeImage</strong> object, you must test   	for true/false and output <strong>'*'</strong> or<strong> ' '</strong>, accordingly.&nbsp; You don't simply   	output the data.</li>
+		<li><strong>get/setElement()</strong> is replaced by <strong>get/setPixel()</strong> which work   	on <strong>boolean</strong>, not <strong>int</strong>, data.</li>
+		<li> <strong>boolean checkSize(String[] data )</strong> should be   	the new version of <strong>TwoDimImage</strong>'s <strong>checkSize()</strong>.&nbsp;&nbsp;&nbsp;I   	didn't specify it above, because it is a private helper method, but it is   	just as useful in the new context.&nbsp; It has a different signature, but   	has to test for essentially the same things, adjusted for the new&nbsp;   	parameter type.</li>
+		<li>The constructor, <strong>BarcodeImage(String[] str_data)</strong>,   	while not much longer than the prior constructor,&nbsp;<strong>TwoDimImage(int[][] int_data)</strong>,   	it is <u><em>much more subtle</em></u> and requires a lot of thought,   	counting, pencil, paper and thinking.&nbsp; You have to move data from the   	client's <strong>String array</strong> into the lower left corner of the private <strong> boolean</strong> member array, and this "ain't" easy.&nbsp; But you are   	qualified to do it, and it is now the time for you to prove this to   	yourself.</li>
+	</ul>
+	<p>This class, <strong>BarcodeImage</strong>, can be written and debugged all by itself,   independent of the other components of today's lesson.&nbsp; Start with <strong> TwoDimImage</strong> and make changes slowly and carefully.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

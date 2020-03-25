@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8b_7.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8B Section 7</title>
+<link href="./CS 1B Module 8B Section 7_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 7 - PriorityQueues</h1>
+	<h2>8B.7.1 The Comparator Interface</h2>
+	<p>We have seen the <strong>Comparable</strong> interface which belongs to the <strong>java.lang   package</strong>. There is another interface defined in the Collections Framework called <strong>Comparator</strong> which is very similar.&nbsp; When you implement a <strong>Comparator</strong> interface, you are providing a <strong>compare()</strong> method that explains the relationship   between two objects of your target class.&nbsp; For instance, if you want to   build a <strong>Comparator</strong> for <strong>Cards</strong>, you would do something like this:</p>
+
+<pre>class MyCardComparator implements Comparator&lt;Card&gt;
+{
+   public int compare(Card c1, Card c2)
+   {
+      // define compare here ... 
+   }
+}
+</pre>
+
+	<p> For our present example, we need a comparator for <strong>Float</strong>.&nbsp; While <strong>Float</strong> already implements <strong>Comparable</strong> as part of <strong>Java.lang</strong>, it does <em>not</em> do so for <strong>Comparator</strong> in <strong>Java.util</strong>.&nbsp; Here is one obvious implementation:</p>
+
+<pre>class MyComparator implements Comparator&lt;Float&gt;
+{
+   public int compare(Float f1, Float f2)
+   {
+      if (f1 &lt; f2)
+         return -1;
+      if (f1 &gt; f2)
+         return 1;
+      return 0;
+   }
+}
+</pre>
+
+	<h2>8B.7.2&nbsp; PriorityQueue</h2>
+	<p>A <strong>PriorityQueue</strong> is a <strong><em>generic collection class</em></strong> that we   can instantiate around any object type we wish such as <strong>Card</strong> or <strong>Float</strong>.&nbsp;   The idea of the <strong>PriorityQueue</strong> is that it implements the expected <strong>add()</strong> and<strong> remove()</strong> methods, but with a twist:&nbsp; If you supply a <strong> Comparator</strong> object to the <strong>PriorityQueue</strong> constructor, it will insert   new objects in their proper order.&nbsp; This results in a list structure that   is even more powerful than <strong>LinkedList</strong> because we have very little work to   do.</p>
+	<p>The steps are quite simple.</p>
+	<ol>
+		<li><em><strong>Implement a Comparator</strong></em> for your target class (as we did   	above for <strong>Float</strong>).</li>
+		<li><em><strong>Instantiate a PriorityQueue&lt;&gt;</strong></em> passing the <u>initial size</u> of the Queue and <u>the Comparator</u> as arguments to the constructor.</li>
+		<li><em><strong>Use add() and remove() as you would normally.</strong></em>&nbsp;   	Objects are inserted in their natural order as defined by your Comparator.</li>
+	</ol>
+	<p>To emphasize how little work we have to do, I have added a new improvement to   our next example.&nbsp; Not only are the <strong>Insert()</strong> and <strong>Remove()</strong> methods gone,   replaced by the implicit <strong>add()</strong> and <strong>remove()</strong> of the <strong>PriorityQueue</strong>, but the <strong>ShowList()</strong> is also gone.&nbsp; How can that be?&nbsp; Well, we could have done   this all along, but I've saved it for now to add to the potency of this drastic   simplification.&nbsp; Any object that has a <strong>toString()</strong> method overridden can be   placed in a <strong>System.out.println()</strong> method.&nbsp; The collections classes all   implement <strong>toString()</strong> enabling us to print out these <em><strong>lists</strong></em>, <em><strong>queues</strong></em>, <em><strong>stacks</strong></em> or <em><strong>deques</strong></em> without any loops or hoopla.</p>
+	<p>Study this elegantly simple example.</p>
+
+<pre>import java.util.*;
+
+class MyComparator implements Comparator&lt;Float&gt;
+{
+   public int compare(Float f1, Float f2)
+   {
+      if (f1 &lt; f2)
+         return -1;
+      if (f1 &gt; f2)
+         return 1;
+      return 0;
+   }
+}
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      PriorityQueue&lt;Float&gt; myList = new PriorityQueue&lt;Float&gt;(5, new MyComparator());
+      int k;
+      float x;
+
+      // build list of 10 floats, 2 at a time (1 random and 1 k*100)
+      for (k = 0; k &lt; 5; k++)
+      {
+         x = 1000 * (float)Math.random(); // float bet 0 and 1000
+         myList.add(x);
+         myList.add((float)(k*100));
+      }
+
+      // should be sorted
+      System.out.println(myList + "\n");
+
+      // remove 5 nodes (and delete them!)
+      for (k = 0; k &lt; 5; k++)
+      {
+         x = k*100;
+         if (myList.remove(x))
+            System.out.println(x + " removed");
+         else 
+            System.out.println(x + " not found");
+      }
+      System.out.println(myList + "\n");
+
+      if (!myList.remove (-10))  // should have no effect
+         System.out.println("-10 not in list as expected. \n");;
+      System.out.println(myList + "\n");
+   }
+ }
+</pre>
+
+</div>
+</div>
+
+
+</body></html>

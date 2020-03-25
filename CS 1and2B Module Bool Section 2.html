@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0089)https://www.fgamedia.org/faculty/loceff/cs_courses/common/LIFE/cs_1and2B_bool_func_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1and2B Module Bool Section 2</title>
+<link href="./CS 1and2B Module Bool Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section CIRC - Circuit Complexity</h1>
+    <div class="parenthetical"> This page is optional. It gives context to some of the concepts just described.    </div>
+  	<h2>CIRC.1 Circuit Complexity and Exponential Growth</h2>
+	<p>An arbitrary boolean function that has <em>N</em> inputs requires, as we just saw, a list of 2<sup><em>N</em></sup> booleans (the outputs for each possible input) to represent it, at least it would if we were to use the array representation just described. In other words, let's assume that  we have a boolean function which we name <strong><em>f</em><sub><em>N</em></sub></strong>, where we appended the subscript <em>N</em> to indicate the number of input bits; it can handle inputs in the range, 0 to 2<sup><em>N</em></sup>-1, and the table size for <strong><em>f</em><sub><em>N </em></sub></strong>would be 2<sup><em>N</em></sup>. If we were to build a new function, "based somehow on <strong><em>f</em><sub><em>N</em></sub></strong>", but which took one extra bit, and called the new function <strong><em>f</em><sub><em>N</em>+1</sub></strong>, the table size of the new function would, of course, have size 2<sup><em>N+1</em></sup>, that is, it would require a table twice as large compared with the table of the original <strong><em>f</em><sub><em>N</em></sub></strong>. </p>
+	<p>Why do we care about this, and what does it even mean that  <strong><em>f</em><sub><em>N</em>+1</sub></strong> was "somehow based" on the function  <strong><em>f</em><sub><em>N</em></sub></strong>? </p>
+	<p>The answer lies in a field called <em><strong>decision theory</strong></em>. It turns out that a huge infinity of computational questions can be translated into a single (often large) boolean function with one ouput. Practically any computational problem you can think of asking can be expressed using a boolean function that solves it. The time it takes to solve the problem (the algorithm) corresponds to the size of the circuit (or table) that represents its boolean function. </p>
+	<p>The statement that "<strong><em>f<sub>N+1</sub></em></strong><em> is somehow based on the function <strong>f<sub>N</sub></strong></em>" is a way to say that <strong><em>f</em><sub><em>N</em></sub></strong> represented the decision problem for an input  of size <em>N</em> and <strong><em>f</em><sub><em>N</em>+1</sub></strong> represents <em>that same decision problem</em> for an input size one larger than <em>N</em>, or <em>N</em>+1. Both functions are related by virtue of their solving the same basic problem, but for different input sizes. Here, I'm using the letter <strong><em>f</em></strong> to label the decision problem at hand. If I had a different problem, I might use <strong><em>g</em></strong> (and the two tables for the different size inputs for this second problem, <strong><em>g</em><sub><em>N</em> </sub></strong>and <strong><em>g</em><sub><em>N</em>+1</sub></strong>).</p>
+	<p>As an example,  the problem whose solution depends on <em>N</em> is </p>
+    <div class="picCenter">
+      <p> <strong>Given any integer <em>k</em> between 0 and 2<sup><em>N</em></sup>-1, <em>is k prime?</em></strong>	</p>
+    </div>
+	<p>(The reason for picking the upper limit <strong>2<sup><em>N</em></sup></strong>-1 is that we are asking whether <em>k</em> can be represented using <em>N</em> binary digits.) This question has a boolean function, <strong><em>f</em><sub><em>N</em></sub></strong>, that corresponds to the solution of the problem and a table that represents  <strong><em>f</em><sub><em>N</em></sub></strong> . That function would answer the question for all inputs <em>k</em> &lt;= 2<sup><em>N</em></sup>-1; you supply any such <em>k</em> as an input, and the table would answer <strong>true</strong> if <em>k</em> were prime and <strong>false</strong> if not. In fact, for each <em>N</em>, we build a different boolean function that solves the prime number problem for all <em>k</em> &lt; 2<sup><em>N</em></sup>, so we get a function family, { <strong><em>f</em><sub><em>N</em></sub></strong>} dedicated to the prime number problem. As you can imagine, the algorithm takes more time to answer as <em>N</em> grows larger. This is also reflected in the table size for  <strong><em>f</em><sub><em>N</em></sub></strong> which has  has  2<sup><em>N</em></sup> elements in it. Using such tables, { <strong><em>f</em><sub><em>N</em></sub></strong>}, the size of each  <strong><em>f</em><sub><em>N</em></sub></strong> <em><strong>grows exponentially</strong></em> with <em>N: each table is twice the size of the table before it</em>. If we cannot find any better way to represent this algorithm other than to construct these brute-force tables then we say that the algorithm grows exponentially. For sake of argument, let's say we have not found  a better way to answer this prime number question other than to supply the entire table of size 2<sup><em>N</em></sup>. That would make the problem (potentially) one that exhibits <em><strong>exponential growth</strong></em>.</p>
+	<p>There are many circuits (and questions) that don't require a large table to represent them. For example, the question </p>
+	<div class="picCenter">
+	  <p><strong>Given any integer <em>k</em> between 0 and 2<sup><em>N</em></sup>-1, <em>is k &gt; 0?</em></strong></p>
+	</div>
+	<p></p>
+	<p>can be answered by <strong>OR</strong>-ing the <em>N</em> bits that constitute <em>k</em> together. This is merely <em>N</em>-1 <strong>OR</strong> gates, and it grows <em>linearly</em> (like <em>N</em>) not <em>exponentially</em> (like 2<sup><em>N</em></sup>). In other words, the boolean function family, { <strong><em>g</em><sub><em>N</em></sub></strong>}, that correspond to this question  has a much slower growth rate than the family { <strong><em>f</em><sub><em>N</em></sub></strong>} that corresponds to the prime number question. So, some problems can be represented by a circuit that has a slower growth rate, others require circuits that grow exponentially.</p>
+	<p>The manner in which a problem's algorithm takes grows with <em>N</em> -- or the size that its family of functions {<strong><em>f</em><sub><em>N</em></sub></strong>} grows with <em>N</em> -- is called the <strong><em>complexity of the algorithm</em></strong>. Algorithms (<em><strong>function families</strong></em>) that have polynomial growth (grow like <em>N</em> or <em>N</em><sup><em>2</em></sup> or <em>N</em><sup><em>7</em></sup>) are labeled <em><strong>easy</strong></em>. Those that have exponential growth are called <em><strong>hard</strong></em>. </p>
+	<p>There are lots of ill-defined statements in this last section, all of which require several pages of math to make rigorous. They require us to define terms like deterministic and non-deterministic circuit families, and lead the famous P ≠ NP conjecture. That's for another course.</p>
+	<h2>CIRC.2 Universal Gates</h2>
+	<p>Just as we could represent the question "is <em>k</em> (in the range 0 to 2<sup><em>N</em></sup>-1) greater than zero?" using (<em>N</em>-1) OR-gates, it turns out any arbitrary function <strong><em>f</em><sub><em>N</em></sub></strong> can be expressed using a circuit with a combination of relatively few binary or unary gates (like <strong>AND</strong>, <strong>OR</strong>, <strong>NOT</strong>, etc.) Whenever you have a small set of  gates which can be used to build any boolean function, that set is called <strong><em>universal</em></strong>. </p>
+	<p>The gates <strong>AND</strong>, <strong>OR</strong> and <strong>NOT</strong> form one universal set. It's very easy to show this, although I won't do it here.</p>
+	<p>Can we do it in fewer gates? Yes. We only need one gate to build everything else: the <strong>NAND</strong>-gate (the not-and gate). We introduced ii in the previous page, but for reference, its defining table is:</p>
+	<div align="center"> <font size="4" face="Arial Black"> NAND</font>
+	  <table width="60%" height="131" border="0" cellpadding="0" cellspacing="0" bordercolor="#808080" bordercolorlight="#800000" bordercolordark="#000000" bgcolor="#808080" id="table2">
+	    <tbody><tr>
+	      <td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">input</font></strong></td>
+	      <td align="center" bgcolor="#000000"><strong> <font face="Courier" color="#00FF00">ouput</font></strong></td>
+        </tr>
+	    <tr>
+	      <td align="center"><strong><font face="Courier">false false = 00 = 0(dec)</font></strong></td>
+	      <td align="center"><strong><font face="Courier">true</font></strong></td>
+        </tr>
+	    <tr>
+	      <td align="center"><strong><font face="Courier">false true = 01 = 1(dec)</font></strong></td>
+	      <td align="center"><strong><font face="Courier">true</font></strong></td>
+        </tr>
+	    <tr>
+	      <td align="center"><strong><font face="Courier">true false = 10 = 2(dec)</font></strong></td>
+	      <td align="center"><strong><font face="Courier">true</font></strong></td>
+        </tr>
+	    <tr>
+	      <td align="center"><strong><font face="Courier">true true = 11 = 3(dec)</font></strong></td>
+	      <td align="center"><strong><font face="Courier">false</font></strong></td>
+        </tr>
+      </tbody></table>
+    </div>
+	<p>You can do everything with this one gate. Furthermore, it isn't the only gate that can be used, without the help of other gates, to represent all boolean functions.  (Think about it, or search for it online.)</p>
+
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

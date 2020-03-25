@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_6b_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 6B Section 2</title>
+<link href="./CS 1B Module 6B Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 2 - Handling Java Exceptions</h1>
+	<h2>6B.2.1 Catching Java Exceptions</h2>
+	<p> Let's rewrite our division program again, this time using exceptions.&nbsp; The   message we got:</p>
+	<div class="picCenter"><img src="./CS 1B Module 6B Section 2_files/pic_1b6_14.jpg" alt="console shot" width="570" height="121" border="0"></div>
+	<p> gives us a hint about what kind of exception we are catching.&nbsp; First we'll   show the code, then we can talk about the variety of exceptions available to us   in Java.</p>
+
+<pre>import java.util.*;
+import javax.swing.*;
+
+public class Foothill
+{
+   public static void main(String[] args)
+   {
+      int a = 0, b = 0, result;
+
+      try
+      {
+         a = 10;
+         result = a / b;
+         System.out.println(result);
+      }
+      catch(<b><span style="background-color: #00FFFF">ArithmeticException</span></b> ex)
+      {
+         System.out.println("*** Likely div. by 0 exception ***");
+         // put contingency value into result
+         result = 0;
+      }
+
+      b = -5;
+      result = a / b;
+      System.out.println(result);
+   }
+}
+</pre>
+
+	<p>And this time we get a more considerate response when we run the program:</p>
+	<div class="picCenter"><img src="./CS 1B Module 6B Section 2_files/pic_1b6_15.jpg" alt="console shot" width="570" height="121" border="0"></div>
+	<p>I didn't put the second division in a try/catch block, only the first.&nbsp;   That's because I wanted you to easily see the logic in this first example,   clearly.</p>
+	<p>As you see, we are assuming that Java generates an ArithmeticException when it does   division and finds a 0 in the denominator.&nbsp; Now, we could have placed the entire program into a large <em><strong> try/catch block</strong></em> if it served our purpose.&nbsp; The way I did it   exemplifies how we might cordon off a small section of guarded code so that we   could continue processing normally even if a problem occurred in that guarded   block.&nbsp; This way we don't have to endure a crashed program, but can go on   and perform the second division.</p>
+	<h2>6B.2.2 Java Exception Classes</h2>
+	<p>The <strong>catch()</strong> line names the exception that we are trapping, namely an <strong> ArithmeticException</strong>.&nbsp; This is one of several exception classes that   Java supplies, each derived from the base class <strong>Exception</strong>.&nbsp; Here is   a list of the most useful ones:</p>
+	<ul>
+		<li class="codeInLine">ArithmeticException</li>
+		<li class="codeInLine">NullPointerException</li>
+		<li class="codeInLine">IndexOutOfBoundsException</li>
+		<li class="codeInLine">IllegalArgumentException</li>
+		<li class="codeInLine">IOException</li>
+		<li class="codeInLine">EOFException</li>
+		<li class="codeInLine">FileNotFoundException</li>
+		<li class="codeInLine">ClassNotFoundException</li>
+		<li class="codeInLine">AWTException</li>
+		<li class="codeInLine">NumberFormatException</li>
+	</ul>
+	<p>and the most general of all</p>
+	<ul>
+		<li class="codeInLine">Exception</li>
+	</ul>
+	<p>To find out what exceptions are available to you, go to the Java   documentation</p>
+	<div class="picCenter"><a href="http://docs.oracle.com/javase/7/docs/api/index.html" target="_blank">http://docs.oracle.com/javase/7/docs/api/index.html</a></div>
+	
+	<p>and find the package of   interest in the upper left.&nbsp; Click on it, then in the lower left, scroll down to the bottom and there is a section that lists   the exceptions.&nbsp; For example, if you want to know which exceptions are relevant to the AWT package (I picked it because it is immediately visible in the upper left due to its early alphabetical ordering), click on it, and then scroll down in the list below that starts <strong>Interfaces</strong>, <strong>Classes</strong>, .etc.</p>
+	<p>In general, go to the main documentation page and follow the links that take you   to your desired package.</p>
+	<p>In the language of <em>OOP</em>, when Java throws an exception, it instantiates   an object of some exception class, above.&nbsp; You can catch one or more of   them in a series of catch blocks:</p>
+
+<pre>  try
+   {
+      skyDive();
+      // do normal stuff
+      rideMotorcycles();
+      // do normal stuff
+      smoke10PacksADay();
+      // do normal stuff
+   }
+   catch(ArithmeticException ex)
+   {
+      // handle errors
+   }
+   catch(FileNotFoundException ex)
+   {
+      // handle errors
+   }
+   catch(IOException ex)
+   {
+      // handle errors
+   }
+   catch(Exception ex)
+   {
+      // handle errors
+   }
+</pre>
+
+	<p>The first exception that is found in this list of catch clauses will be the   only block executed. So you should think about what you want to do if more than   one exception is thrown.&nbsp; The more important case should be higher up.&nbsp; </p>
+	<p>Also, notice that  most general exceptions should be at the bottom.&nbsp;   An <strong>IOException</strong> should come after a <strong>FileNotFoundException</strong>, since   any of the exceptions in the java.io package (including <strong>FileNotFoundException</strong>)   are covered by the <strong>IOException</strong>.&nbsp; And, the most general <strong>Exception</strong> should come at the end.</p>
+	<p>These exception clauses are not necessarily tied to any particular method   invocation in the guarded code (try block).&nbsp; All three method calls might   be capable of generating an <strong>ArithmeticException</strong>, for example.</p>
+	<p>Finally, there are the instance methods of the Exception class that you can   call using the Exception object, ex, that is generated:</p>
+	<ul>
+		<li class="codeInLine">getMessage()</li>
+		<li class="codeInLine">toString()</li>
+		<li class="codeInLine">printStackTrace()</li>
+		<li class="codeInLine">getStackTrace()</li>
+	</ul>
+	<p>Adding some of these into my example above, using the expanded catch block:</p>
+
+<pre>   catch(ArithmeticException ex)
+   {
+      System.out.println( "Message: " + ex.getMessage() );
+      System.out.println("\n*** Likely div. by 0 exception ***");
+      System.out.println("\nAnd here is the printStackTrace()");
+      ex.printStackTrace();
+      // put contingency value into result
+      result = 0;
+   }
+</pre>
+
+	<p>we get this output:</p>
+	<div class="picCenter"><img src="./CS 1B Module 6B Section 2_files/pic_1b6_16.jpg" alt="console shot" width="458" height="215" border="0"></div>
+	<br>
+	
+	<p>The final -2 is printed by the last, unguarded section of code in my program,   and is not part of the exception reporting.&nbsp; Obviously, this is messier and   not what we would really print, but it demonstrates how you can use the ex   object passed to you. </p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

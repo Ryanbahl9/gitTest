@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5a_8.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5A Section 8</title>
+<link href="./CS 1B Module 5A Section 8_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 8 - Transporter Reconsidered</h1>
+	<h2>5A.8.1 A Fresh Look at our Transporter</h2>
+	<p>Before we add to our earlier transporter application let's re-examine it   using OOP&nbsp; vocabulary.&nbsp; For example:</p>
+
+<pre>JFrame frmMyWindow = new JFrame("Transporter Room");
+frmMyWindow.setSize(300, 200);
+</pre>
+
+	<p>As we now know, the first of these two lines is a combination of the two other statements:</p>
+
+<pre>JFrame frmMyWindow;
+frmMyWindow = new JFrame("Transporter Room");
+</pre>
+
+	<p>We can now describe this in <em><strong>OOP</strong></em> terminology.&nbsp; <strong>JFrame</strong> is a <em><strong>class</strong></em> which Java defines for us (inside the <strong>javax.swing</strong> package).&nbsp; We are   declaring a <em><strong>reference</strong></em> for this <em><strong>class</strong></em> named <strong> frmMyWindow</strong>.&nbsp; Then we&nbsp; <em><strong>instantiate</strong></em> an <strong><em>object</em></strong> using the <strong>"new"</strong> keyword.&nbsp; After these two statements are   executed we have a real <strong>JFrame</strong> <em><strong>object</strong></em> that we refer to using&nbsp; <strong>frmMyWindow</strong>. </p>
+	<p>Also,&nbsp; when we instantiate this object, we know that a <em><strong>constructor</strong></em> gets called.&nbsp; From the form of our instantiation line, we can conclude that   the&nbsp; <em><strong>constructor</strong></em> takes a <em><strong>parameter</strong></em> and we are   passing in the argument <strong>"Transporter Room."</strong>&nbsp; We also know from looking at the output of the   program that this parameter tells the <strong>JFrame</strong> what text to write in the&nbsp; frame   title.</p>
+	<p>Meanwhile, the second of the two original lines, <strong>frmMyWindow.setSize(300,200),</strong> is clearly a <em> <strong>method call.</strong></em> Since we are <em><strong>dereferencing</strong></em> it through a <strong> JFrame</strong> <em><strong>object</strong></em>, it must be an <em><strong>instance method</strong></em> (not a <em><strong>static class method</strong></em>) and will cause&nbsp;   something specific to happen to that particular <em><strong>object</strong></em>.&nbsp; It's pretty clear from the name of the <em><strong>method</strong></em> that it is setting the   size of the <strong>frmMyWindow</strong> object to be 300 pixels x 200 pixels.</p>
+	<p>This kind of analysis applies to all of the <em><strong>classes</strong></em> that we use   in   this program.&nbsp; We are <em><strong>declaring references,   instantiating objects </strong></em>and <em><strong>modifying properties</strong></em> of the <em><strong>objects</strong></em> for each of the various classes, <strong>JFrame,   FlowLayout, JLabel, JTextField </strong>and<strong> JButton.</strong>&nbsp; Of course, since we   are using pre-defined Java classes, we don't see the definitions of those   classes, but merely import them using the import statements and use them as we   like.</p>
+	<h2>5A.8.2 Breaking the Program into Two Classes</h2>
+	<p>Let's now modify the program and separate the <strong>JFrame</strong> data and   methods from the main class.&nbsp; In other words, we will <em><strong>encapsulate</strong></em> all of   the <strong>JFrame</strong> issues in its own class.&nbsp; We will   name our new JFrame-type class <strong>TranspoFrame</strong>, and our main class <strong> Foothill</strong>.</p>
+	<p>Look at the new version:</p>
+
+<pre>import javax.swing.*;
+import java.awt.*;
+   
+public class Foothill 
+{
+   public static void main(String[] args)
+   {
+      // establish main frame in which program will run
+      TranspoFrame myTranspoFrame 
+            = new TranspoFrame("Transporter Room");
+      myTranspoFrame.setSize(300, 200);
+      myTranspoFrame.setLocationRelativeTo(null);
+      myTranspoFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      
+      // show everything to the user
+      myTranspoFrame.setVisible(true);
+   }
+}
+
+// TranspoFrame class is derived from JFrame class
+class TranspoFrame  extends JFrame
+{
+   // member data (instance variables)
+   JButton btnMyButton;
+   JTextField txtMyTextArea;
+   JLabel lblMyLabel;
+   
+   // TranspoFrame constructor
+   public TranspoFrame(String title)
+   {
+      // pass the title up to the JFrame constructor
+      super(title);
+      
+      // set up layout which will control placement of buttons, etc.
+      FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 5, 20); 
+      setLayout(layout);
+      
+      // 3 controls: a label, a text field and a button
+      lblMyLabel = new JLabel("Friend's Name: ");
+      txtMyTextArea = new JTextField(10);
+      btnMyButton = new JButton("Press Here to See Friend"); 
+      add(lblMyLabel);
+      add(txtMyTextArea);
+      add(btnMyButton);
+   }
+   
+} // end class TranspoFrame
+</pre>
+
+	<p>This is straightforward, but ...&nbsp; </p>
+	<h4>... I'll guide you through it.</h4>
+	<ul>
+		<li>The first line of our&nbsp; new class <strong>TranspoFrame</strong> has some   	interesting syntax
+			<pre>   class TranspoFrame extends JFrame</pre>
+This means that our new class will <em><strong>inherit</strong></em> all of the built-in   	capabilities of <strong>JFrame</strong>.&nbsp; We are <em><strong>deriving</strong></em> a   	new class <strong>TranspoFrame</strong> from an existing <em><strong>base class</strong></em> <strong> JFrame</strong>.&nbsp; Everything we put into the definition of our new class   	will now be <em><strong>added   	on</strong></em><strong> </strong>to the <strong>JFrame</strong> data and methods.&nbsp; The main <strong>Foothill</strong> class is now very short.&nbsp; It only has a few lines because all   	of the hard work is now being done in our <strong>TranspoFrame</strong> class.<br>
+		</li>
+		<li>Since <strong>TranspoFrame</strong> is derived from <strong>JFrame</strong>, <strong>main()</strong> can use <strong>TranspoFrame</strong> as it would <strong>JFrame</strong>.&nbsp; We declare a <strong> TranspoFrame</strong> object, instantiate it, and start calling methods like <strong> setSize()</strong> and <strong>setVisible()</strong> exactly as we would if we were using <strong>a JFrame <em>object</em></strong>.&nbsp; In fact, we <em><u>are</u></em> using a <strong>JFrame</strong> <em><strong>object</strong></em> when we use a <strong>TranspoFrame</strong> <em><strong>object</strong></em> by virtue of the fact that <em><strong>TranspoFrame</strong></em> is <em><strong> derived from JFrame</strong></em>.<br>
+		</li>
+		<li>The GUI controls (the button, label and text field) need to be defined   	somewhere.&nbsp; They are no longer local variables of the <strong>main()</strong> method.&nbsp; So where would this all be done?&nbsp; Since we now have a class devoted   	to our application window, the <strong>TranspoFrame</strong> class, it makes sense that these   	become<em><strong> instance variables</strong></em> of our new class.<br>
+		</li>
+		<li>All the things that we used to do in the<strong> main() </strong>method of our <strong> main</strong> class still have to get done.&nbsp; But now we do these things   	inside the <strong>TranspoFrame</strong> class.&nbsp; But where?&nbsp; Do you remember   	what method always gets called before any other method in a class?&nbsp; The <em><strong>constructor</strong></em>.&nbsp; So we instantiate the controls (buttons,   	labels, etc.) in the <strong>TranspoFrame</strong> constructor.&nbsp; Now, if we look back at   	the first line of <strong>main()</strong> we see that the instantiation of the <strong>TranspoFrame</strong> object, <strong>myTranspoFrame</strong>, is the exact place where all this work gets done.&nbsp;   	Why there?&nbsp; Because that is where the constructor automatically gets   	called for us.<br>
+		</li>
+		<li> There is one  line that sticks out:
+			<pre>   super(title);</pre>
+Now that we have learned about constructor chaining, this is not that much of a mystery. Recall that in our old version, we passed the <em><strong>String literal</strong></em> <span class="codeInLine">"Transporter Room"</span> to the <strong>JFrame</strong> <em><strong>constructor</strong></em>. Since we are not using <strong>JFrame</strong> directly in our main, but instead are using the derived <strong>TranspoFrame</strong>, we will   pass this literal to our <strong>TranspoFrame</strong> <em><strong>constructor</strong></em>.&nbsp;   But this constructor is defined by <em><u>us</u></em> and we don't know how to   manually cause a <strong>String</strong> to be written in the <strong>JFrame</strong> title bar.&nbsp;   Therefore we call the special method <strong>super()</strong> which in turn calls the   actual <strong>JFrame</strong> <em><strong>constructor</strong></em>.&nbsp; If we wish to pass any arguments to that <em><strong>constructor</strong></em> (as we   certainly do here) we place those arguments into the<strong> super()</strong> call.&nbsp;  This is nothing more than the <em><strong>method chaining</strong></em> (or<strong><em> constructor   chaining</em></strong>) that we  learned previously.<strong><em><br>
+</em></strong></li>
+		<li>Finally, we can see that some of the <em><strong>instance methods </strong></em>of the <strong>JFrame</strong> class are no longer <em><strong>dereferenced</strong></em> through any objects but are called in a   	vacuum.&nbsp; By this I mean that in the original version we called
+<pre>   frmMyWindow.setLayout(layout);
+</pre>
+
+			while in this version we just call
+
+<pre>    setLayout(layout);
+</pre>
+
+			Since <strong>setLayout()</strong> is an <em><strong>instance method</strong></em> of <strong>JFrame,</strong> and <strong>TranspoFrame</strong> is derived from <strong>JFrame</strong>, we don't have to   	supply a dereferencing object if we call a <strong>JFrame</strong>&nbsp; method from   	within a <strong>TranspoFrame</strong> method.&nbsp; And that's what we are doing.&nbsp;   	We are calling the <strong>setLayout()</strong> <em><strong>method</strong></em> from inside the <strong>TranspoFrame</strong> <em><strong>constructor</strong></em>.&nbsp; The rule that <em><strong>instance   	methods</strong></em> can call<em><strong> other instance methods</strong></em> or data of <em> the same class</em> without a dereferencing   	object, also applies to inherited class definitions.&nbsp; The methods in   	the derived classes can access the methods of the base class without   	dereference.  </li>
+	</ul>
+	<p>Well this is how it's done in the&nbsp; big leagues.&nbsp; Because <strong>JFrame</strong> is   a typical class on which to base GUI applications, it is very common to <em><strong>derive</strong></em> our special flavor of dialog window from this from <strong>JFrame</strong> and do all of the   initialization in our <em><strong>derived constructor</strong></em>.&nbsp; Everything here, the call to <strong>super()</strong>, the placement of the controls in the derived class as <em><strong>instance   variables</strong></em>, and the<strong> "un-dereferenced"</strong> use of the <strong>JFrame</strong> <em><strong>methods</strong></em>, are all part of the correct way to implement this GUI.&nbsp;   You can almost memorize these things since they will usually be done exactly the   same way in future projects.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

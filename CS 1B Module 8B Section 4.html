@@ -1,0 +1,430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8b_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8B Section 4</title>
+<link href="./CS 1B Module 8B Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 4 - Improving Deck with ArrayList</h1>
+	<h2>8B.4.1 Moving Cards from Arrays to ArrayLists</h2>
+	<p>Now that we know about <strong>ArrayList</strong>s, let's take a critical look at our <strong>Deck</strong> class more closely. Its primary member is the <em><strong>array</strong></em> of <strong>Cards</strong>:</p>
+
+<pre>public class Deck
+{
+   private static final int MAX_CARDS_PER_DECK = 6 * 54; 
+
+   private Card[] cards;
+   private int topCard;
+</pre>
+ 
+	<p>You can already see an annoyance. We have to decide how large an array to allocate. If you think that the fix for this is to constantly resize the array, that would actually be a more complicated solution. Also, there is this "extra" member, <strong>topCard</strong>, which we seem to need but wish we didn't. Let's look at some of the implementation that resulted from the choice of <em><strong>array</strong></em>. </p>
+	<p>When we load up the deck in<strong> init()</strong> one of the double nested loops is:</p>
+ 
+ <pre>      // hand over the masterPack cards to our deck
+      for (pack = 0; pack &lt; numPacks; pack++)
+         for (k = 0; k &lt; 52; k++)
+            cards[pack*52 + k] = masterPack[k];
+</pre>
+
+	<p>The index expression in the last line is ugly. We're trying to turn two nested index values into a single index that tells us where the highest unused location is. This is programming 101, and you can do this in your sleep, but that doesn't make the sleep any more pleasant.  An <strong>ArrayList</strong> doesn't require such computation; we just add to the front of the list (a little different than adding to the end of an array, but it has the same effect) by calling <strong>add(0)</strong> and we're done. Where else do  <strong>cards[]</strong> and <strong>topCard</strong> come up?</p>
+	<p>Here is a fragment from <strong>dealCard()</strong>:</p>
+
+<pre>   if (topCard == 0)
+      return errorReturn;
+   else
+      return cards[--topCard];
+</pre>
+
+	<p>It's not horrible, but we have to remember to decrement <strong>topCard</strong> before we return. Not only that, but we can't use<strong> topCard--</strong> (as it would give the wrong answer, obviously). Even though we know how and why, it would be nice to use an <strong>ArrayList</strong> instead of an <em><strong>array</strong></em>, since <strong>add(0)</strong> presents no such difficulties.</p>
+	<p>There are several places where the array nature of <strong>cards[]</strong> creates micro-challenges which increase the chance for error. So let's switch to <strong>ArrayList</strong>s.</p>
+	<h3>Note About the Selection of ArrayList</h3>
+	<p>What makes <strong>ArrayLists</strong> easier than <em><strong>arrays</strong></em> is the fact that we can always add and remove to the <em>front</em> of the <strong>ArrayList</strong> using <strong>ArrayList</strong>'s <strong>add(0, - )</strong> and <strong>remove(0)</strong>. <strong>0</strong> is the <strong>0</strong>th index, so we always use that value, and never need to know about <strong>topCard's</strong> value. You might think that this is then a misuse of <strong>ArrayList</strong>. Maybe we should be using a Dequeu (<strong>Stack</strong>). However, we will want to also access elements at random using <strong>get(k)</strong>, which helps justify <strong>ArrayList</strong> in this context.</p>
+	<p>Another potential criticism is that add/remove from position 0 is not as efficient in an <strong>ArrayList</strong> as it is in a <strong>LinkedList</strong>. This can be answered by always adding to position <strong>size()</strong>, which is potentially more efficient (than at position <strong>0</strong>) in an <strong>ArrayList</strong>. If you were troubled by this, then, you would change the <strong>0</strong> to <strong>size()</strong> in various places.</p>
+	<h2>8B.4.2 An ArrayList of Cards</h2>
+	<p>Inside <strong>Deck</strong>, we use  an <strong>ArrayList</strong> of cards, not an <em><strong>array</strong></em>, and when we want to deal out a   card we simply call the<strong>ArrayList</strong>'s <strong>remove(0)</strong> to remove   it from the deck.&nbsp; The card will be gone and there is no need to do any bookkeeping on <strong>topCard</strong>. In fact, we no longer  need  <strong>topCard</strong>. That's already a plus.</p>
+	<p>Here is the start of the new prototype for our improved <strong>Deck</strong>, which I'll call <strong>DeckVec</strong> (for deck <em><strong>vector</strong></em>, a language-independent term  for <strong>java.util</strong>'s <strong>ArrayList</strong>):</p>
+
+<pre>//class DeckVec  ----------------------------------------------------------------
+public class DeckVec
+{
+   private ArrayList&lt;Card&gt; cards;
+
+   private int numPacks;
+</pre>
+
+	<p>Already, it's cleaner.  No array dimensioning will be needed in the constructor, no <strong>MAX_CARDS_PER_DECK</strong> and no <strong>topCard</strong>. <strong>cards</strong> is now an (empty) <strong>ArrayList</strong>, and it will grow and shrink though calls to <strong>add(0, - )</strong> and <strong>remove(0)</strong>.</p>
+	<p>Let's see how this simplifies some of the  implementation. The<strong> init()</strong> method's double nested loop now looks like this:</p>
+
+<pre>   // hand over the masterPack cards to our deck
+   for (pack = 0; pack &lt; numPacks; pack++)
+      for (k = 0; k &lt; 52; k++)
+         cards.add(0, masterPack[k]);
+</pre>
+
+	<p>Nicely done, right? What about <strong>dealCard()</strong>?</p>
+
+<pre>public Card dealCard()
+{
+   // always deal the top card (which we will take from position 0) 
+   Card errorReturn = new Card('E', Card.Suit.spades); //  in rare cases
+
+   if (cards.size() == 0)
+      return errorReturn;
+   else
+      return cards.remove(0);
+}
+</pre>
+<p>Here is a summary of what we did, and what we still would need to do to completely transform <strong>Deck</strong> to use a <strong>ArrayList</strong> instead of an <em><strong>array</strong></em><strong></strong>:	</p>
+	<ul>
+	    <li>Change <strong>cards[]</strong> from <em><strong>array</strong></em> to <strong>ArrayList&lt;Card&gt;</strong></li>
+	    <li>Remove <strong>topCard</strong> and <strong>MAX_CARDS_IN_DECK</strong></li>
+	    <li><strong>topCard</strong> value, when needed, is now <strong>cards.size()</strong>. But, you can still use a <em>local</em><strong> topCard = cards.size()</strong> if you use <strong>topCard</strong> in a loop and don't want the overhead of the <strong>size()</strong> call inside the loop (or loop control).</li>
+	    <li>When adding to the deck, instead of adding into <strong>cards[topCard++]</strong> use <strong>cards.add(0, -)</strong>.</li>
+      <li>When dealing, instead of returning <strong>cards[--topCard]</strong>, we grab <strong>cards.remove(0)</strong>.</li>
+      <li>Instead of using <strong>cards[k]</strong> we need <strong>cards.get(k)</strong> or <strong>cards.set(k, -)</strong> .   </li>
+    </ul>
+    <h2>8B.4.3 A Complete Listing</h2>
+    <p>Here is a full listing of the transformed <strong>Deck</strong> class, along with <strong>Card</strong> and a test <strong>main()</strong></p>
+    
+<pre>// ======  Foothill.java ===================================================
+
+public class Foothill
+{
+   public static void main(String[] args)
+   {
+      DeckVec deck1 = new DeckVec(2);
+      
+      // deal first deck (two packs), unshuffled.
+      while (deck1.getNumCards() &gt; 0)
+         System.out.print( deck1.dealCard() +  " /  ");
+      System.out.println('\n');
+      
+      while (deck1.getNumCards() &gt; 0)
+         System.out.print( deck1.dealCard() +  " /  ");
+      System.out.println('\n');
+
+      // deal one pack in the second deck, first unshuffled ...
+      DeckVec deck2 = new DeckVec();
+
+      while (deck2.getNumCards() &gt; 0)
+         System.out.print( deck2.dealCard() +  " /  ");
+      System.out.println('\n');
+
+      // now shuffled (don't forget to reload the deck)
+      deck2.init();
+      deck2.shuffle();
+      while (deck2.getNumCards() &gt; 0)
+         System.out.print( deck2.dealCard() +  " /  ");
+      System.out.println('\n');
+   }
+}
+
+// ======  Card.java  ==================================
+
+//Card class --------------------------------------------------------------------
+public class Card implements Comparable&lt;Card&gt;
+{   
+   // type and constants
+   public enum Suit { clubs, diamonds, hearts, spades }
+   
+   // for ordering
+   public static char[] valueRanks = { '2', '3', '4', '5', '6', '7', '8', '9', 
+      'T', 'J', 'Q', 'K', 'A'};
+   static Suit[] suitRanks = {Suit.clubs, Suit.diamonds, Suit.hearts, 
+      Suit.spades};
+   static int numValsInOrderingArray = 13;
+
+   // private data
+   private char value;
+   private Suit suit;
+   boolean errorFlag;
+
+   // 4 overloaded constructors
+   public Card(char value, Suit suit)
+   {
+      set(value, suit);
+   }
+
+   public Card(char value)
+   {
+      this(value, Suit.spades);
+   }
+   public Card()
+   {
+      this('A', Suit.spades);
+   }
+   // copy constructor
+   public Card(Card card)
+   {
+      this(card.value, card.suit);
+   }
+
+   // mutators
+   public boolean set(char value, Suit suit)
+   {
+      char upVal;            // for upcasing char
+
+      // convert to uppercase to simplify
+      upVal = Character.toUpperCase(value);
+
+      if ( !isValid(upVal, suit))
+      {
+         errorFlag = true;
+         return false;
+      }
+
+      // else implied
+      errorFlag = false;
+      this.value = upVal;
+      this.suit = suit;
+      return true;
+   }
+
+   // accessors
+   public char getVal()
+   {
+      return value;
+   }
+
+   public Suit getSuit()
+   {
+      return suit;
+   }
+
+   public boolean getErrorFlag()
+   {
+      return errorFlag;
+   }
+
+   public boolean equals(Card card)
+   {
+      if (this.value != card.value)
+         return false;
+      if (this.suit != card.suit)
+         return false;
+      if (this.errorFlag != card.errorFlag)
+         return false;
+      return true;
+   }
+
+   // stringizer
+   public String toString()
+   {
+      String retVal;
+
+      if (errorFlag)
+         return "** illegal **";
+
+      // else implied
+
+      retVal =  String.valueOf(value);
+      retVal += " of ";
+      retVal += String.valueOf(suit);
+
+      return retVal;
+   }
+
+   // helper
+   private boolean isValid(char value, Suit suit)
+   {
+      char upVal;
+
+      // convert to uppercase to simplify (need #include &lt;cctype&gt;)
+      upVal = Character.toUpperCase(value);
+
+      // check for validity
+      if (
+            upVal == 'A' || upVal == 'K'
+            || upVal == 'Q' || upVal == 'J'
+            || upVal == 'T' 
+            || (upVal &gt;= '2' &amp;&amp; upVal &lt;= '9')
+            )
+         return true;
+      else
+         return false;
+   }
+   
+   // sort member methods
+   public int compareTo(Card otherCard)
+   {
+      if (this.value == otherCard.value)
+         return ( getSuitRank(this.suit) - getSuitRank(otherCard.suit) );
+
+      return ( 
+            getValueRank(this.value) 
+               - getValueRank(otherCard.value) 
+            );
+   }
+
+   // helpers for compareTo()
+   public static int getSuitRank(Suit st)
+   {
+      int k;
+
+      for (k = 0; k &lt; 4; k++) 
+         if (suitRanks[k] == st)
+            return k;
+
+      // should not happen
+      return 0;
+   }
+
+   public  static int getValueRank(char val)
+   {
+      int k;
+
+      for (k = 0; k &lt; numValsInOrderingArray; k++) 
+         if (valueRanks[k] == val)
+            return k;
+
+      // should not happen
+      return 0;
+   }
+}
+
+// ======  DeckVec.java  ==================================
+import java.util.*;
+
+//class DeckVec  ----------------------------------------------------------------
+public class DeckVec
+{
+   // six full decks (no jokers) is enough for about any game
+   private static Card[] masterPack;  // one 52-Card master for initializing decks
+
+   private ArrayList&lt;Card&gt; cards;
+   private int numPacks;
+
+   private static boolean firstTime = true;  // avoid calling allcMstrPck &gt; once
+
+   public DeckVec(int numPacks)
+   {
+      allocateMasterPack();  // do not call from init()
+      cards = new ArrayList&lt;Card&gt;();
+      init(numPacks);
+   }
+
+   static private void allocateMasterPack()
+   {
+      int j, k;
+      Card.Suit st;
+      char val;
+
+      // we're in static method; only needed once per program: good for whole class
+      if ( !firstTime )
+         return;
+      firstTime = false;
+
+      // allocate
+      masterPack = new Card[52];
+      for (k = 0; k &lt; 52; k++)
+         masterPack[k] = new Card();
+
+      // next set data
+      for (k = 0; k &lt; 4; k++)
+      {
+         // set the suit for this loop pass
+         st = Card.Suit.values()[k];
+
+         // now set all the values for this suit
+         masterPack[13 * k].set('A', st);
+         for (val= '2', j = 1; val &lt;= '9'; val++, j++)
+            masterPack[13 * k + j].set(val, st);
+         masterPack[13 * k + 9].set('T', st);
+         masterPack[13 * k + 10].set('J', st);
+         masterPack[13 * k + 11].set('Q', st);
+         masterPack[13 * k + 12].set('K', st);
+      }
+   }
+
+   public DeckVec()
+   {
+      this(1);
+   }
+
+   // set deck from 1 to 6 packs, perfecly ordered
+   public void init(int numPacks)
+   {
+      int k, pack;
+
+      if (numPacks &lt; 1 || numPacks &gt; 6)
+         numPacks = 1;
+
+      cards.clear();
+      // hand over the masterPack cards to our deck
+      for (pack = 0; pack &lt; numPacks; pack++)
+         for (k = 0; k &lt; 52; k++)
+            cards.add(0, masterPack[k]);
+
+      // if something modified a card, we would be in trouble.  fortunately,
+      // we don't expect a card to ever be modified after instantiated
+      // in the context of a deck. e.g. state would be for deck set-up only
+
+      this.numPacks = numPacks;
+   }
+
+   public void init()
+   {
+      init(1);
+   }
+
+   public int getNumCards() 
+   {
+      return cards.size(); 
+   }
+
+   public void shuffle()
+   {
+      Card tempCard;
+      int k, randInt, topCard;
+
+      // topCard avoids calling size() every loop pass
+      topCard = cards.size();
+      for (k = 0; k &lt; topCard; k++)
+      {
+         randInt = (int)(Math.random() * topCard); 
+
+         // swap cards k and randInt (sometimes k == randInt:  okay)
+         tempCard = cards.get(k);
+         cards.set( k, cards.get(randInt) );
+         cards.set( randInt, tempCard );
+      }
+   }
+
+   public Card dealCard()
+   {
+      // always deal the top card (which we will take from position 0) 
+      Card errorReturn = new Card('E', Card.Suit.spades); //  in rare cases
+
+      if (cards.size() == 0)
+         return errorReturn;
+      else
+         return cards.remove(0);
+   }
+
+   public Card inspectCard(int k)
+   {
+      // return copy of card at position k.
+      // if client tries to access out-of-bounds card, return error
+
+      Card errorReturn = new Card('E', Card.Suit.spades); //  in rare cases
+
+      if ( k &lt; 0 || k &gt;= cards.size() )
+         return errorReturn;
+      else
+         return cards.get(k);
+   }
+}
+</pre>
+
+
+
+</div>
+</div>
+
+
+</body></html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0082)https://www.fgamedia.org/faculty/loceff/cs_courses/common/LIFE/cs_1and2B_3a_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1and2B Module 3A Section 2</title>
+<link href="./CS 1and2B Module 3A Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  		<h1>Section 2 - The Game of Life</h1>
+		<h2>3A.2.1 The Game of Life</h2>
+		<p>When I was just out of high school, I read   					an article about a mathematical game called <font color="#006699"><strong><em>life</em></strong></font>.&nbsp; It was   					invented by a mathematician, John Horton Conway.&nbsp; <font color="#006699"><strong><em>Life</em></strong></font> was not a   					game in the sense of&nbsp; Xbox 360 or Wii.&nbsp; It was played by   					oneself in the spirit of solitaire.&nbsp; One began with a large piece of graph paper   					and placed some marks or stones in   					a few of the squares to create an <em>initial pattern <strong>or</strong> <strong>seed</strong></em>.&nbsp;&nbsp;   					After that, the rules of <font color="#006699"><em><strong>life</strong></em></font> determined what happened next.&nbsp; One referred to   					<em><strong>Conway's&nbsp; rules</strong></em> carefully examining each <em><strong>cell</strong></em> of the <em><strong>seed</strong></em> to figure out whether it survived, died or was reborn   					into the next generation. Thus, a series of <em>generations</em> resulted, each one arising by applying <font color="#006699"> <em><strong>life'</strong></em></font>s rules to the prior generation.&nbsp; Conway's   					initial research demonstrated that there were certain <em><strong> seeds</strong></em> that caused things to get boring fast (the   					entire board became empty, i.e., all white/dead), while others   					generated interesting repetitive graphics: blinkers and   					gliders.&nbsp; He even offered a $50 prize to anyone who could   					prove or disprove that there was no finite initial condition that would   					grow without limit as the generations passed.&nbsp; <em> Fifty bucks.</em></p>
+		<p><font color="#006699"><em><strong>Life's</strong></em></font> playing   					field, called the <em><strong>universe</strong></em>, is a   					two-dimensional grid of square <strong><em>cells</em></strong>, each of   					which is in one of two possible states, <font color="#990000"><strong><em>alive</em></strong> (black or 1)</font> or <font color="#996600"><strong><em>dead</em></strong> (white or 0)</font>.   					Every <em><strong>cell</strong></em> interacts with its eight neighbors   					to determine whether it and its neighbors will survive to   					the next generation.&nbsp;&nbsp; The rules are applied to all   					cells simultaneously in one generation, and when all the   					survivors are computed, the old pattern is removed and   					replaced by survivors (and children) of the next generation.&nbsp;   					The rules are simple:</p>
+		<ol>
+			<li>Any <font color="#990000"><em><strong>live</strong></em></font> cell with two or three <em><font color="#990000"><strong>live</strong></font></em> neighbors lives on to the next generation (ideal life   						support).</li>
+			<li>Conversely, if it has zero, one or four-or-more <font color="#990000"><em><strong>live</strong></em></font> neighbors, it <font color="#996600"><em><strong>dies</strong></em></font> (death from loneliness or overcrowding).</li>
+			<li>Any <font color="#996600"><em><strong>dead</strong></em></font> cell with exactly three <font color="#990000"><em><strong>live</strong></em></font> neighbors becomes a <em><font color="#990000"><strong>live</strong></font></em> cell (birth).</li>
+		</ol>
+		<p>Here are some examples taken from Martin Gardner's 1970   					Scientific American article about <em> <font size="4" color="#006699">life</font></em>.</p>
+<table align="center" cellpadding="10">
+			<tbody><tr>
+				<th>&nbsp;</th>
+				<th colspan="3">generations</th>
+				<th>ultimate result</th>
+			</tr>
+			<tr>
+				<th>&nbsp;</th>
+				<th>0 (seed)</th>
+				<th>1</th>
+				<th>2</th>
+				<th>&nbsp;</th>
+			</tr>
+			<tr>
+				<th>a</th>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="black box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="black box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="black box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="black box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td>dies</td>
+			</tr>
+			<tr>
+				<th>b</th>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td>dies</td>
+			</tr>
+			<tr>
+				<th>c</th>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td>dies</td>
+			</tr>
+			<tr>
+				<th>d</th>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td align="center">&nbsp;</td>
+				<td>block (stable)</td>
+			</tr>
+			<tr>
+				<th>e</th>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td align="center"><table border="1" cellpadding="0" cellspacing="0">
+						<tbody><tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_1.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+						<tr>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+							<td><img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_2.gif" alt="box"></td>
+						</tr>
+				</tbody></table></td>
+				<td>blinker (period 2)</td>
+			</tr>
+		</tbody></table>
+		
+		<p>Today, we can animate gifs to see how the generations   					evolve.&nbsp; Here is the <em><strong>blinker</strong></em>, example <strong> e</strong>, above:</p>
+		<p> <img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_4.gif" alt="box" width="82" height="82" border="0"></p>
+		<p>Here is an example of a <em><strong>glider</strong></em> — a pattern that moves   					diagonally, forever.   Notice that every four generations, the pattern has moved itself one step   diagonally to the lower-right:</p>
+		<p>&nbsp;</p>
+		<div class="fullImageLink" id="file"> <img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_3.gif" alt="box" width="84" height="84" border="0"><br>
+		&nbsp;</div>
+
+	<p>And about that $50 prize?&nbsp; Within a year a mathematician, Bill Gosper,   found a seed that resulted in a bullet being ejected every 30 generations, thus   growing without bound.&nbsp; It is called <em><strong>Gosper's Glider Gun</strong></em>:</p>
+	<p> <img src="./CS 1and2B Module 3A Section 2_files/pic_1and2b3_5.gif" alt="box" width="250" height="180" border="0"></p>
+	<h2>3A.2.2 The Significance of Life</h2>
+	<p>In case you think that the behavior of the game of <em><font color="#006699">life</font></em> is nothing more than   a primitive animation, reminiscent of early and clunky video games, you have not   yet gotten the point.&nbsp; These cute movies are not something that a graphic   designer and animator put together.&nbsp; They are the direct result of a few   simple <em><strong>rules</strong></em> and a <em><strong>seed</strong></em> — and nothing more.&nbsp; In the case of <strong><em><font color="#006699">life</font></em></strong>, the   rules are symbolic of a few crude observations that biologists have made about   populations:&nbsp; If things get either too crowded or too barren, individuals   tend to die.&nbsp; If they are in the sweet middle ground, they tend to survive.&nbsp;   And there is usually a special condition that creates birth. &nbsp;(Lest you think that the <em><strong>three</strong></em> neighbors needed to generate a new live cell is wrong — that it should be <em> <strong>two</strong></em> — don't forget that no one said that the three neighbors are the   parents. Conway's rule only says that, in general, it is more likely that a   child will result when there are three individuals in close proximity. And   indeed, maybe this is true.&nbsp; If you randomly group individuals into twos,   you are less likely to get the ingredients for procreation than if you group   them into threes. Jests aside, what we are saying is that there is an ideal   condition that will result in a new member of the group, and this condition is   slightly narrower than the condition for survival of an existing member.)</p>
+<img src="./CS 1and2B Module 3A Section 2_files/cs_B_common_21.jpg" alt="box" width="300" height="207" hspace="9" vspace="3" border="2" align="left">
+	<p>Computational digital modeling of complex natural behavior turns out to be   very common in research and industry.&nbsp; <font color="#006699"><em><strong>Life</strong></em></font> represents a simple and easily visualized example of this operation, but not the   only, nor even the first, one. Why it captured the imagination of intellectuals   and mathematical enthusiasts when it was introduced while other computational   inventions were confined to the specialists in the field probably had to do with   a combination of things. It had a simple name, it was easy to explain, it   roughly represented population dynamics and human behavior and it was   popularized in a magazine that was read by a larger, lay population (<strong>Scientific   American</strong>).&nbsp; Also, let's not forget that Conway offered fifty bucks to   anyone who could settle an assertion about it.</p>
+	<p>The game of <font color="#006699"><em><strong>life</strong></em></font> was one of many theoretical inventions which can be traced   back to Alan Turing and John von Neumann, two of the founding fathers of modern theory of computation in the   1940s.&nbsp; Variously called "self-replicating systems" or "cellular automata"   (<strong><font color="#990000">CA</font></strong>), the field studies how individual building blocks like the binary cells of <font color="#006699"><em><strong>life</strong></em></font> and a simple rule-set can generate larger, more complex structures that   have properties that neither the cells themselves, nor the inventor of their   rules could have anticipated.&nbsp; </p>
+	<p><font color="#990000"><strong>CA</strong></font> (I'll start using the abbreviation for   cellular automata from here out) are mathematical models characterized by the requirement that time   and space are discrete quantities that can take on only a   finite number of values.&nbsp; This may seem like an unrealistic model of   the "obviously" continuous  universe in which we live, but ever since Max Planck's initial work that spawned quantum   physics over 100 years ago, there   has been increasing evidence that at the smallest levels, such assumptions may   be correct.</p>
+	<p>The developer of the popular visualization software <em><font color="#800080">Mathematica</font></em>, Stephan   Wolfram, advanced the field of <font color="#990000"><strong>CA</strong></font> in the 1980s and '90s demonstrating that there   were both highly ordered and impossibly chaotic systems that could emerge from   elementary <font color="#990000"><strong>CA</strong></font> models.&nbsp; More recently, Melanie Mitchell is among many   researchers who have added significantly to the body of knowledge in <strong> <font color="#990000">CA</font></strong>.&nbsp;   We'll use her elegant rule description in our example of 1-dimensional <strong> <font color="#990000">CA</font></strong>,   coming up next.</p>
+	<p>There are many fields which are closely related to <font color="#990000"><strong>CA</strong></font> but which each have a   unique emphasis and application.&nbsp; You can do a search on these areas by Googling phrases like <font color="#990000"><em>genetic algorithms</em></font>, <font color="#990000"> <em>emergence</em></font> and <font color="#990000"><em>artificial life</em></font>.&nbsp;   A somewhat more distant cousin, but one that has some overlap with <font color="#990000"><strong>CA</strong></font> is that of <font color="#990000"><em>artificial intelligence</em></font>, especially the sub-field of <font color="#990000"><em>artificial neural networks</em></font>.</p>
+	<p>The applications of <font color="#990000"><strong>CA</strong></font> and its related fields are varied.&nbsp; They include:</p>
+	<ul>
+		<li>Simulation of biological systems</li>
+		<li>The design of massively parallel computers</li>
+		<li>Graphic design in the visual and performing arts</li>
+		<li>Pattern recognition</li>
+		<li>Machine intelligence</li>
+		<li>Modeling phenomena such as
+			<ul>
+				<li>the dispersal patterns of forest fires</li>
+				<li>occurrence of certain crime patterns in urban areas</li>
+				<li>competition between species</li>
+				<li>plankton growth</li>
+				<li>animal behavior</li>
+			</ul>
+		</li>
+	</ul>
+	<p>Soon, we will actually write a program that has all the characteristics of   these more complex <font color="#990000"><strong>CA</strong></font> algorithms yet is surprisingly simple, especially when   formulated in the context of OOP.&nbsp; Before doing so, we'll need to acquire   some new programming tools: binary number representations and bit-wise   operators.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

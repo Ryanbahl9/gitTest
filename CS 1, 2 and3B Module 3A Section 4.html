@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0082)https://www.fgamedia.org/faculty/loceff/cs_courses/common/LIFE/cs_1and2B_3a_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1, 2 and3B Module 3A Section 4</title>
+<link href="./CS 1, 2 and3B Module 3A Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 4 - Bit Operations</h1>
+	<h2>3A.4.1 Shift Operators</h2>
+	<p>Now that we know how numbers are stored internally, we can manipulate them as   bits rather than numbers.&nbsp; By that I mean you can shift the bits left or   right a specified number of positions.</p>
+	<ul>
+		<li>101 shifted left one position is 1010</li>
+		<li>101 shifted left three positions is 101000</li>
+		<li>101 shifted right one position is 10</li>
+		<li>101 shifted right three position is 0</li>
+	</ul>
+	<p>Shifting left and right turns out to be a useful operation in cellular   automata, as you will discover.&nbsp; C++,  Java and Python all support <em><strong>shift operations</strong></em><strong></strong> using   the <span class="codeInLine">&lt;&lt;</span> (shift <em><strong>left</strong></em>) and <span class="codeInLine">&gt;&gt;</span> (shift <em><strong>right</strong></em>) operators.</p>
+	<h4>Java and C++</h4>
+	<pre>// shift yInt left three positions and store the result in xInt
+xInt = yInt &lt;&lt; 3;</pre>
+	<h4>Python</h4>
+	<pre># shift y_int right two positions and store the result in x_int
+x_int = y_int &gt;&gt; 2</pre>
+	<h4>Decimal Shifts</h4>
+	<p>You undoubtedly know that in <em><strong>decimal</strong></em> arithmetic, <em><strong>multiplying by 10</strong></em> is easily done by <em><strong>appending a zero</strong></em> to the digits of the number.&nbsp; This is a <em><strong>left-shift operation</strong></em>.&nbsp; <em><strong>Appending two zeros</strong></em>,   i.e., <em><strong>shifting left two places</strong></em>, is the same as <em><strong>multiplying by 100</strong></em>.&nbsp; Similarly, <em><strong>shifting right</strong></em> is   like <em><strong>dividing by 10</strong></em>.&nbsp; Of course,   when we shift right we lose the fractional place, so this is really an<em><strong> integer</strong></em> (or <em><strong>floor</strong></em>) <em><strong>division</strong></em>, not a floating point one.</p>
+	<h4>Binary Shifts</h4>
+	<p>In   <strong><em>binary</em></strong> arithmetic, <em><strong>shifting left once</strong></em> is equivalent to <em><strong>multiplying by 2</strong></em>, <em><strong>shifting left   twice</strong></em> is equivalent to <em><strong>multiplying by 4</strong></em>, etc.&nbsp; Similarly, <em><strong>shifting right</strong></em> is   like  dividing by 2 in <em><strong>binary</strong></em>.&nbsp; Again, we lose the fractional place, so this is really an <em><strong>integer   division</strong></em>.</p>
+	<h2>3A.4.2 Logical bit operators</h2>
+	<p>If we   think of the <em><strong>bit</strong></em> <strong>1</strong> as <strong> <em>true</em></strong> and the bit <strong>0</strong> as <strong> <em>false</em></strong>,   we can apply the operations <em><strong>and</strong></em>, <em><strong>or</strong></em> and <em><strong>not</strong></em> to <em><strong>bits</strong></em> just as we did with "<strong><em>booleans</em></strong>."&nbsp; The <em><strong>bitwise operators</strong></em> for <em><strong>and</strong></em>, <em><strong>or</strong></em> and <em><strong>not</strong></em> are <span class="codeInLine">&amp;</span>, <span class="codeInLine">|</span> and <span class="codeInLine">~</span>, respectively.&nbsp; The definitions for these operators on a   single bit are:</p>
+	<div class="narrowTable">
+			<table width="90%" border="0" cellspacing="0" cellpadding="0" summary="The | operator">
+				<caption>
+					Bitwise OR
+				</caption>
+				<tbody><tr>
+					<th scope="col">a</th>
+					<th scope="col">b</th>
+					<th scope="col">a | b</th>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+			</tbody></table>
+		</div>
+		<p>&nbsp;</p>
+		<div class="narrowTable">
+			<table width="90%" border="0" cellspacing="0" cellpadding="0" summary="The | operator">
+				<caption>
+					Bitwise AND
+				</caption>
+				<tbody><tr>
+					<th scope="col">a</th>
+					<th scope="col">b</th>
+					<th scope="col">a &amp; b</th>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+			</tbody></table>
+		</div>
+		<p>&nbsp;</p>
+		<div class="narrowTable">
+			<table width="90%" border="0" cellspacing="0" cellpadding="0" summary="The | operator">
+				<caption>
+					Bitwise NOT
+				</caption>
+				<tbody><tr>
+					<th scope="col">a</th>
+					<th scope="col">~a</th>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+				</tr>
+			</tbody></table>
+		</div>
+		<p>&nbsp;</p>
+		<p>Now, this only gives the result of a <em><strong>single bit</strong></em>.&nbsp; Numbers in computers   are stored in <em><strong>words</strong></em> that are several bits: 8, 16, 32 and 64 typically.&nbsp; If you do a <em><strong>bitwise operation</strong></em> on two numbers,    the result will be applied to <em><strong>each bit position</strong></em> individually, the result of   one position having no influence on the result of any other position.</p>
+	<p>For example, </p>
+	<ul>
+		<li>11110000 | 01010101= 11110101 </li>
+		<li>11110000 &amp; 01010101= 01010000</li>
+		<li>~11110000 = 00001111</li>
+		<li>~01010101 = 10101010</li>
+	</ul>
+	<p>Apply the above rules to each position, individually, to see this.&nbsp; If you   want to prove it to yourself, convert <strong>11110000</strong> and <strong>01010101</strong> to   either <em><strong>hex</strong></em> or <em><strong>decimal</strong></em> so you can use them in a program, and assign them to two   variables.&nbsp; Then apply the bitwise operators and display the results.&nbsp;   Convert the results to <em><strong>binary</strong></em> and you should get the answers shown above.&nbsp; </p>
+    <div class="parenthetical">
+      <p><strong>Warning</strong>:&nbsp; the <em><strong>bitwise</strong></em> <em><strong>not</strong></em> (complement) operator, <span class="codeInLine">~</span>, will convert all the   <strong>0</strong>s of the number to <strong>1</strong>s.&nbsp; Since this includes left-most <strong>0</strong>s (that we don't   usually think about) the answer will be a number with a lot of <strong>1</strong>s in the   leftmost positions.&nbsp; This results in a <em><strong>negative value</strong></em> for most <strong>ints</strong>, so  the answer you see will be <em><strong>a strange looking negative number</strong></em>.&nbsp; Unless you   want to look-up "two's complement" to see how this negative number is stored   internally, you'll probably just have to take my word for the last two results.&nbsp;   (Can you think of an easy — almost trivial — way to test that bit-wise complement <em>seems</em> to work correctly?)</p>
+    </div>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

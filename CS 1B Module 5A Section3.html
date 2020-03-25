@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5a_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5A Section3</title>
+<link href="./CS 1B Module 5A Section3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+    <h1>Section 3&nbsp; - The JFrame</h1>
+    <h2>5A.3.1 JFrame<img src="./CS 1B Module 5A Section3_files/pic_1a10_17.jpg" alt="screen shot" width="300" height="200" hspace="9" border="0" align="right"></h2>
+    <p>The window that we are going to open this week is not the  <strong>JOptionPane</strong> style object that you may have used in the past. This one&nbsp; is called a <strong>JFrame</strong> and it is much   more customizable. </p>
+    <p>With the <strong>JOptionPane</strong> we could only give it one message and had to accept the   "<strong>OK</strong>" button.&nbsp; With <strong>JFrame</strong> we can place as many different controls as we   wish.&nbsp; As you can see there are three such controls inside the <strong>JFrame</strong>, and   we'll discuss those shortly.</p>
+    <p>The way one places a <strong>JFrame</strong> on the screen is as follows:</p>
+<pre>   // establish main frame in which program will run
+   JFrame frmMyWindow = new JFrame("Transporter Room");
+   frmMyWindow.setSize(300, 200);
+   frmMyWindow.setLocationRelativeTo(null);
+   frmMyWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+</pre>
+      
+
+    <p>Let's explore this line-by-line.</p>
+    <div>
+
+<pre>   // establish main frame in which program will run
+</pre>
+
+    </div>
+    <p>This is, of course, just a comment to help us understand what the next group   of lines does.&nbsp; As usual, we aligned the comment up with the lines   directly below it.&nbsp; Also notice that we did not skip any lines.&nbsp; We   waited until the last statement in this group before skipping a line, then   opened the next group with another comment.</p>
+<pre>   JFrame frmMyWindow = new JFrame("Transporter Room");
+</pre>
+
+    <p>This line creates a new <strong>JFrame</strong> for us to work on.&nbsp; The <strong>JFrame</strong> object is   called <strong>frmMyWindow</strong>, and when displayed on the screen it will have the words&nbsp; <strong>"Transporter Room" </strong>printed in the top title bar.&nbsp; This  line is    shorthand for the two longer statements we could have used instead:</p>
+<pre>   JFrame frmMyWindow;
+   frmMyWindow = new JFrame("Transporter Room");
+</pre>
+    
+    <p> Either   version will create a new <strong>JFrame</strong> object for us.</p>
+    <div class="important"> Terminology
+    	<p> We are   	using the <strong>JFrame</strong> <em><strong>class</strong></em> to help us define a specific <strong> JFrame</strong> <em><strong>object</strong></em> which we are naming <span class="codeInLine">frmMyWindow</span>.&nbsp;&nbsp;   	In other words, we are instantiating a <strong>JFrame</strong> object and calling it <strong class="codeInLine"> frmMyWindow</strong>;</p>
+    </div>
+<p> Next:</p>
+
+<pre>   frmMyWindow.setSize(300, 200);
+</pre>
+    
+    <p>This line sets the size of the <strong>JFrame</strong> to be 300 pixels wide and 200 pixels   tall.&nbsp; A pixel is one pixel element, a very small size.&nbsp; Your computer   screen might be 1024 pixels wide, for example.&nbsp; More optional terminology:&nbsp;   We are using the <strong>frmMyWindow</strong> <em><strong>object</strong></em> to call the<strong> setSize()</strong> <em><strong>method</strong></em>.&nbsp; Another  way to say it is that we are <em><strong> dereferencing</strong></em> the <strong>setSize()</strong> method through the <strong>object</strong> <em> <strong>frmMyWindow</strong></em>.</p>
+    
+<pre>   frmMyWindow.setLocationRelativeTo(null);
+</pre>
+    
+    <p>This line above is how we force the new <strong>JFrame</strong> object to be centered   on the computer screen.&nbsp; (Optional terminology: We use the <strong>frmMyWindow</strong> <em><strong>object</strong></em> to <em><strong>dereference</strong></em> a call to the <strong> setLocationRelativeTo()</strong> <em><strong>method</strong></em>.)</p>
+
+<pre>   frmMyWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+</pre>
+    
+    <p>This last line of the group tells Java that when the user clicks the little <strong>x</strong> box in the upper right of the <strong>JFrame</strong>, the box will close and the program will   end.&nbsp; It would be possible to allow the user to close a <strong>JFrame</strong> without   ending our program.&nbsp; We want to avoid that in this program, which is why we   include this line.</p>
+    <p>Normally, for your early GUI applications, you'll want to use these four   statements, making minor adjustments to the size, object name, and text that   goes on the top of the frame.&nbsp; You can even write a short program now that   has only these four lines and try to run it. (If you do, don't forget to import   <span class="codeInLine">javax.swing.*</span>).</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

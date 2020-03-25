@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5b_7.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5B Section 7</title>
+<link href="./CS 1B Module 5B Section 7_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1 style="TEXT-ALIGN: left">Section 7 - The Event Handlers</h1>
+	<h2 style="TEXT-ALIGN: left">5B.7.1 The Enter Button Handler</h2>
+	<p style="TEXT-ALIGN: left">We are going to need two event listeners.&nbsp; One   for the <strong>Enter</strong> button which will allow us to push numbers on to the stack.   Another for any of the four <strong><em>operator keys</em></strong>, which will pop items   off the stack and do a computation.&nbsp; We'll take the<strong><em> E</em></strong><em><strong>nter   button listener</strong></em> first.</p>
+	<h3 style="TEXT-ALIGN: left">The Plan</h3>
+	<p style="text-align: left">It's a simple plan.&nbsp; </p>
+	<h4 style="text-align: left">If the user presses the <strong>Enter</strong> button we:</h4>
+	<ol>
+		<li> Read the Text value from the text field   	into a local <strong>String</strong> variable, <strong>strA</strong>.		</li>
+		<li> Clear the text field and set the focus to   	prepare for another number from the user.		</li>
+		<li> Convert the String, <strong>strA</strong> to a double, <strong>dblA</strong>. (If   	there is an error here, we just return).		</li>
+		<li> Push the double, <strong>dblA</strong> onto our <strong>MyStack</strong> object, <strong>stk</strong>.		</li>
+	</ol>
+	<p style="text-align: left">What could possibly go wrong?</p>
+	<p style="text-align: left">This listener can work for both the button click and   also the enter key of the text field.&nbsp; Both of those are action events.</p>
+	<h3 style="text-align: left">The Source Code for the Enter Method Handler</h3>
+	<p style="text-align: left">Here it is.&nbsp; We've actually discussed every   line of it, so you only have to read it, understand it, copy and paste it and   try it out.&nbsp; If there is anything you don't understand, reread the few   previous sections and, if you can't find the answer, ask.</p>
+
+<pre>// inner class for btnEnter and txtNumber Listener
+class EnterListener implements ActionListener
+{
+   // event handler for JButton or Enter Key
+   public void actionPerformed(ActionEvent e)
+   {
+      double dblA = 0;
+      String strA;
+
+      // read value from text fields into local variables
+      strA = txtNumber.getText();
+      txtNumber.setText("");  // clear
+      txtNumber.requestFocus();
+
+      // try to convert from String to double, return if fail
+      try
+      {
+         dblA = Double.parseDouble(strA);
+      }
+      catch (NumberFormatException error)
+      {
+         return;
+      }
+     
+      if ( !stk.push(dblA) )
+         txtNumber.setText( "Stack Overflow");
+   }
+} // end inner class EnterListener
+</pre>
+
+	<p style="text-align: left">The above code will appear as an inner class to the   Calculator, placed anywhere inside that class but outside other method or class   definitions.&nbsp; We will see it completely in a moment.</p>
+	<h3 style="text-align: left">Registering the Listener with the Controls</h3>
+	<p style="text-align: left">We have to associate this listener with the btnEnter   JButton and the txtNumber JTextArea.&nbsp; This is done as we have in the past:</p>
+
+<pre>   // register Enter listeners (for pushing numbers)
+   ActionListener enterListener = new EnterListener();
+   btnEnter.addActionListener( enterListener );
+   txtNumber.addActionListener( enterListener );
+</pre>
+
+	<p style="text-align: left">This code will appear in the constructor for the   Calculator class.&nbsp; We will see that soon.</p>
+	<h2 style="text-align: left">5B.7.2 The Addition Event Handler</h2>
+	<h3 style="text-align: left">The Plan</h3>
+	<h4 style="text-align: left">If the user presses the +   button we:</h4>
+	<ol>
+		<li> Pop two doubles off the stack, store them in <strong>dbl1</strong>, <strong>dbl2</strong> (return if stack does not have at least two items on it).		</li>
+		<li> Add the doubles, placing the answer into a   	double <strong>dblResult</strong>.		</li>
+		<li> Convert the double <strong>dblResult</strong> to a String <strong>strResult</strong>..		</li>
+		<li> Set the Text of the <strong>textA</strong> to display the   	new String <strong>strResult</strong>.		</li>
+		<li> Push the answer <strong>dblResult</strong>, back onto the   	stack for future calculations.		</li>
+	</ol>
+	<h3 style="text-align: left">The Source Code for the Enter Method Handler</h3>
+	<p style="text-align: left">Here it is.&nbsp; Instead of calling it the   AddListener, I'm calling it the OpListener, because we can use this for every   one of the four operators.&nbsp; However, I'm only going to implement it for   addition.&nbsp; You will see that I have left out code for -, * and /.</p>
+
+<pre>// inner class for OpListener
+   class OpListener implements ActionListener
+   {
+      // event handler for JButton or Enter Key
+      public void actionPerformed(ActionEvent e)
+      {
+         String strResult;
+         Double dbl1, dbl2, dblResult;
+
+         // pop two items
+         if (!stk.testStack(2))
+            return;
+         dbl2 = stk.pop();
+         dbl1 = stk.pop();
+
+         // do the math
+         if (e.getSource()== btnPlus)
+            dblResult = dbl1 + dbl2;
+         // else ... other operators ... ??
+
+         // convert from double to  String
+         NumberFormat tidy = NumberFormat.getInstance(Locale.US);
+         tidy.setMaximumFractionDigits(10);
+         strResult = tidy.format(dblResult);
+
+
+         // write result back to TextA and push
+         txtNumber.setText(strResult);
+         stk.push(dblResult);
+      }
+   } // end inner class OpListener
+</pre>
+
+	<p style="text-align: left">The above code will appear as an inner class to the   Calculator, placed anywhere inside that class but outside other method or class   definitions.&nbsp; We will see it completely in a moment.</p>
+	<h3 style="text-align: left">Registering the Listener with the Controls</h3>
+	<p style="text-align: left">We have to associate this listener with the btnPlusJButton   and as well as the other three operator buttons:</p>
+
+<pre>   // register Operation listeners (for doing the math)
+   ActionListener opListener = new OpListener();
+   btnPlus.addActionListener( opListener );
+   btnMinus.addActionListener( opListener );
+   btnMult.addActionListener( opListener );
+   btnDiv.addActionListener( opListener );
+</pre>
+	
+	<p style="text-align: left">Although we have registered the listener with all   four buttons, it will only function with the plus button since we have not   written the code yet to deal with the other three.</p>
+	<p style="text-align: left">Let's look at the entire source on the next page.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

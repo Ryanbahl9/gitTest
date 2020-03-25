@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_3a_6.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 3A Section 6</title>
+<link href="./CS 1B Module 3A Section 6_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 6 - Implementing M. Mitchell Rules (and StringBuffer)</h1>
+	<h2>3A.6.1 The Plan</h2>
+	<p>You have to always think in terms of <em><strong>objects</strong></em> when you start a project like this.&nbsp; What will the   <em><strong>objects</strong></em> be?&nbsp; In <strong>CA</strong>, one answer is that there   should be at least one <em><strong>class</strong></em>:</p>
+<ul>
+      <li> An <strong>Automaton</strong> <em><strong>class</strong></em> — it  accepts   	a <em><strong>rule</strong></em> in its <em><strong>constructor</strong></em> and   	has <em><strong>methods</strong></em> that compute and display new generations as   	a result of repeatedly applying the <em><strong>rule</strong></em>.		</li>
+    </ul>
+    
+    <div class="parenthetical">We could also pass a <em><strong>seed</strong></em> to the <strong>Automaton</strong> <em><strong>constructor</strong></em>, but to keep things manageable for this lecture and assignment, we'll always assume the <em><strong>seed</strong></em> is  a<em><strong> "single 1, swimming in an infinite sea of 0s</strong></em>," i.e., <span class="codeInLine">  ...000000000000<strong>1</strong>000000000000... </span>.</div>
+    <p>With this in mind, we will create an <strong> Automaton</strong> <em><strong>class</strong></em> that  provides a <span class="codeInLine">propagateNewGeneration()</span> <em><strong>method</strong></em> (to compute the <em><strong>next gen</strong></em> based on the <strong><em>rule</em></strong> and <em><strong>current gen</strong></em>) and a<strong class="codeInLine"> toStringCurrentGen()</strong> (which returns a <strong>String</strong>, like <strong class="codeInLine">"*&nbsp;&nbsp; * ** * *"</strong>). We will let the <em><strong>client</strong></em> do the modest work of <em><strong>looping</strong></em> to produce <em><strong>multiple generations</strong></em>, displaying each <em><strong>generation</strong></em>, one-beneath-the-previous. We will always assume the <em><strong>seed</strong></em> is a<em><strong> single asterisk </strong></em>surrounded by <em><strong>infinite blanks</strong></em>, like, <strong class="codeInLine">"... &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... "</strong>. </p>
+	<p align="left">I often like to start with a proposed<strong> <em>main</em></strong> that shows how we will use the <em><strong>class</strong></em>.&nbsp; From   there, it makes the class design a little easier.</p>
+    
+<pre>import java.util.Scanner;
+
+public class Foothill
+{
+   public static void main(String[] args)
+   {
+      int rule, k;
+      String strUserIn;
+      
+      Scanner inputStream = new Scanner(System.in);
+      Automaton aut;
+
+      // get rule from user
+      do
+      {
+         System.out.print("Enter Rule ("  
+               + Automaton.MIN_RULE + " - " +  Automaton.MAX_RULE + "): ");
+         // get the answer in the form of a string:
+         strUserIn = inputStream.nextLine();
+         // and convert it to a number so we can compute:
+         rule = Integer.parseInt(strUserIn);
+
+      } while (rule &lt; Automaton.MIN_RULE || rule &gt; Automaton.MAX_RULE);
+
+      // create automaton with this rule and single central dot
+      aut = new Automaton(rule);
+
+      // now show it
+      System.out.println("   start");
+      for (k = 0; k &lt; 50; k++)
+      {
+         System.out.println( aut.toStringCurrentGen() );
+         aut.propagateNewGeneration();
+      }
+      inputStream.close();
+      System.out.println("   end");
+   }
+}</pre>
+
+	<p>We immediately see that the <em><strong>constructor</strong></em> takes the<strong> rule</strong> (as an <strong>int</strong>). That implies that it is stored   internally.&nbsp;While an <strong>int</strong> is, indeed, a compact way to represent a <em><strong>rule</strong></em>,   it is not necessarily the most useful.&nbsp; We should   probably devise a slightly more intuitive internal   representation of a <em><strong>rule</strong></em>.&nbsp; If we keep our minds fixed on the observation that a <em><strong>rule</strong></em> needs to give an <em><strong>output</strong></em>, <strong>on</strong> or <strong>off</strong>, for each of the    eight possible <em><strong>input combinations</strong></em>, we will instantly conclude that a <em><strong>rule</strong></em> is easily representable    as an <em><strong>array</strong></em> of <em><strong>eight </strong></em><strong>booleans</strong>.&nbsp;<span class="codeInLine">rule[0]</span> will give the <em><strong>output</strong></em> (<strong>True</strong>=ON or <strong>False</strong>=OFF) from the <em><strong>input</strong></em> combination <span class="codeInLine">"000"</span>.&nbsp; <span class="codeInLine">rule[1]</span> would give the <em><strong>output</strong></em> for <span class="codeInLine">"001"</span>.&nbsp; <span class="codeInLine">rule[2]</span>, the <em><strong>output</strong></em> for <span class="codeInLine">"010"</span>, <span class="codeInLine">rule[3]</span> the <em><strong>output</strong></em> for <span class="codeInLine">"011"</span>,   and so on, up to <span class="codeInLine">rule[7]</span> which tells the <em><strong>output</strong></em> for the <em><strong>input</strong></em> combo <span class="codeInLine">"111"</span>.</p>
+	<p>We   should also store a <strong>String</strong> that represents the <em><strong>current generation</strong></em> or,   as I call it, <span class="codeInLine">thisGen</span>.&nbsp;</p>
+	<h2>3A.6.2 Class Automaton</h2>
+	<p>With this introduction, we can now give a reasonable   overview for <em><strong>class</strong></em> <strong>Automaton</strong>:</p>
+<pre>class Automaton
+{
+   // class constants
+   public final static int RULES_SIZE = 8;
+   public final static int BITS_IN_RULE_SIZE 
+      = (int)(Math.log(RULES_SIZE) / Math.log(2));
+   public final static int MIN_DISPLAY_WIDTH = 21;
+   public final static int MAX_DISPLAY_WIDTH = 121;
+   public final static int DFLT_DISPLAY_WIDTH = 79;
+   public final static int MIN_RULE = 0;
+   public final static int MAX_RULE = (int)Math.pow(2,RULES_SIZE) - 1; // 255
+   public final static int DFLT_RULE = 1;
+   public final static String ON_STR = "*";
+   public final static String OFF_STR = " ";
+   
+   // private members
+   private boolean rule[];   // allocate rule[8] in constructor!
+   private String thisGen;   // same here
+   String extremeBit; // bit, "*" or " ", implied everywhere "outside"
+   int displayWidth;  // an odd number so it can be perfectly centered
+   
+   // public constructors, mutators, etc. (need to be written)
+   public Automaton(int newRule)
+   public void resetFirstGen()
+   public boolean setRule(int newRule)
+   public boolean setDisplayWidth(int width)
+   public String toStringCurrentGen()
+   public void propagateNewGeneration()
+}</pre>
+<h3>Static Class Finals</h3>
+<p>Looking up, you can see there are several <em><strong>public</strong></em> <strong>symbolic</strong><span class="codeInLine"> finals</span>:</p>
+<ul>
+  <li><span class="codeInLine">RULES_SIZE</span></li>
+  <li><span class="codeInLine">BITS_IN_RULE_SIZE</span> // optional</li>
+  <li><span class="codeInLine">MIN_DISPLAY_WIDTH</span></li>
+  <li><span class="codeInLine">MAX_DISPLAY_WIDTH</span></li>
+  <li><span class="codeInLine">DFLT_DISPLAY_WIDTH</span></li>
+  <li><span class="codeInLine">MIN_RULE</span></li>
+  <li><span class="codeInLine">MAX_RULE</span></li>
+  <li><span class="codeInLine">DFLT_RULE</span></li>
+  <li><span class="codeInLine">ON_STR</span></li>
+  <li> <span class="codeInLine">OFF_STR</span></li>
+</ul>
+<p>Their values are given in the code, above. <strong><em>You must define all of them, and use them all</em></strong>, rather than the <em><strong>literal</strong></em> values they represent, <em>except for the <strong>optional</strong></em><span class="codeInLine"> BITS_IN_RULE_SIZE</span>, which you might find difficult to leverage. The other <span class="codeInLine">CONSTANTS</span> are either obvious by their names and values, or they are explained below. Be sure that <em><strong>you never use the literals, 8, 79, 255,</strong></em> <em><strong>etc.</strong></em> anywhere in your program (<em><strong>main</strong></em> or <em><strong>class</strong></em>) in place of the <em><strong>symbolic constants</strong></em>. <em><strong>If you violate this rule, you will lose 2 points. </strong></em>Using <strong><em>literals</em></strong> instead of the <span class="codeInLine">CONSTANTS</span> means the code is difficult to update.</p>
+<h3>The Private Instance Members</h3>
+	<p>Here is a lising of the <em><strong>members</strong></em> that each <em><strong>object</strong></em> of this <em><strong>class</strong></em> has. I'll explain the meaning of each <strong>member</strong> in the <span class="sectionOrAssignmentTitle">sections</span> that follow.</p>
+	<ul>
+	  <li><span class="codeInLine">thisGen</span> — a <strong>String</strong> that represents the <em><strong>current generation</strong></em> destined to be  sent to the console as part of <em><strong>one line</strong></em> to be displayed in the creation of the larger <em><strong>output pattern</strong></em>.</li>
+	  <li><span class="codeInLine">displayWidth</span>  — "how much" of the <strong> <span class="codeInLine">thisGen</span> </strong> <strong>String</strong> to send to the console. </li>
+	  <li><span class="codeInLine">extremeBit</span> — a single character (in a <strong>String</strong> form) which is either blank, <strong>" "</strong>, or an asterisk, <strong>"*"</strong>. It represents the value we imagine to be stored in <em><strong>every </strong></em><strong>String</strong><em><strong> position</strong></em> to the <em><strong>far left</strong></em> and <em><strong>far right</strong></em> (out to <em><strong>infinity</strong></em>), beyond the actual, interesting, middle portion of the <strong>String</strong>. </li>
+	  <li><span class="codeInLine">rule[]</span> — an <em><strong>array</strong></em> of <strong>booleanss</strong> that expresses how a <em><strong>new generation</strong></em> is formed from the <em><strong>current generation</strong></em>.</li>
+    </ul>
+	<h4 class="codeInLine">rule[]</h4>
+	<p>We've talked about what a <em><strong>rule</strong></em> is in the previous pages. Our <em><strong>rule</strong></em> will be an <strong>int</strong> from <strong>0 - 255</strong>. A <em><strong>client</strong></em> passes the <strong>int</strong> to the <em><strong>constructor</strong></em> as an <em><strong>argument</strong></em>.  If that <strong>int</strong> were <strong><em>33</em></strong>, for example, it would be a binary <strong>00100001</strong> which, in <em><strong>array</strong></em> form, is (informally) <strong>[False, False, True, False, False, False, False, True]</strong>. So, the <em><strong>mutator</strong></em> <span class="codeInLine">setRule()</span> would construct an <strong><em>array</em></strong> that has this form (if it received a <strong>33</strong> as its <strong><em>parameter</em></strong>).</p>
+	<h4><span class="codeInLine">thisGen</span></h4>
+	<p>Loosely speaking, <span class="codeInLine">thisGen</span> is the <strong>String</strong> we send to the display to see what state the <strong>Automaton</strong> is in. Conceptually, it's a long <strong>String</strong>, like:</p>
+	<pre>"                      ** ****                      "</pre>
+	<p>but in reality, that line is made up of an "<strong><em>interesting middle part</em></strong>, maybe only 7 characters near the center...</p>
+	<pre>                       "** ****"</pre>
+	<p>... surrounded on the <em><strong>left</strong></em> and <em><strong>right</strong></em> with a bunch of either all <em><strong>blanks</strong></em>, <span class="codeInLine">" "</span> (in this case), or a bunch of all <strong><em>asterisks</em></strong>, <span class="codeInLine">"*"</span> (in some other case). </p>
+	<p>Here's an example of the <em><strong>display string</strong></em> in a different situation:</p>
+	<pre>&nbsp;"*******************  *  *  *** ******************"</pre>
+	<p>In this case, <span class="codeInLine">thisGen</span> ia actually just the middle part, a <strong>String</strong> of length 13 ...</p>
+	<pre>&nbsp;                   "  *  *  *** *"</pre>
+	<p>... surrounded  by all the same character,  that character now being an <strong><em>asterisk</em></strong>, <span class="codeInLine">"*"</span>.<span class="codeInLine"></span>
+  </p>
+  
+	<h4><span class="codeInLine">displayWidth</span></h4>
+	<p><span class="codeInLine">displayWidth</span> tells us how much of the <span class="codeInLine">thisGen</span> <strong>string</strong> to send to the console. This enables <span class="codeInLine"> thisGen</span>  to get extremely long (millions of characters) without causing a mess on the console. </p>
+	<p>The <em><strong>mutator</strong></em> for this <em><strong>member</strong></em>, <span class="codeInLine">setDisplayWidth()</span>, will check that the passed value is <em><strong>within range</strong></em> and, for technical reasons, an <em><strong>odd number</strong></em>. Typically <span class="codeInLine"> displayWidth</span>  will be <strong>79</strong>, but we allow it to be any value from <span class="codeInLine">MIN_DISPLAY_WIDTH</span> to <span class="codeInLine">MAX_DISPLAY_WIDTH</span></p>
+	<p>The <strong><em>stringizer</em></strong>, <span class="codeInLine">toStringCurrentGen()</span>, will make carerul use of this <em><strong>member</strong></em>. If <span class="codeInLine"> thisGen</span> is <em><strong>longer</strong></em> than <strong> <span class="codeInLine"> displayWidth</span></strong>, <span class="codeInLine">toStringCurrentGen()</span> has to decide which sub-portion of <span class="codeInLine"> thisGen</span>  to display. The answer is the <em><strong>exact center section</strong></em>, cropping off excess characters, equally, from the left and right before it <em><strong>returns</strong></em> its <strong>string</strong>.  If <span class="codeInLine"> thisGen</span> is <em><strong>shorter</strong></em> than <strong><span class="codeInLine"> displayWidth</span></strong>, <span class="codeInLine">toStringCurrentGen()</span> will need to "pad" <span class="codeInLine"> thisGen</span>, left and right, with enough characters (<em><strong>all blanks</strong></em> or <em><strong>all asterisks</strong></em>, explained below), to make it exactly <strong><span class="codeInLine"> displayWidth</span> </strong> charaters long, before it <em><strong>returns</strong></em> its <strong>string</strong>.</p>
+    
+    
+    
+	<h3><span class="codeInLine">extremeBit</span> and Generating a New Generation</h3>
+          
+	<p>What is this strange sounding <em><strong>attribute</strong></em>, <span class="codeInLine">extremeBit</span>? It is a<em><strong> single character</strong></em> (in a <strong>String</strong> form) which is either <em><strong>blank</strong></em>, <strong class="codeInLine">" "</strong>, or an <em><strong>asterisk</strong></em>, <strong class="codeInLine">"*"</strong>. It represents the value we <em>imagine</em> is stored in <em><strong>every </strong></em><strong>String</strong><em><strong> position</strong></em> to the <em><strong>far left</strong></em> and <em><strong>far right</strong></em> (out to <em><strong>infinity</strong></em>), beyond the actual, interesting, <em><strong>middle portion</strong></em> of the <strong>String</strong> (<span class="codeInLine">thisGen</span>).</p>
+	<p>To do this automaton correctly, we have to imagine that <em><strong>every generation is infinite in both directions</strong></em>. We begin by assuming that everything to the left and right, which is not the central, single <span class="codeInLine">"*"</span> <em><strong>asterisk</strong></em>, is a <em><strong>blank</strong></em>, <span class="codeInLine">" "</span>. Therefore, <span class="codeInLine">extremeBit</span> is initially <em><strong>blank</strong></em>, <strong class="codeInLine">" "</strong>.  However, after we start applying the <strong><em>rule</em></strong> to that initial <em><strong>generation</strong></em>, it might change those <em><strong>blanks</strong></em> to <em><strong>asterisks</strong></em><strong></strong>. Also, <span class="codeInLine">thisGen</span>, which starts off as a single <em><strong>asterisk</strong></em>, <strong class="codeInLine">"*"</strong>, will grow by two characters each generation, so for the <em><strong>second generation</strong></em> it's <em><strong>three characters</strong></em>, for the <em><strong>third generation</strong></em> it's <em><strong>five characters</strong></em>, and so on. </p>
+	<div class="question"> How does <span class="codeInLine">thisGen</span>, grow in length, and how the do the infinite number of distant bits to the far left and far right, represented by <span class="codeInLine">extremeBit</span>, change from <strong><em>blanks</em></strong>, <span class="codeInLine">" " to </span><strong><em>asterisks</em></strong>, <span class="codeInLine">"*"</span>, and maybe back to <strong>blanks</strong>, <span class="codeInLine">" "</span>? </div>
+	<p>The following  description of the the most important <em><strong>method</strong></em> in our <em><strong>class</strong></em>, <span class="codeInLine">propagateNewGeneration()</span>, will explain how <span class="codeInLine">extremeBit</span> and <span class="codeInLine">thisGen</span> work together and change together.</p>
+	<ul>
+      <li>When we are testing the <em><strong>input</strong></em> values <em>near the center</em>,  the initial <strong class="codeInLine">"*"</strong>, or <strong>1</strong>, bit,  will join with  neighboring <strong class="codeInLine">" "</strong>, or <strong>0,</strong> bits to form a number like <strong>1,</strong> <strong>2</strong> or <strong>4</strong> as an <em><strong>input</strong></em> to the <em><strong>rule</strong></em>. </li>
+      <li>To make this  clear, apply what you learned in the last page to see what happens if you use the <em><strong>rule</strong></em> <em><strong>14</strong></em> on  the initial <span class="codeInLine">thisGen</span> <strong>String</strong>, which is just <span class="codeInLine">"*"</span> and with <span class="codeInLine">extremeBit</span>, always starting off as <strong class="codeInLine">" "</strong>, or <strong>0</strong>. <br>
+        <br>
+        <div class="parenthetical"><strong>Remember</strong>: <em><strong>Everything</strong></em> <em><strong>outside</strong></em> that initial <em><strong>one asterisk</strong></em><strong><em></em></strong> in ("*") in <span class="codeInLine">thisGen</span> is implicitly defined by our <span class="codeInLine">extremeBit</span>, which starts out <em><strong>blank</strong></em>, <span class="codeInLine">" "</span>. That's an <em><strong>infinite number of blanks</strong></em> to the left and right of the central  "*". So, in our first application of <em><strong>rule 14</strong></em> to this <em><strong>first generation</strong></em>, we need to use <em><strong>four</strong></em> of those <em><strong>blank </strong></em><span class="codeInLine">extremeBits</span><em><strong>,</strong></em> together with the center <em><strong>asterisk</strong></em>, to create the <em><strong>length 5 </strong></em><strong>String</strong> <span class="codeInLine">"&nbsp;&nbsp;*&nbsp;&nbsp;"</span> (binary <span class="codeInLine">00100</span>) for <em><strong>input</strong></em> to <em><strong>rule 14. </strong></em> We'll then have enough bits to get the <em><strong>three "central" output children</strong></em> of the <strong><em>second generation</em></strong>. That means we will create three <em><strong>input triplets</strong></em> <strong>1</strong>, <strong>2</strong> and <strong>4</strong> (or, if you prefer,<strong> <em>binary</em></strong><span class="codeInLine"> 001</span>, <span class="codeInLine">010</span> and <span class="codeInLine">100</span>, also representable as "&nbsp;&nbsp;*",&nbsp;"&nbsp;*&nbsp;",&nbsp; and&nbsp;&nbsp;"*&nbsp;&nbsp;"), all of which involve the single, initial (central) <strong class="codeInLine">"*"</strong> combined with two of the added four <strong><em>blank</em></strong> <span class="codeInLine">extremeBit</span>s. They are  sent to<em><strong> rule 14</strong></em> three times, to get the three <em><strong>output bits</strong></em>.</div>
+        <br>
+        <br>
+For <em><strong>rule 14,</strong></em>. the <em><strong>output bit </strong></em>for the first two triplets, (decimal <strong>1</strong>, or " &nbsp; &nbsp;*" and decimal <strong>2</strong>, or " &nbsp;*&nbsp; "), is "*" (<strong>0</strong> or <strong>true</strong>/<strong>ON</strong>). For the third triplet, (decimal 4, or "* &nbsp; &nbsp;"), the output is "&nbsp;" (<strong>0</strong> or <strong>false</strong>/<strong>OFF</strong>). (Write out <em><strong>rule 14</strong></em> in binary and refer to the algorithm in the previous page to see why.) That means the <em><strong>second generation</strong></em> will have a "**&nbsp; " in the center, produced by <em><strong>rule 14</strong></em> applied to the <em><strong>5-character input</strong></em> <strong>String</strong> <span class="codeInLine">"&nbsp;&nbsp;*&nbsp;&nbsp;"</span>. [If it takes you more than a 1 or 2 minutes   to compute this result, then you need to reread the last section.] That is, the <span class="codeInLine">"*" </span>together with its <em><strong>four neighboring implied</strong></em> <strong><em>blanks</em></strong>, <span class="codeInLine">" "</span>s, near  it, produced <em><strong>three children, all asterisks,</strong></em> in the <em><strong>second generation</strong></em>. </li>
+      <li>The rest of the <em><strong>infinite bits</strong></em> in the <em><strong>second generation</strong></em> are <em><strong>blanks</strong></em> (<strong>0</strong>s), because the <em><strong>input triplets</strong></em> for the <em><strong>infinite</strong></em> <strong>Strings</strong> to the left and right are all <strong class="codeInLine">"&nbsp;&nbsp;&nbsp;" </strong>(binary <span class="codeInLine">000</span> or decimal<strong> 0</strong>), and when <strong>0</strong> is sent to <em><strong>rule 14</strong></em> it produces an <em><strong>output</strong></em> of 0. [This time it's easer, so if it takes you more than 30 seconds to see it, review the last page.]</li>
+      <li>Now that we've figured out the <em><strong>second generation</strong></em>, we move on to the <em><strong>third generation</strong></em>. <span class="codeInLine">thisGen</span> has become a central <strong>string</strong> "** ", together with an infinite <em><strong>sea of blanks</strong></em> (<span class="codeInLine">extremeBit</span> = <strong class="codeInLine">"&nbsp;"</strong>, or <strong>0</strong>) on either side. We use <em><strong>four</strong></em> of those implied <em><strong>blanks</strong></em>, <em><strong>two</strong></em> on either side of the centeral "**&nbsp; "<strong>,</strong> to produce a new input,<span class="codeInLine"><strong>"&nbsp;&nbsp;**&nbsp;&nbsp;&nbsp;"</strong></span>, a 7-character input <strong>String</strong>. That, with the help of <em><strong>rule 14</strong></em>, produces a new <strong><em>5-character output</em></strong> <strong>string</strong> for <span class="codeInLine">thisGen</span>., specifically, the String <span class="codeInLine">"**&nbsp;&nbsp;&nbsp;"</span>. So, in the <em><strong>third generation</strong></em>, <span class="codeInLine">thisGen</span> has  grown to <em><strong>five  characters</strong></em>.  As with the <em><strong>first generation</strong></em>, <span class="codeInLine">extremeBit</span> in the <em><strong>second generation</strong></em> is still <strong>0</strong>, so using that as <strong><em>input</em></strong> to <em><strong>rule 14</strong></em> continues to produce another <strong>0</strong> for  the <em><strong>third generation</strong></em>'s <span class="codeInLine">extremeBit</span>.</li>
+      <li>So the original<strong class="codeInLine"> "*"</strong> causes a spread of <em><strong>asterisks</strong></em> and <em><strong>spaces</strong></em> from the center, depending on what the <em><strong>rule</strong></em> is. This is one way that some of original <strong>0</strong>s (<em><strong>blanks</strong></em>) close to, but outside, <span class="codeInLine">thisGen</span> can turn to <strong>1</strong>s: they may  get converted by the spreading of the original, central <strong class="codeInLine">"*"</strong> as a result of <em><strong>rule</strong></em> application.</li>
+      <li>Very far from this <em><strong>central interesting part</strong></em>, everything is <strong>0</strong>, initially. So every triplet is <strong>000</strong>, which means the <em><strong>input</strong></em> to the <em><strong>rule</strong></em> (in the<em><strong> first generation</strong></em>) is always <strong>0</strong> way out there. But the <em><strong>rule</strong></em> might  say that <strong>rule[0] = true</strong>. If so, all those distant <strong>0</strong>s will turn into <em><strong>an infinite number of</strong></em> <strong>1</strong>s in the <em><strong>second generation</strong></em>: the sea of <span class="codeInLine">" "</span>s (blanks,<em><strong>0</strong></em>s) will become a sea of <span class="codeInLine">"*"</span>s (asterisks, <strong>1</strong>s). That would mean <span class="codeInLine">extremeBit</span> would become <strong>1</strong> after an application of the <em><strong>rule</strong></em>. And if the rule <strong><em>does</em></strong> change the <span class="codeInLine">extremeBit</span> to <strong>1</strong>, then an application of the <em><strong>rule</strong></em> to input 111 (7,<span class="codeInLine"> "***"</span>) might, in a later generation, convert <span class="codeInLine">extreme_bit</span> back to <strong>0</strong>. It depends on the <em><strong>rule</strong></em>.</li>
+	</ul>
+	<p>Either way, besides the growing central <strong><em>signal</em></strong>, or interesting part, there will be a boring sea of either all <strong>0</strong>s or all <strong>1</strong>s. The <span class="codeInLine">extremeBit</span> <strong>String</strong> is a <em><strong>single character</strong></em> that tells us which it is. If it is <span class="codeInLine">" "</span>, it means  <span class="codeInLine">thisGen</span> is swimming in a sea of <strong>0</strong>s. If it is a <span class="codeInLine">"*"</span>, it means <span class="codeInLine">thisGen</span> is swimming in a sea of <strong>1</strong>s. This is needed to compute the <em><strong>next generation</strong></em>.</p>
+	<h3>The Member Methods</h3>
+	<p>Let's describe the <em><strong>methods</strong></em>.</p>
+    
+	<ul>
+		<li><strong>Automaton(int newRule)</strong> — a <em><strong>constructor</strong></em>. Through the <em><strong>mutator</strong></em>, below, we'll sanitize <strong>rule</strong> and then convert it to our   	internal representation. We also need to establish the <em><strong>seed</strong></em>: a <em>single </em><strong>1</strong><em> in a sea of </em><strong>0</strong><em>s</em>. This is our <em><strong>first generation</strong></em>. Do this by setting <strong>thisGen</strong> to <span class="codeInLine">"*"</span> and <strong>extremeBit</strong> to <span class="codeInLine">" "</span>.</li>
+	  <li><strong>String toStringCurrentGen()</strong> — This <strong>public</strong> stringizer returns a <strong>String</strong> consisting of the current generation, <strong>thisGen</strong>, but does so by embedding it in a <strong>returnString</strong> whose length is <em>exactly</em> <strong>displayWidth</strong> long. If <strong>thisGen</strong> is <em>smaller</em> than <strong>displayWidth</strong>, it is positioned in the center of the larger <strong>returnString</strong>, with the excess padded by <strong>extremeBit</strong> characters. If <strong>thisGen</strong> is <em>longer</em> than <strong>displayWidth</strong>, it has to be truncated (on both ends) so that it is perfectly centered in the returned <strong>returnString</strong>, any excess trimmed off both ends, equally.</li>
+		<li><strong>Four Public Mutators</strong>:
+          <ul>
+    
+    <li><strong>boolean setRule(int newRule) </strong> — converts the int <strong>newRule</strong>, a number from <strong>0-255</strong>, to an <em><strong>array</strong></em> of   		eight <strong>bools</strong>.&nbsp; For example, if the <strong>newRule</strong> is <strong>182</strong>,   		then this is the binary number <strong>1 </strong> <font color="#FF0000"><strong> <span style="background-color:#33CCCC; ">0</span></strong></font><strong> 1 1 0 1 </strong> <font color="#0000FF"><strong> <span style="background-color:#FFFF00; ">1</span></strong></font><strong> 0</strong>, which means that the resultant <em><strong>array</strong></em> will be
+      <blockquote> rule[7] = true, <br>
+        <font color="#FF0000"> <span style="background-color:#33CCCC; font-weight:700; "> rule[6] =   		false </span></font>, <br>
+        rule[5] = true, <br>
+        rule[4] = true, <br>
+        rule[3] = false, <br>
+        rule[2] = true, <br>
+        <font color="#0000FF"> <span style="background-color:#FFFF00; font-weight:700; "> rule[1] = true </span></font> , <br>
+        rule[0] = false. </blockquote>
+      I have color coded two of the bits in <strong>182</strong> and   		their corresponding <strong>bools</strong> in the <em><strong>array</strong></em> <span class="codeInLine">rule[]</span> so you   		can easily see how the conversion needs to work.&nbsp;   		As usual, this must sanitize the <strong>int</strong> so that   		only values in the legal range <strong>0-255</strong> are allowed.</li>
+    <li><strong>boolean setDisplayWidth(int width)</strong> — a <strong>mutator</strong> for <span class="codeInLine">displayWidth</span> which checks the <em><strong>argument</strong></em> against <span class="codeInLine">MIN_DISPLAY_WIDTH</span> and  <span class="codeInLine">MAX_DISPLAY_WIDTH</span> and also only allows <em><strong>odd widths</strong></em> (for centering purposes).</li>
+    <li><strong>void resetFirstGen() </strong> — a <em><strong>mutator-like</strong></em> <em><strong>method</strong></em> that resets <span class="codeInLine">thisGen</span> and the <span class="codeInLine">extremeBit</span> to some initial and/or default values.</li>
+    <li><strong>void propagateNewGeneration()</strong> —this <em><strong>mutator-like</strong></em> <em><strong>method</strong></em> is the workhorse.&nbsp; It will use the three private members, <span class="codeInLine">thisGen</span>, <span class="codeInLine">extremeBit</span> and<span class="codeInLine"> rule[]</span>, to create the <em><strong>next   	generation</strong></em> from them.&nbsp; This <em><strong>method</strong></em> must first append two <span class="codeInLine">extremeBit</span>s to each side of <span class="codeInLine">thisGen</span> in order to provide it with enough bits (or chars)  needed by <span class="codeInLine">rule[]</span>.&nbsp; This adds four chars to <span class="codeInLine">thisGen</span>, temporarily. We then apply <span class="codeInLine">rule[]</span> in a <em><strong>loop</strong></em> to the new, larger, <span class="codeInLine">thisGen</span>, which  creates a separate (local) <span class="codeInLine">nextGen</span> <strong>String</strong>. If you do this correctly,<strong>  <span class="codeInLine">nextGen</span> </strong>will be two  characters smaller than   the recently augmented <span class="codeInLine">thisGen </span>(but still two larger than the original <span class="codeInLine">thisGen </span>that entered the <em><strong>method</strong></em>). [<em>You must understand this statement, conceptually, before you write your first line of code, or you will be doomed.</em>] Then, you replace the old <span class="codeInLine">thisGen </span>with our new <span class="codeInLine">nextGen</span>.<br>
+      <br>
+      In summary, we pad<span class="codeInLine"> thisGen </span>with four <span class="codeInLine">extremeBit</span>s, then apply <strong>rule[]</strong>, and we have a new <span class="codeInLine">nextGen</span>, two larger than we started out with. We copy that back to <span class="codeInLine">thisGen</span> to complete the cycle.<br>
+      <br>
+      Finally, we have to apply <span class="codeInLine">rule[]</span> to<strong><em> three consecutive </em></strong><span class="codeInLine">extremeBit</span>s to figure out what the new<span class="codeInLine"> extremeBit</span> will be for the <em><strong>next generation</strong></em> (<span class="codeInLine">" "</span> or <span class="codeInLine">"*"</span>?) .&nbsp; What do I mean by "<em>three consecutive</em>"?&nbsp; We apply <span class="codeInLine">rule[]</span> to an <strong>int</strong> representing a 3-bit pattern inside the old generation.&nbsp; In this   case, we are doing it way out, where all the bits are the same:&nbsp; <span class="codeInLine">extremeBit</span>.&nbsp; So each input will be three <strong>0</strong>s or three <strong>1</strong>s — an <strong>int</strong> <strong>0</strong> or   an <strong>int 7</strong> — depending on the value of <span class="codeInLine">extremeBit</span>.&nbsp; The result will   enable us determine the new value of <span class="codeInLine">extremeBit</span>.&nbsp; We must do this before we return, so <span class="codeInLine">extremeBit</span> is correct for the next call to this <em><strong>method</strong></em>.</li>
+    </ul>
+	  </li>
+	</ul>
+	<h3>General Coding Requirement</h3>
+	<p>Aside from the spec in the <span class="sectionOrAssignmentTitle">Modules</span>, and the usual "<em><strong>avoid point loss</strong></em>" hints, here is a specific requirement I want you to pay close attention to. <strong><em>Use loops whenever possible</em></strong> rather than repeating nearly identical code, <strong><em>3 times</em></strong> or, worse, <em><strong>8 times</strong></em>. If you find that you have several small, <em><strong>nearly identical code fragments</strong></em> or <em><strong>if blocks</strong></em>, <em><strong>one below the next</strong></em> you can be sure you are forgetting some elementary <strong><em>looping</em></strong> lesson from your <span class="sectionOrAssignmentTitle">first programming course</span>. The repeated code can and should be condensed into a single <em><strong>loop</strong></em>. This <span class="sectionOrAssignmentTitle">Assignment</span> lends itself to <em><strong>loops</strong></em>, so use them.</p>
+	<h2>3A.6.3 The Implementation</h2>
+	<p>You will be implementing this as part of your <span class="sectionOrAssignmentTitle">lab assignment</span> this week.</p>
+	<h2>3A.6.4 StringBuffer</h2>
+	<p>For those of you who have never seen <strong>StringBuffer</strong> before and want to use something slightly more powerful than <strong>String</strong>, you may try it.&nbsp; I'll let you research this class on your own with the help of the links I provide in the first section of this module. </p>
+	<p>But before you go off in that direction, know that you can use <strong>String</strong>, rather than <strong> StringBuffer</strong> and do this assignment very easily using only what you already learned about String last quarter.</p>
+	<p>On the surface it seems like <strong>StringBuffer</strong> might be more useful because:	</p>
+	<ol>
+      <li>you can modify individual <strong>char</strong>s inside a <strong>StringBuffer</strong> object.</li>
+	    <li>You can <strong>append()</strong> a char to a <strong>StringBuffer</strong> object, while <strong>String</strong>'s + operator only works when both are <strong>String</strong>s.</li>
+	    <li>With <strong>StringBuffer</strong> you end up with less garbage collection behind the scenes:  <span class="codeInLine">myString = myString + "*" </span>creates a little garbage, even though it is a short and legal statement.</li>
+      </ol>
+    <p>To summarize, <strong>String</strong> is fine, but if you feel like learning something new, try out <strong>StringBuffer</strong>. </p>
+    <p></p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

@@ -1,0 +1,719 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_4a_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 4A Section 2</title>
+<link href="./CS 1B Module 4A Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 2 - Derived Classes</h1>
+	<h2>4A.2.1 A Derived Class</h2>
+	<p>If we wanted a <em><strong>phone-with-extension,</strong></em> we might consider   copy/pasting all of the above code into a new file and then adding one more <em><strong>member</strong></em>,   the <strong>extension</strong>. To that, we would then manually add any <strong><em>member functions</em></strong> or <em><strong>static finals</strong></em> needed to handle this <strong>extension</strong>. In&nbsp;Java, and any other <em><strong>OOP</strong></em> language, we can <em><strong>skip</strong></em> the <em><strong>copy/paste</strong></em> step and start immediately <em><strong>adding new code</strong></em>, even if we don't have access to, or permission to edit, the original <strong>Phone <em>class</em></strong>.</p>
+	<p>We <em><strong>extend</strong></em> <strong>Phone</strong> to a new <em><strong>sub-class</strong></em>, called <strong>PhoneWX</strong> ("<em>Phone With Extension</em>") like so: </p>
+
+<pre>//Derived Class PhoneWX  -----------------------------
+class PhoneWX extends Phone 
+{
+   // additional member
+   private String extension;
+
+   // public static constants
+   public static final String DEFAULT_EXT  = "00";
+   public static final int VALID_EXT_LEN = 2;
+
+   // constructors
+   public PhoneWX()
+   {
+      super();
+      extension = DEFAULT_EXT;
+   }
+   public PhoneWX(String ac, String num, String ext)
+   {
+      // first, base class stuff
+      super(ac, num);
+
+      // now the extension
+      if ( !setExt(ext) )
+         extension = DEFAULT_EXT;
+   }
+
+   // mutators
+   public boolean setExt(String ext)
+   {
+      // first base class stuff
+      if ( !validExt(ext) )
+         return false;  // don't change anything, return false
+      extension = ext;
+      return true;
+   }
+
+   public boolean setAll(String ac, String num, String ext)
+   {
+      // set only good args.  bad ones don't change member
+      boolean retValSetBoth, retValSetExt;
+
+      // first base class stuff (unique call to base)
+      retValSetBoth = setBoth(ac, num);
+
+      // now derived member
+      retValSetExt = setExt(ext);
+
+      // client gets false if anything was bad.
+      return retValSetBoth &amp;&amp;  retValSetExt;
+   }
+
+   // accessor
+   public String getExt()
+   {
+      return extension;
+   }
+
+   // stringizers
+   public String toString()
+   {
+      return super.toString() + "  ext. " + extension;
+   }
+   public void showPhone()
+   {
+      // System.out.println(super.toString() + "  ext: "  + extension );
+      // or, easier, just 
+      System.out.println( toString() );
+   }
+   public void showPhoneWithoutExtension()
+   {
+      System.out.println( super.toString() );
+   }
+
+   //overridden
+   public String dialing()
+   {
+      String retStr;
+
+      // chain to base class method
+      retStr = super.dialing();
+
+      // now add derived data to console
+      retStr += "   (" + toString() + ")\n";
+
+      return retStr;
+   }
+
+   // overloaded
+   public String redialing()
+   {
+      String retStr;
+
+      // chain to base class method AS OVERLOAD, not OVERRIDE
+      retStr = "calling extension " + toString() + " only once ...\n";
+      retStr += redialing(1);  // because of argument, 1, must be base call
+      return retStr;
+   }
+
+   // helper for vetting extensions numbers  --------------------------
+   private static boolean validExt(String s)
+   {
+      if (isNumber(s) &amp;&amp; (s.length() == VALID_EXT_LEN))
+         return true;
+      return false;
+   }
+}</pre>
+
+	<p><strong>PhoneWX</strong> is called a <em><strong>derived</strong></em> class or <em><strong>sub-class</strong></em> of <strong>Phone</strong>.&nbsp; The first line, <strong>"class PhoneWX extends Phone"</strong> tells us that we are creating a new <em><strong>class</strong></em> that contains everything in the<em><strong> base class</strong></em>, plus whatever else we   put in. We see that we are adding </p>
+	<ul>
+      <li>two new <strong>static finals</strong>, <span class="codeInLine">DFLT_EXT</span> and <span class="codeInLine">VALID_EXT_LEN</span></li>
+      <li>one new <em><strong>data member</strong></em>, the <span class="codeInLine">extension</span>, and </li>
+      <li>several new <em><strong>member methods</strong></em>. </li>
+	</ul>
+	<p>Simply put, if we declare an <em><strong>object</strong></em> of the <em><strong>base </strong></em><strong><em>class</em></strong>, <strong>Phone</strong>,   it only contains what a <strong>Phone</strong> should — the <span class="codeInLine">areaCode</span> and <span class="codeInLine">number</span>.   If we declare an <em><strong>object</strong></em> of the <em><strong>derived</strong></em> class, <strong>PhoneWX</strong>, it   contains the previously defined <span class="codeInLine"> areaAode</span> and <span class="codeInLine">number</span> <em>plus the new additions,</em> <span class="codeInLine">extension</span>. </p>
+    <div class="important"> Proper Use of Derived Classes
+      <p>A <em><strong>derived class</strong></em> must possess an <font color="#0000FF"><b> <em>is a</em></b></font> relationship with its <em><strong>base class</strong></em>. An <strong>Employee </strong><font color="#0000FF"><b><em>is a</em></b></font> <strong>Person</strong>. A <strong>Truck</strong> <font color="#0000FF"><b><em>is an</em></b></font> <strong>Automobile</strong>. A <strong>PhoneWX</strong><em> <font color="#0000FF"><b>is a</b></font></em> <strong>Phone</strong>. However, a <strong>UserInterfaceForEmployee </strong><font color="#FF0000"><b><em>is NOT an</em></b></font><strong> Employee</strong>, and an <strong>EnginePart</strong><font color="#FF0000"><b><em> is NOT an</em></b></font><strong> Automobile</strong>. Making one <em><strong>class</strong></em> a<em><strong> sub-class</strong></em> of another just because, in your own mind, you can program something more easily is wrong headed. You will lose points. So make sure every <em><strong>extension</strong></em> of a<em><strong> base class</strong></em> to a <strong><em>derived class</em></strong> bears an "<font color="#0000FF"><b>is a</b></font>" relationship. (-5 points)</p>
+    </div>
+	<h2>4A.2.2 Method Overriding (Added Member Functions with the Same Names and Signatures)</h2>
+	<p>Some <em><strong>methods</strong></em>,   like <span class="codeInLine">toString()</span>, have the <em><strong>same name</strong></em> and <em><strong>signature</strong></em> in <em><strong>base</strong></em> and <em><strong>derived classes</strong></em>.&nbsp; Here is <span class="codeInLine">toString()</span> in the <em><strong>base class</strong></em>. It prints the <span class="codeInLine">areaCode</span> and <span class="codeInLine">number</span>:</p>
+	<pre>   public String toString()
+   {
+      String result;
+      result = "(" + areaCode + ")"
+            + number.substring(0,3) + "-"
+            + number.substring(3,7);
+      return result;
+   }</pre>
+	<p>Here's its <em><strong>override</strong></em> in the <em><strong>derived class</strong></em>. We don't yet know what <strong>super</strong> means, but we will soon. The bottom line is that this <em><strong>override</strong></em> prints all three <strong><em>members</em></strong>,  <span class="codeInLine">areaCode</span>, <span class="codeInLine">number</span> and <span class="codeInLine">extension</span>:</p>
+	<pre>   public String toString()
+   {
+      return super.toString() + "  ext. " + extension;
+   }</pre>
+	<p>If<span class="codeInLine"> toString()</span> is called through a <em><strong>base class object</strong></em>, then   the <em><strong>base class</strong> version</em> is executed; if it's called through a<em><strong> derived class   object</strong>,</em> the <em><strong>derived</strong> version</em> gets executed. </p>
+
+<pre>   Phone base = new Phone("800", "1234567");
+   PhoneWX sub = new PhoneWX("313", "5551234", "39");
+       
+   System.out.println( 
+      base.toString() + "\n" 
+      + sub.toString()  );</pre>
+
+	<p>The output:</p>
+	<pre>(800)123-4567
+(313)555-1234  ext. 39</pre>
+	<p>The term for this behavior is  <em><strong>function</strong></em> or <em><strong>method</strong></em> <em><strong>overriding</strong></em>.&nbsp; When you create a <em><strong>method</strong></em> in   your<em><strong> derived class</strong></em> having the <em><strong>same exact signature</strong></em>  as one in your <em><strong>base class</strong></em>, you are <strong><em>overriding</em></strong> the <em><strong>base class method</strong></em>.&nbsp; Any <em><strong>object</strong></em> of   the <em><strong>derived class</strong></em> will <em><strong>invoke</strong></em> the <em><strong>derived method</strong></em>, not the <em><strong>base method</strong></em>.&nbsp; As you see   above <span class="codeInLine">sub.toString()</span> calls the <strong>PhoneWX</strong> version of <span class="codeInLine">toString()</span>.</p>
+	<div class="parenthetical">The <em><strong>derived</strong></em> <span class="codeInLine">toString()</span> did not <em>have</em> to print all three <em><strong>members</strong></em>. It might have printed only the <span class="codeInLine">extension</span>. The point is, it is a different <em><strong>method</strong></em> than its <em><strong>base class</strong></em> namesake, and a <em><strong>derived object's</strong></em> <em><strong>call</strong></em> will <em><strong>invoke</strong></em> <em>it</em>, not its <em><strong>base class partner</strong></em>. (We'll see what <strong>super</strong> does in a few moments.)</div>
+	<h2>4A.2.3 Added Member Functions with Different Names or Signatures</h2>
+	<p>There are also new <em><strong>member functions</strong></em> in the <em><strong>derived class</strong></em> that   have names which are not part of the <em><strong>base class</strong></em>.&nbsp; These are <em><strong>new</strong></em>, added <em><strong>methods</strong></em>, and in the above example a few such <em><strong>methods</strong></em> are <strong>getExt(),</strong> <strong>setExt(), showAll()</strong> (different names, not seen in <em><strong>base</strong></em>), and<strong> redialing()</strong> (same name as <em><strong>base</strong></em>, but different <em><strong>signature</strong></em>). &nbsp; In such   cases, there is no ambiguity.&nbsp; Only a <em><strong>sub-class</strong></em> <em><strong>object</strong></em> (an <em><strong>object</strong></em> of the <em><strong>derived class</strong></em>) can reference them.&nbsp; A <em><strong>base class object</strong></em> doesn't   possess them.</p>
+	<p>Here is a new<strong> main()</strong> with some <strong><em>calls</em></strong> that involve two of the newly added and distinctly named <em><strong>methods</strong></em>, <span class="codeInLine">setExt()</span> and <span class="codeInLine">setAll()</span>, along with some <em><strong>base class</strong></em>-only <em><strong>calls</strong></em>, like <span class="codeInLine">setPhNum()</span> and <span class="codeInLine">setBoth()</span>:</p>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      Phone base = new Phone("800", "1234567");
+      PhoneWX sub = new PhoneWX("313", "5551234", "39");
+
+      System.out.println("base and sub after constructor:");
+      base.showPhone();
+      sub.showPhone();
+      System.out.println();
+
+      base.setAC("111");
+      sub.setAC("999");
+      sub.setPhNum("7777777");
+      sub.setExt("99");
+
+      System.out.println("base with areaCode set to 111");
+      base.showPhone();
+      System.out.println();
+      
+      System.out.println("sub with everything changed:");
+      sub.showPhone();
+      System.out.println();
+      
+      base.setBoth("555", "5555555");
+      sub.setAll("222", "2222222", "22");
+      
+      System.out.println("base-only call to setBoth() results in");
+      base.showPhone();
+      System.out.println("sub-only call to setAll() results in");      
+      sub.showPhone();
+   }
+}</pre>
+
+	<p>Here is an output from this <strong>main()</strong>:</p>
+	<pre>base and sub after constructor:
+(800)123-4567
+(313)555-1234  ext. 39
+
+base with areaCode set to 111
+(111)123-4567
+
+sub with everything changed:
+(999)777-7777  ext. 99
+
+base-only call to setBoth() results in
+(555)555-5555
+sub-only call to setAll() results in
+(222)222-2222  ext. 22    </pre>
+	<h2>4A.2.4 Invoking Base Class Methods from Derived Class Definitions</h2>
+    
+   	<h3>super</h3>
+	<p>If a <em><strong>derived class method</strong></em> wants to <em><strong>invoke</strong></em> a <em><strong>base class   method</strong></em> that is <em><strong>overridden</strong></em> in the <em><strong>derived class</strong></em>, there is a potential   problem.&nbsp; For example, some <em><strong>methods</strong></em> in the <em><strong>derived class</strong></em> want to access the <span class="codeInLine">toString()</span> <strong><em>method</em></strong> of the <em><strong>base class</strong></em>.&nbsp; If they call <span class="codeInLine">toString()</span> they will get the <em><strong>derived class version</strong></em> that <em><strong>overrides</strong></em> the <em><strong>base class version</strong></em>.&nbsp;   How, then, can the <em><strong>derived class methods</strong></em> get at <em><strong>base class versions</strong></em> in this situation? &nbsp; <strong>Answer:</strong>&nbsp; Through use of the <strong>super</strong> keyword. </p>
+	<p>Look at <span class="codeInLine">showPhoneWithoutExtension()</span> to see how this is done:</p>
+	<pre>   public void showPhoneWithoutExtension()<br>   {<br>      System.out.println( super.toString() );<br>   }</pre>
+	<p>Notice how the  <span class="codeInLine">toString()</span>invocation is prefaced with the   keyword<strong> super</strong>. If the  <span class="codeInLine">toString()</span> invocation had   no prefix,  it would have referred to  a <em><strong>method</strong></em> <span class="codeInLine">toString()</span> of the self-same<em><strong> derived class</strong></em> and would have printed out the <span class="codeInLine">extension</span> as well.</p>
+	<p>Dereferencing any <em><strong>method</strong></em> using <strong>super</strong> means that we are accessing the   <em><strong>base class</strong></em> version of the <em><strong>method</strong></em>, usually — but not always  — the one we are <em><strong>overriding</strong></em>. <strong>super</strong> can appear inside any <em><strong>methods</strong></em> of the <em><strong>derived class</strong></em>, <strong><em>overriding</em></strong> ones or non-<em><strong>overriding</strong></em> ones (additional).&nbsp; Its   use is not based on the fact that it appears inside an <em><strong>overriding method</strong></em>, but   that it wants to <em><strong>invoke</strong></em> an <em><strong>overridden</strong></em> <em><strong>method</strong></em> in the <em><strong>base class</strong></em>.</p>
+	<h3>Constructors and super</h3>
+	<p>In <em><strong>constructors</strong></em>, <strong>super</strong> is   used alone, as in <strong>super(...)</strong>, and means that you want to have the <em><strong>base   class constructor</strong></em> execute, hopefully initializing all <em><strong>base class</strong></em> data.&nbsp; It   must be the first statement in a <em><strong>constructor</strong></em> if you have it at all (and you   should always have it). </p>
+
+<pre>   public PhoneWX(String ac, String num, String ext)
+   {
+      super(ac, num);
+      
+      // now the extension - let mutator do validation
+      if ( !setExt(ext) )
+         extension = DEFAULT_EXT;
+   }</pre>
+<h2>4A.2.5 Classifying All the Method Name Possibilities</h2>
+<p>We've talked about <em><strong>method overriding</strong></em>, and new, <em><strong>distinct methods</strong></em> in the <strong>derived class</strong> without name counterparts in the <em><strong>base class</strong></em>. Let's summarize this and add a  twist.<strong><em></em></strong></p>
+<p>From the point of view of the <em><strong>derived class</strong></em>, when it looks "up" at the <em><strong>base   class</strong></em>, the <em><strong>base methods</strong></em> fall into three categories:</p>
+<ol>
+  <li><em><strong>Overridden Methods</strong></em> — <em><strong>methods</strong></em> that have the same <em><strong>signature</strong></em> (after <em><strong>default arguments</strong></em> are considered) as   	their counterparts in the <em><strong>derived class</strong></em>.&nbsp; (Covered above.)</li>
+  <li><em><strong>Base-Only Method Names</strong></em> — <em><strong>methods</strong></em> whose <em><strong>names</strong></em> don't appear at all in the <em><strong>derived class's namespace</strong></em>. </li>
+  <li><strong><em>Overloaded Method Names</em></strong> — <em><strong>methods</strong></em> that have the <em><strong>same name</strong></em><strong></strong> as   	their counterparts in the <em><strong>derived class</strong></em>, but whose <strong><em>signatures</em></strong> (<strong><em>parameter</em></strong> lists) are incompatible their namesakes in the <em><strong>derived class</strong></em>. Same names, <em><strong>different signatures</strong></em>.</li>
+  </ol>
+<h3>Base-Only Method Names: Unique Call to Base from Derived </h3>
+<p>Since we covered <em><strong>bullet 1</strong></em>, lets' now dig into <em><strong>bullet 2</strong></em>.</p>
+<p>If a <em><strong>derived class</strong></em> <em><strong>method</strong></em> wants to call a <em><strong> unique base class method</strong></em> (<em><strong>bullet 2</strong></em>), the <em><strong>derived method </strong></em> would do so as if   both it and the<em><strong> base class method</strong></em> were <em><strong>members</strong></em> of the <strong>same   class</strong> (<em>which they are</em>).&nbsp; We are utilizing this property in <strong>PhoneWX</strong>'s <span class="codeInLine">setAll()</span> definition when we call the <em><strong>base class</strong></em>'s <span class="codeInLine">setBoth()</span>: </p>
+
+<pre>   public boolean setAll(String ac, String num, String ext)
+   {
+      // set only good args.  bad ones don't change member
+      boolean retValSetBoth, retValSetExt;
+
+      // first base class stuff (unique call to base)
+      retValSetBoth = setBoth(ac, num);
+
+      // now derived member
+      retValSetExt = setExt(ext);
+
+      // client gets false if anything was bad.
+      return retValSetBoth &amp;&amp;  retValSetExt;
+   }</pre>
+<p> <span class="codeInLine"><img src="./CS 1B Module 4A Section 2_files/cs_B_common_27.jpg" alt="scenic meadow" width="226" height="167" hspace="17" vspace="7" border="0" align="left">setBoth() </span>is being called from the <em><strong>derived</strong></em> <span class="codeInLine">setAll()</span>. No   problem here. We let the<em><strong> base class</strong></em> take care of itself, and we go on to deal   with the extra stuff ourselves.&nbsp; </p>
+<p>Also, notice that, as usual when calling   one <em><strong>instance method</strong></em> from another <em><strong>instance method</strong></em> of the same <em><strong>class</strong></em>, we do not   use an <em><strong>object</strong></em> to <em><strong>dereference</strong></em> the <em><strong>call</strong></em>.&nbsp; The <em><strong>method call</strong></em>, <span class="codeInLine">setBoth(),</span> is assumed to be <em><strong>de-referenced</strong></em> through the implied <span class="codeInLine">this</span>. &nbsp;Nevertheless, <span class="codeInLine">this.setBoth()</span> is alternate, equivalent way to <em><strong>invoke</strong></em> a <em><strong>sibling method</strong>. </em>(That syntax can be used to get into a <em><strong>base class method</strong></em> — if it is not <em><strong>overriden</strong></em> — since, in that case, it acts like a <em><strong>sibling</strong></em> <em><strong>method</strong></em>.) There is no need to specify the <em><strong>object</strong></em> or the <em><strong>class</strong></em> in this situation because the <em><strong>object</strong></em> that did   the calling (<span class="codeInLine">this</span>), is at the same time a <strong>Phone</strong> <em><strong>object</strong></em> and a <strong>PhoneWX</strong> <em><strong>object</strong></em>. There is only one <em><strong>object</strong></em> (just like you are both a person and a   student, but there is only one <em>you</em>). </p>
+<h4>There is no ambiguity either regarding ...</h4>
+<ul>
+  <li><strong><em>which object</em></strong> is used to make the secondary <em><strong>call</strong></em> (it's the <span class="codeInLine">*this</span> <em><strong>object</strong></em>), or</li>
+  <li><strong><em> which class's method</em></strong> is being <em><strong>called</strong></em> (only the <em><strong>base class</strong></em> has that <em><strong>method name</strong></em>). </li>
+  </ul>
+<h3>Overloaded Base Class Method Names: The Scope Resolution Operator ::</h3>
+	<p>Now we cover<em><strong> bullet 3</strong></em>.</p>
+	<p>If a <em><strong>derived class method</strong></em> wants to <em><strong>invoke</strong></em> a <em><strong>base class   method</strong></em> that is<em><strong> overloaded</strong></em> in the <em><strong>derived class</strong></em>, it has the same problem we encountered in the <em><strong>overriding</strong></em> case (<em><strong>bullet 1</strong></em>). The solution is the same: the <strong>super. </strong>operator.</p>
+
+	<p>Here's an example in which the <strong>PhoneWX</strong> wants to get at an <em><strong>overloaded</strong></em>, not <em><strong>overridden</strong></em>, <em><strong>method</strong></em> of the <em><strong>base class</strong></em>. <span class="codeInLine">redialing()</span> is a <em><strong>method</strong></em> in both <em><strong>base</strong></em> and <em><strong>derived</strong></em> namespaces, but its <em><strong>signature</strong></em> is different between them. Here's the <em><strong>base class's</strong></em> signature:</p>
+	<pre>   public String redialing(int numTimes)</pre>
+	<p>And here's the <em><strong>subclass's</strong></em> signature:</p>
+	<pre>   public String redialing()</pre>
+	<p>It's not <em><strong>overridden</strong></em>, it's <em><strong>overloaded</strong></em>. Imagine a <em><strong>derived class object</strong></em> calling <span class="codeInLine">redialing()</span>. Consider a <strong><em>derived class object </em></strong>instigating the <em><strong>call</strong></em>:</p>
+	<pre>herDerived.redialing();</pre>
+	<p>The <em><strong>object</strong></em> tells C++ to go to the <em><strong>derived class</strong></em> for the <em><strong>invocation</strong></em>. If there is a <em><strong>derived</strong></em> <em><strong>method</strong></em> named <em><strong>redialing</strong></em> that <em><strong>takes no parameters</strong></em>, the compiler is happy and sends control to the <em><strong>derived method definition</strong></em>:</p>
+	<pre>   public String redialing()
+   {
+      String retStr;
+
+      // chain to base class method AS OVERLOAD, not OVERRIDE
+      retStr = "calling extension " + toString() + " only once ...\n";
+      retStr += super.redialing(1);  // super used
+      return retStr;
+   }</pre>
+	<p>To get at the <em><strong>base class</strong></em> (<strong>Phone</strong>'s) <span class="codeInLine">redialing(int)</span>, which has a different <em><strong>signature</strong></em> than the <strong>derived</strong> <strong>PhoneWX </strong><span class="codeInLine">redialing()</span>, it can use the keyword <strong>super</strong>.</p>
+    <div class="parenthetical"> You can also argue that, being part of the same <em><strong>class</strong></em>, and therefore <em><strong>inheriting the namespace of the base class</strong></em>, one should be able to forego the extra <strong>super</strong> syntax on the grounds of the <em><strong>same-class</strong></em> aspect of <em><strong>derived</strong></em> and <em><strong>base classes</strong></em> ... <em>and you would be right</em>. Another way to do this is to simply call <span class="codeInLine">redialing()</span> from inside the <em><strong>derived</strong></em> definition, without the dereference. The fact that only the<em><strong> base class</strong></em> version takes an argument disambiguates the <em><strong>call</strong></em> <span class="codeInLine">redialing(1)</span>.<br>
+      <br>
+      <pre>   public String redialing()
+   {
+      String retStr;
+
+      // chain to base class method AS OVERLOAD, not OVERRIDE
+      retStr = "calling extension " + toString() + " only once ...\n";
+      retStr += redialing(1);  // because of argument, 1, must be base call
+      return retStr;
+   }</pre>
+    </div>
+<h2>4A.2.5 Private and Protected</h2>
+	<p>For ease of reference, I want to repeat   something that I stated earlier, but give it a heading of   its own:&nbsp; the difference between <strong>Protected</strong> and <strong>Private</strong> data.&nbsp; We    said that a <em><strong>Derived class methods</strong></em> cannot   access the <strong>private</strong> data of their <em><strong>base class</strong></em>.&nbsp; That means that <strong>PhoneWX</strong> <em><strong>methods</strong></em> cannot use <span class="codeInLine">areaCode</span> or <span class="codeInLine">number</span> directly.&nbsp; However, any   <em><strong>member</strong></em> of the <em><strong>base class</strong></em> that is of the <strong>protected</strong> category is   accessible to the <em><strong>derived class member functions</strong></em>.&nbsp; This is the reason we   create some data as <strong>protected</strong> in a <em><strong>base class</strong></em>.&nbsp; Other&nbsp;<strong><em>methods</em></strong> that are   not "family", such as the <em><strong>client</strong></em> method <strong>main() </strong>(of another <em> <strong>package</strong></em>), cannot get at <strong> protected</strong> data.&nbsp; Only <em><strong>methods</strong></em> in<em><strong> derived classes</strong></em> or in the <em><strong>same package</strong></em> can get at <strong>protected</strong> data.&nbsp; This technique gives the <em><strong>base class</strong></em> a way to not expose   its <em><strong>members</strong></em> to the outside world (as they would be if they were declared <strong> public</strong>) yet still allow its <em><strong>derived class methods </strong></em>to gain access to them,   including those <em><strong>derived methods</strong></em> in another <em><strong>package</strong></em>.</p>
+	<p>We are making use of this in the <strong>protected</strong> <em><strong>base class method</strong></em> i<strong>sNumber().</strong>&nbsp; <strong>PhoneWX</strong> <em><strong>methods</strong></em> can call this <em><strong>base class function</strong></em> because <strong>PhoneWX</strong> is <em><strong>derived</strong></em> from <strong>Phone</strong>, where <span class="codeInLine">isNumber</span>() is classified as   <strong>protected</strong>.&nbsp; However we could not call <span class="codeInLine">isNumber()</span> from other <em><strong>methods</strong></em> that are not in the <em><strong>derived class</strong></em> and are listed inside another <em><strong>package</strong></em>.&nbsp; </p>
+	<p>When placing all the classes in a single package or file, the difference   between <strong>public</strong> and <strong>protected</strong> is blurred.&nbsp; However, in actual   applications most classes are packaged, and their difference is meaningful.</p>
+	<h2>4A.2.6 References to Base and Derived Objects</h2>
+	<p>There is a universal rule in Java about <em><strong>base class references </strong></em>and<strong><em> derived class references</em></strong>.&nbsp; It goes like this:</p>
+	<div class="important"> Fundamental Law of Base/Derived References
+		<p>A<em><strong> base class</strong></em> reference can point to a <em><strong>derived class object</strong></em> without being cast (coerced).&nbsp; A<em> <strong>derived class</strong> reference</em> can only point to a <em><strong>base class object</strong></em> if a   	<em><strong>type cast</strong></em> is used.</p>
+	</div>
+<p>Here is an illustration of this rule (these three statements are meant to be   isolated examples and not part of the same chunk of code):</p>
+
+<pre>   base = sub; // okay if base is Phone reference and sub is a PhoneWX reference
+
+   base = new PhoneWX();  // okay, even if base is a Phone reference
+      
+   sub = (PhoneWX) base;   // cast required - rarely done</pre>
+
+	<p>Sometimes we know that a <em><strong>base class</strong></em> reference happens to be pointing to a   <em><strong>derived class object</strong></em> so we can type <em><strong>coerce</strong></em> the reference to squeeze it into a   <em><strong>derived class</strong></em> reference, then use that reference as a <em><strong>derived object</strong></em>.&nbsp;   However, we have to be careful, because if we are wrong — if the base class   reference we coerced was <em><strong>not</strong></em> actually referencing a <em><strong>derived object </strong></em>— then we will   get a runtime error.&nbsp; This can be handled, because there is an operator <strong>instanceof</strong> that will help   us check a <em><strong>base class</strong></em> reference before trying to type cast:</p>
+
+<pre>  if (base instanceof PhoneWX)
+     sub = (PhoneWX) base; </pre>
+
+	<p>It returns <strong>false</strong> if base is not pointing to a <strong>PhoneWX</strong> and therefore, the   <em><strong>coercion</strong></em> would not happen.</p>
+	<h2>4A.2.7 The Entire Listing</h2>
+	<p>Here is the full class and client.</p>
+	<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      Phone meBase = new Phone("123", "1234567");
+      PhoneWX herDerived = new PhoneWX("650", "7654321", "77");
+      PhoneWX himDerived = new PhoneWX();
+
+      System.out.println("\nAfter Constructors:");
+      System.out.print("ME (BASE) ...   \n   ");
+      meBase.showPhone();
+      System.out.print("HER (SUB) ...   \n   ");
+      herDerived.showPhone();
+      System.out.print("HIM (SUB) ...   \n   ");
+      himDerived.showPhone();
+
+      meBase.setBoth("408", "9998877");
+      himDerived.setAll("415", "5551234", "99");
+
+      System.out.println("\nAfter setBoth(), setAll():");
+      System.out.print("ME (BASE) ...   \n   ");
+      meBase.showPhone();
+      System.out.print("HER (SUB) ...   \n   ");
+      herDerived.showPhone();
+      System.out.print("HIM (SUB) ...   \n   ");
+      himDerived.showPhone();
+
+      if (!meBase.setAC("719498"))
+         meBase.setAC("714");
+      if (!himDerived.setExt("719"))
+         himDerived.setExt("20");
+
+      System.out.println("\nAfter setAC(), setExt():");
+      System.out.print("ME (BASE) ...   \n   ");
+      meBase.showPhone();
+      System.out.print("HER (SUB) ...   \n   ");
+      herDerived.showPhone();
+      System.out.print("HIM (SUB) ...   \n   ");
+      himDerived.showPhone();
+
+      System.out.println("\nShowing that toString() calls depend on sub/base obj:");
+      System.out.println( 
+            meBase.toString() + "\n" 
+                  + herDerived.toString()  );
+
+      System.out.println("\nUsing accessors:");
+      System.out.println("ME (BASE) ...\n   "
+            + meBase.getAreaCode() + "   "
+            + meBase.getNumber());
+      System.out.println("HER (SUB) ...\n   "
+            + herDerived.getAreaCode() + "   "
+            + herDerived.getNumber() + "   "
+            + herDerived.getExt());
+      System.out.println("HIM (SUB) ...\n   "
+            + himDerived.getAreaCode() + "   "
+            + himDerived.getNumber() + "   "
+            + himDerived.getExt());
+
+      System.out.println( "\nLet's see the number w/out the ext of 'her':");
+      herDerived.showPhoneWithoutExtension();
+
+      System.out.println("\ndialing():");
+      System.out.println("ME (BASE) ...\n  "
+            + "   " +  meBase.dialing());
+      System.out.println("HER (SUB) ...\n   "
+            + "   " +  herDerived.dialing());
+      System.out.println("HIM (SUB) ...\n   "
+            + "   " +  himDerived.dialing());
+
+      System.out.println("\nredialing():");
+      System.out.println("ME (BASE) ...\n  "
+            + "   " +  meBase.redialing(4));
+      System.out.println("HER (SUB) ...\n   "
+            + "   " +  herDerived.redialing(3));
+      System.out.println("HIM (SUB) ...\n   "
+            + "   " +  himDerived.redialing());
+      System.out.println();
+   }
+}
+
+// Base Class Phone  -----------------------------
+class Phone
+{
+   // private data
+   private  String areaCode;
+   private  String number;
+
+   // public static constants
+   public static final String DEFAULT_AC  = "000";
+   public static final String DEFAULT_NUM  = "0000000";
+   public static final int VALID_PH_NUM_LEN = 7;
+   public static final int VALID_AC_NUM_LEN = 3;
+
+   public Phone()
+   {
+      number = DEFAULT_NUM;
+      areaCode = DEFAULT_AC;
+   }
+
+   public Phone(String ac, String num)
+   {
+      if ( !setPhNum(num) )
+         number = DEFAULT_NUM;
+      if ( !setAC(ac) )
+         areaCode = DEFAULT_AC;
+   }
+
+   // mutators
+   public boolean setPhNum(String num)
+   {
+      if ( !validPhNumber(num) )
+         return false;
+      number = num;
+      return true;
+   }
+   public boolean setAC(String ac)
+   {
+      if ( !validAC(ac) )
+         return false;
+      areaCode = ac;
+      return true;
+   }
+
+   public boolean setBoth(String ac, String num)
+   {
+      // set only good args.  bad ones don't change member
+      boolean retValNum, retValAC;
+
+      retValNum = setPhNum(num);
+      retValAC = setAC(ac);
+
+      // client gets false if either was bad.
+      return retValNum &amp;&amp; retValAC;
+   }
+
+   // accessors
+   public String getAreaCode()
+   {
+      return areaCode;
+   }
+   public String getNumber()
+   {
+      return number;
+   }
+
+   // stringizers
+   public String toString()
+   {
+      String result;
+      result = "(" + areaCode + ")"
+            + number.substring(0,3) + "-"
+            + number.substring(3,7);
+      return result;
+   }
+
+   public void showPhone()
+   {
+      System.out.println(toString());
+   }
+
+   // for demonstration
+   public String dialing()
+   {
+      return  "Now dialing " + toString() + "\n";
+   }
+
+   public String redialing(int numTimes)
+   {
+      int k;
+
+      String retStr = "Trying number " + numTimes + " times ...\n";
+
+      for (k = 0; k &lt; numTimes; k++)
+         retStr += dialing();
+      retStr += "done.\n";
+
+      return retStr;
+   }
+
+   // helpers for vetting Phone numbers  --------------------------
+   protected static boolean isNumber(String s)
+   {
+      for(int k = 0; k &lt; s.length(); k++)
+         if (!Character.isDigit(s.charAt(k)))
+            return false;
+      return true;
+   }
+
+   private static boolean validPhNumber(String s)
+   {
+      if (isNumber(s) &amp;&amp; (s.length() == VALID_PH_NUM_LEN))
+         return true;
+      return false;
+   }
+
+   private static boolean validAC(String s)
+   {
+      if (isNumber(s) &amp;&amp; (s.length() == VALID_AC_NUM_LEN))
+         return true;
+      return false;
+   }
+}
+
+//Derived Class PhoneWX  -----------------------------
+class PhoneWX extends Phone 
+{
+   // additional member
+   private String extension;
+
+   // public static constants
+   public static final String DEFAULT_EXT  = "00";
+   public static final int VALID_EXT_LEN = 2;
+
+   // constructors
+   public PhoneWX()
+   {
+      super();
+      extension = DEFAULT_EXT;
+   }
+   public PhoneWX(String ac, String num, String ext)
+   {
+      // first, base class stuff
+      super(ac, num);
+
+      // now the extension
+      if ( !setExt(ext) )
+         extension = DEFAULT_EXT;
+   }
+
+   // mutators
+   public boolean setExt(String ext)
+   {
+      // first base class stuff
+      if ( !validExt(ext) )
+         return false;  // don't change anything, return false
+      extension = ext;
+      return true;
+   }
+
+   public boolean setAll(String ac, String num, String ext)
+   {
+      // set only good args.  bad ones don't change member
+      boolean retValSetBoth, retValSetExt;
+
+      // first base class stuff (unique call to base)
+      retValSetBoth = setBoth(ac, num);
+
+      // now derived member
+      retValSetExt = setExt(ext);
+
+      // client gets false if anything was bad.
+      return retValSetBoth &amp;&amp;  retValSetExt;
+   }
+
+   // accessor
+   public String getExt()
+   {
+      return extension;
+   }
+
+   // stringizers
+   public String toString()
+   {
+      return super.toString() + "  ext. " + extension;
+   }
+   public void showPhone()
+   {
+      // System.out.println(super.toString() + "  ext: "  + extension );
+      // or, easier, just 
+      System.out.println( toString() );
+   }
+   public void showPhoneWithoutExtension()
+   {
+      System.out.println( super.toString() );
+   }
+
+   //overridden
+   public String dialing()
+   {
+      String retStr;
+
+      // chain to base class method
+      retStr = super.dialing();
+
+      // now add derived data to console
+      retStr += "   (" + toString() + ")\n";
+
+      return retStr;
+   }
+
+   //overloaded
+   public String redialing()
+   {
+      String retStr;
+
+      // chain to base class method AS OVERLOAD, not OVERRIDE
+      retStr = "calling extension " + toString() + " only once ...\n";
+      retStr += redialing(1);  // because of argument, 1, must be base call
+      return retStr;
+   }
+
+   // helper for vetting extensions numbers  --------------------------
+   private static boolean validExt(String s)
+   {
+      if (isNumber(s) &amp;&amp; (s.length() == VALID_EXT_LEN))
+         return true;
+      return false;
+   }
+}</pre>
+	<p>The run:</p>
+	<pre>After Constructors:
+ME (BASE) ...   
+   (123)123-4567
+HER (SUB) ...   
+   (650)765-4321  ext. 77
+HIM (SUB) ...   
+   (000)000-0000  ext. 00
+
+After setBoth(), setAll():
+ME (BASE) ...   
+   (408)999-8877
+HER (SUB) ...   
+   (650)765-4321  ext. 77
+HIM (SUB) ...   
+   (415)555-1234  ext. 99
+
+After setAC(), setExt():
+ME (BASE) ...   
+   (714)999-8877
+HER (SUB) ...   
+   (650)765-4321  ext. 77
+HIM (SUB) ...   
+   (415)555-1234  ext. 20
+
+Showing that toString() calls depend on sub/base obj:
+(714)999-8877
+(650)765-4321  ext. 77
+
+Using accessors:
+ME (BASE) ...
+   714   9998877
+HER (SUB) ...
+   650   7654321   77
+HIM (SUB) ...
+   415   5551234   20
+
+Let's see the number w/out the ext of 'her':
+(650)765-4321
+
+dialing():
+ME (BASE) ...
+     Now dialing (714)999-8877
+
+HER (SUB) ...
+      Now dialing (650)765-4321  ext. 77
+   ((650)765-4321  ext. 77)
+
+HIM (SUB) ...
+      Now dialing (415)555-1234  ext. 20
+   ((415)555-1234  ext. 20)
+
+
+redialing():
+ME (BASE) ...
+     Trying number 4 times ...
+Now dialing (714)999-8877
+Now dialing (714)999-8877
+Now dialing (714)999-8877
+Now dialing (714)999-8877
+done.
+
+HER (SUB) ...
+      Trying number 3 times ...
+Now dialing (650)765-4321  ext. 77
+   ((650)765-4321  ext. 77)
+Now dialing (650)765-4321  ext. 77
+   ((650)765-4321  ext. 77)
+Now dialing (650)765-4321  ext. 77
+   ((650)765-4321  ext. 77)
+done.
+
+HIM (SUB) ...
+      calling extension (415)555-1234  ext. 20 only once ...
+Trying number 1 times ...
+Now dialing (415)555-1234  ext. 20
+   ((415)555-1234  ext. 20)
+done.    </pre>
+</div>
+</div>
+
+
+</body></html>

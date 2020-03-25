@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5b_6.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5B Section 6</title>
+<link href="./CS 1B Module 5B Section 6_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1 style="TEXT-ALIGN: left">Section 6 - RPN Logic</h1>
+	<h2 style="TEXT-ALIGN: left">5B.6.1 Computing in RPN</h2>
+	<p style="TEXT-ALIGN: left"><em><strong>RPN</strong></em>,or <em><strong>postfix</strong></em>, notation   is an alternative to the more well known <em><strong>infix</strong></em> notation.&nbsp; In <em> <strong>infix</strong></em> notation, we write the operator <em><u>between</u></em> the two   operands:</p>
+	<p align="center"><strong><font size="5">2 + 3</font></strong></p>
+	<p style="TEXT-ALIGN: left">In <em><strong>RPN</strong></em> we  write the operator <em> <u>after</u></em> the two operands:</p>
+	<p align="center"><strong><font size="5">2 3 +</font></strong></p>
+	<p style="TEXT-ALIGN: left">While this seems like a trivial change, it allows   any expression to be written without parentheses.&nbsp; For example, there is no way   to write the following expression on one line without parentheses using infix   notation:</p>
+	<p align="center"><strong><font size="5">(2 + 3) / (4 + 5)</font></strong></p>
+	<p style="TEXT-ALIGN: left">In <em><strong>RPN</strong></em>, however, we can write the same   expression as follows:</p>
+	<p align="center"><strong><font size="5">2 3 + 4 5 + /</font></strong></p>
+	<p style="TEXT-ALIGN: left">The key is that after each operation, the two   operands to the left are replaced by the result.&nbsp; So 2 3 + is replaced by 5   making the above expression<span style="background-color:#ffff00; "> 5 4 5 + /</span>.&nbsp;   Re-evaluating, the + adds the 4 and 5 leaving a 9 in its place, or reducing the   expression to 5 9 / which then   becomes 0.5555555.</p>
+	<p style="TEXT-ALIGN: left">Computing <em><strong>RPN</strong></em> expressions is easy if   you have a <em><strong>stack</strong></em>.&nbsp; Here is the algorithm:</p>
+	<ul>
+		<li> Scan the expression from left to right		</li>
+		<li> When you come to a number push it onto the   	stack.		</li>
+		<li> When you come to an operation, pop the last two   	numbers off the stack, and apply the operation to them.		</li>
+		<li> Push the result back onto the stack		</li>
+		<li> When you reach the end of the expression, the   	answer is on the top of the stack.		</li>
+	</ul>
+	<div class="important"> Note
+		<p> When you pop two numbers off the stack, the first of the two popped numbers is   the right-hand operand, the second is the left-hand operand.</p>
+	</div>
+	<h4 style="TEXT-ALIGN: left">Examples:</h4>
+	<div class="narrowTable">
+		<table>
+			<tbody><tr>
+				<th>Infix
+				</th><th>Postfix (RPN)
+				</th></tr>
+			<tr>
+				<td align="middle">2 + 3</td>
+				<td align="middle">2 3 +</td>
+				</tr>
+			<tr>
+				<td align="middle">(2 + 3) / (4 + 5)</td>
+				<td align="middle">2 3 + 4 5 + /</td>
+				</tr>
+			<tr>
+				<td align="middle">2 / (3 / (4 + 5))</td>
+				<td align="middle">2 3 4 5 + / /</td>
+				</tr>
+		</tbody></table>
+	</div>
+	
+	<h2 style="TEXT-ALIGN: left">5B.6.2 Our Implementation.</h2>
+	<p style="TEXT-ALIGN: left">Our RPN calculator will look like this:</p>
+	<p style="TEXT-ALIGN: left"> <img src="./CS 1B Module 5B Section 6_files/pic_1b5_1.jpg" alt="gui shot" width="250" height="301" border="0"></p>
+	<p style="TEXT-ALIGN: left">In order for the user to evaluate <strong> 2+3</strong>, that is, <strong> 2 3 +</strong>, he will do the   following:</p>
+	<ul>
+		<li> type <strong>2</strong>, then click the <strong>Enter</strong> button		</li>
+		<li> type <strong>3</strong>, then click the <strong>Enter</strong> button		</li>
+		<li> click the <strong>+</strong> button.		</li>
+	</ul>
+	<p style="TEXT-ALIGN: left">The answer will appear be in the <strong>JTextArea</strong>.</p>
+	<p style="TEXT-ALIGN: left">Unlike many <em><strong>RPN</strong></em> calculators, we will   require that the user hit the enter key for both numbers.&nbsp; In other words this   is <strong><u><em><font size="5">not</font></em></u></strong> how our program will work:</p>
+	<ul>
+		<li> type <strong>2</strong>, then click <strong>Enter</strong>		</li>
+		<li> type <strong>3</strong>, then click <strong>+</strong>		</li>
+	</ul>
+	<p style="TEXT-ALIGN: left">We only make this restriction to keep our logic   simpler. </p>
+	<h2 style="TEXT-ALIGN: left">5B.6.3 Using a Stack</h2>
+	<p style="text-align: left">As you can tell from what we said above, expressions like 2 / (3 / (4 + 5)) (which is <strong> 2 3 4 5 + / /</strong> in <em><strong>RPN)</strong></em> require a   stack.&nbsp; Reading the RPN expression from left to right, we push numbers onto   the stack as they are encountered.&nbsp;&nbsp; When we come to an operator, we   pop the last two numbers off the stack in order to let that operator operate on&nbsp;   them.&nbsp; </p>
+	<p style="text-align: left">A stack is indispensable when evaluating an <em><strong>RPN</strong></em> expression.</p>
+	<h2 style="TEXT-ALIGN: left">5B.6.4 Making the MyStack Accessible.</h2>
+	<p style="TEXT-ALIGN: left">We need a stack in our program.&nbsp; This means that we   must declare a <strong>MyStack</strong> object somewhere.&nbsp; Since the natural place to do   this is in the <strong>Calculator</strong> class, we will make the <strong>MyStack</strong> object a private   member of that class, which will allow all of the Calculator event handlers to   push and pop off of it.&nbsp; </p>
+	<p style="TEXT-ALIGN: left">Let's see that, along with the other private members   of class <strong>Calculator</strong>:</p>
+	
+<pre>//Calculator class is derived from JFrame class
+class Calculator  extends JFrame
+{
+   private JButton btnPlus, btnMinus, btnMult, btnDiv, btnEnter;
+   private JTextField txtNumber;
+   private JLabel lblInstructions;
+   private JPanel pnlButtons, pnlTextEnter;
+   private MyStack stk;
+	...
+</pre>
+	
+	<p>We are now ready to take the last step:&nbsp; writing and enabling the two   inner Listener Classes for our controls.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

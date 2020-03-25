@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8a_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8A Section 2</title>
+<link href="./CS 1B Module 8A Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 2 - A Base List Class</h1>
+	<h2>8A.2.1 A General Linked List</h2>
+	<p>Our general <strong>List</strong> class contains two private members, <strong>head</strong> and <strong>current</strong>, both <strong>Node</strong> <em><strong>pointers</strong></em>.&nbsp; <strong>Head</strong> will   always point to the front of the list and gives us a way to start traversing it.&nbsp; <strong>Current</strong> will be free to point to any <strong>Node</strong> in the list and   typically starts at the <strong>head</strong> and moves forward one-at-a-time as the   client requests.&nbsp; The client positions <strong>current</strong> by use of the   instance methods <strong>resetCurrent(), getCurrent() </strong>and<strong> iterate()</strong>.</p>
+	<p>We also include methods <strong>insertAfterHead()</strong> and <strong>removeAfterHead()</strong> that   are not really needed in real applications.&nbsp;&nbsp; They are only used in   the first test program so that we can add items to the head of the list (and   remove them from the head of the list). If you look at this carefully, you'll see that the   inclusion of these two methods makes our <strong>List</strong> class behave exactly like a   generic stack class.&nbsp; (Why?).</p>
+	<div class="important"> Understand Every Detail
+		<p><strong>insertAfterHead()</strong> and <strong>removeAfterHead()</strong> will actually place place/remove the node <em>after</em> the first node in the list, so the actions will appear to happen in the second position. You can see this if you follow the code below.  This is not an error: our linked list will always be born with a non-data header node that does not move and is never removed. All the action takes place after that header node, including these two testing methods. </p>
+	</div>
+	<p><br>
+	</p>
+	<h4>Implementation:</h4>
+
+<pre>//Class List ---------------------------------------
+class List
+{
+   // pointer to first node in stack
+   private Node head, current;
+   
+   // constructor
+   public List()
+   {
+      // an empty list will have one "header" node at the front
+      head = new Node();
+      current = null;
+   }
+   
+   protected void insertAfterHead(Node newNode)
+   {   
+      head.insertAfter(newNode);
+   }  
+   
+   protected Node removeAfterHead()
+   {
+     return head.removeAfter();     
+   }
+
+   // console display
+   public void showList()
+   {
+      System.out.println( "\n\n_____Here's the List_______\n" );
+      for (current = head; (current = current.getNext()) != null; )
+      {
+         current.show();
+         System.out.print(" ");
+      }
+      System.out.println( "\n\n_____That's all!_______\n" );
+   }
+
+   protected Node getCurrent()
+   {
+      return current;
+   }
+
+   protected void resetCurrent()
+   {
+      current = head;
+   }
+
+   protected Node iterate()
+   {
+      if (current != null)
+         current = current.getNext();
+      return current;
+   }
+}
+</pre>
+
+	<h2>8A.2.2 A Test Client and Run</h2>
+	<p>To test the class we use this <strong>main()</strong>.&nbsp; Remember that the <strong>Node</strong> class must   appear in the file.</p>
+
+<pre>public class Foothill
+{
+   public static void main(String[] args)
+   {
+      Node np;
+      List myList = new List();
+      int k;
+
+      // build a data-less list by inserting 10 nodes at front
+      for (k = 0; k &lt; 10; k++)
+      {
+         np = new Node();
+         myList.insertAfterHead(np);
+      }
+      myList.showList();
+
+      // remove 5 nodes
+      for (k = 0; k &lt; 5; k++)
+         myList.removeAfterHead();
+      myList.showList();
+   }
+}
+</pre>
+
+	<p>Which produces this result</p>
+
+<pre>_____Here's the List_______
+
+(generic node)  (generic node)  (generic node)  (generic node)  (generic node)
+(generic node)  (generic node)  (generic node)  (generic node)  (generic node)  
+
+_____That's all!_______
+
+
+
+_____Here's the List_______
+
+(generic node)  (generic node)  (generic node)  (generic node)  (generic node)  
+
+_____That's all!_______
+</pre>
+
+	<p>I added a line feed into the first list so the line would not go too far to   the right.</p>
+	<p>We should discuss the very terse but elegant loop control in <strong>showList()</strong>:</p>
+
+<pre>   for (current = head;  (current = iterate()) != null;  )
+</pre>
+
+	<p>This is a short way to go through a list, but it requires that the list have   a <em><strong>header node</strong></em>, that is, a node at the front that does not contain any useful   data.</p>
+	<ol>
+		<li>We start off the pointer <strong>current</strong> at <strong>head</strong>.&nbsp; That is fine.</li>
+		<li><strong>current = iterate()</strong> is not a typo.&nbsp; We are not testing   	for equality, we are making an assignment.&nbsp; As we said before, we are   	taking a step forward in our list with this kind of assignment. We saw it   	with<strong> p = p.GetNext()</strong>, which is what <strong>iterate()</strong> is doing<strong>. </strong>&nbsp;However, in past examples this step occurred   	in the third section of the <em><strong>for</strong></em> <strong><em>loop</em></strong>. Here it is   	occurring in the second, test, section.&nbsp;After the assignment we are testing   	whether the value of the assignment was   	non-null, i.e., we are asking "have we reached the end of the list (remember the   	list ends with a <strong>null</strong>).&nbsp; Therefore, this statement takes a step   	forward and then tests for <strong>null</strong>.</li>
+		<li>Because the iteration is done in the second section there is no need to   	have anything in the iteration (third) section of the for loop control.   	That's why it is blank.</li>
+	</ol>
+	<p>Again, we take a step first before we test, which is why we must have a <em> header node</em> in the list.&nbsp; If there was none, we would be skipping the   first data node.</p>
+	<h3>Memory Considerations</h3>
+	<p>A careful study of the class and client reveals that we are making some   decisions about memory usage.&nbsp; The first decision is   that we have chosen to link client nodes directly into the list rather than   making local copies owned by the list.&nbsp; This is a choice - we are saying   that in this class it is important (for some reason) that nodes which are linked   in be the originals.&nbsp; This may be a dangerous decision, but it is a judgment call that   the class designer is   making.</p>
+	<ul>
+		<li><font color="#990033"><strong>Dangerous:</strong></font>&nbsp; The client has   	access to the nodes that are in the list.&nbsp; That means the client might   	be able to pillage our list.&nbsp; We reduce the possibility by removing <strong>Node.GetNext()</strong> method&nbsp; -- it was just used   	for testing in the last section.&nbsp; Also, we have various <strong>protected </strong>qualifiers in place which prevents out-of-package clients from using   	these methods.&nbsp; <strong>Protected </strong>means that only   	classes derived from <strong>List</strong> will be able to access the methods of that   	section.&nbsp; It's fine to let the derived <strong>List</strong> classes invoke these   	protected functions because they are created by "tinkerer", not   	end user, programmers.&nbsp; But the real client class that   	will ultimately use the finished product will not be able to get at these dangerous   	methods (<em>dangerous</em> because they return node references which could potentially be used to damage   	the list).&nbsp; There might be other measures that need to   	be taken, but we have made our point.&nbsp; </li>
+	</ul>
+	<ul>
+		<li><font color="#990033"><strong>Useful: </strong></font>We may want the data (i.e.,   	non-<strong>next</strong>) portion of <em>derived</em> <strong>Node</strong> objects to be mutable <em>after</em> they are put into the list.&nbsp; This would result in the list   	always being up-to-date with each node's most recent changes.&nbsp; This is what I am calling&nbsp; "hot-linked" (not to be   	confused with the excellent lunch you can get at <em><strong>Top Dog</strong></em> near UC   	Berkeley).&nbsp; That is, in turn, why we want originals and not copies to be   	in the list.</li>
+	</ul>
+	<p>Also, we are creating a <em><strong>header node</strong></em> that will always be in the   list, even when it is empty.&nbsp; <em><strong>Header nodes</strong></em> provide a way to   make moving through the list easier with fewer special cases (i.e., we never   have to test for empty lists).</p>
+</div>
+</div>
+
+
+</body></html>

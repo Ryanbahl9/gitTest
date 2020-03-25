@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_3b_1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 3B Section 1</title>
+<link href="./CS 1B Module 3B Section 1_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 1 - Rectangular 2-D Arrays</h1>
+	<h2>3B.1.1&nbsp; Two Dimensional Arrays</h2>
+	<p>A <em><strong>two dimensional array </strong></em>(or<strong><em> 2-D   Array</em></strong>) comes in two flavors:&nbsp; the <strong><em>rectangular</em></strong> or <strong><em> fixed-size</em></strong> variety and the <strong><em>ragged</em></strong>. Most 2-D arrays you are likely   to encounter will be rectangular, since ragged arrays usually indicate more of an   array-of-lists data structure.&nbsp; However both have their place, and I'll show   you both types.</p>
+	<p>We start with a simple rectangular array (also called a <em><strong>matrix</strong></em>).&nbsp;   A 2-D array of floats is declared and instantiated like this: </p>
+
+<pre>   double[][] moon;      
+   moon = new double[4][6];
+</pre>
+
+	<p>Or, you could do it in a single line:</p>
+
+<pre>   double[][] moon = new double[4][6];
+</pre>
+
+	<p>Either way, this tells the compiler that we want 24 float locations, organized in a   rectangular arrangement: 4 rows, each with 6 columns, for example: </p>
+
+<pre>1.000 0.500 0.333 0.250 0.200 0.167 
+2.000 1.000 0.667 0.500 0.400 0.333 
+3.000 1.500 1.000 0.750 0.600 0.500 
+4.000 2.000 1.333 1.000 0.800 0.667 
+</pre>
+
+	<p>Initializing the elements in an array   of primitive data (like floats) is simply a matter of running through both   indexes in a nested for loop.&nbsp; In fact, this simple procedure reveals   something about 2-D arrays, so let's examine it:</p>
+
+<pre>for ( row = 0; row &lt; moon.length; row++)
+   for ( col = 0; col &lt; moon[row].length; col ++)
+      moon[row][col] = (row+1.)/(col+1.);
+</pre>
+
+	<p align="left"> <img src="./CS 1B Module 3B Section 1_files/cs_B_common_23.jpg" alt="scenic surfer" width="214" height="169" hspace="9" vspace="4" border="2" align="right">You'll notice that instead of using the constants 4 and 6, we let Java tell   us what the limits of the loops are.&nbsp; In the outer loop, we are using <strong> moon.length</strong> to control the number of passes.&nbsp; This looks suspiciously   like an ordinary 1-D array technique.&nbsp; Guess what?&nbsp; <strong>moon</strong> is a 1-D   array!&nbsp; It is an 1-D array containing 4 elements, and each element is,   itself a 1-D array (of length 6).&nbsp; So <strong>moon.length</strong> evaluates to 4 in the   example.&nbsp; The inner loop completes our analysis, proving the claim I just   made.&nbsp; Each of the arrays that make up the "rows" of <strong>moon</strong> are named <strong>moon[0], moon[1]</strong>, etc. and those names are used to get their lengths (which all   happen to be 6).</p>
+	<p>Here is a short program that produces the output array that I posted above.</p>
+
+<pre>import javax.swing.*;
+import java.util.*;
+import java.text.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      int row, col;
+      double[][] moon = new double[4][6];
+      
+      NumberFormat tidy = NumberFormat.getInstance(Locale.US);
+      tidy.setMaximumFractionDigits(3);
+      tidy.setMinimumFractionDigits(3);
+      
+      // load the array with values
+      for ( row = 0; row &lt; moon.length; row++)
+         for ( col = 0; col &lt; moon[row].length; col ++)
+            moon[row][col] = (row+1.)/(col+1.);
+      
+      // print out the whole array
+      for ( row = 0; row &lt; moon.length; row++)
+      {
+         for ( col = 0; col &lt; moon[row].length; col ++)
+            System.out.print(tidy.format(moon[row][col]) + " ");
+         System.out.println();
+      }   
+   }
+}
+</pre>
+
+	<p>This array-of-arrays concept in Java is important. It means that any   multi-dimensional array 2-D, 3-D, or higher, is really an array of arrays (of   arrays ...).</p>
+	<p>This suggests the more general concept of <em><strong>ragged array</strong></em> which we will discuss in a   few moments.&nbsp; Since each row of the <strong>moon</strong> array is really an independent   array in its own right, there is no reason these rows have to all be the same length.&nbsp; But I'm getting ahead of myself. </p>
+	<h2>3B.1.2&nbsp; Flexible Row or Column Addressing</h2>
+	<p>Because we have two indexes in the 2-D array, we can address the numbers as if   they were in a rectangle. In fact, this is the beauty and utility of 2-D arrays. For example </p>
+
+<pre>   // print out the 3rd column (col=2)
+   for (row = 0; row &lt; moon.length; row++)
+      System.out.println(tidy.format(moon[row][2]));
+</pre>
+
+	<p>will easily print the <em>third</em> column (col=2 is the third column   because we begin numbering from 0).&nbsp;&nbsp; Here's the proof that it worked:</p>
+
+<pre>0.333
+0.667
+1.000
+1.333
+</pre>
+
+	<p>Compare this with the above matrix to see that it's right.&nbsp; Imagine   trying to do this trick with a 1-D array of 24 elements rather than the 4 x 6   array <strong>moon</strong>.&nbsp; It would involve messy computation.</p>
+	<p>Here's the same idea, where we pluck out the third row instead of the third   column.</p>
+
+<pre>   // print out the 3rd row (row=2)
+   for (col = 0; col &lt; moon[2].length; col++)
+      System.out.print(tidy.format(moon[2][col]) + " ");
+</pre>
+
+	<p>And the output:</p>
+
+<pre>&nbsp;3.000 1.500 1.000 0.750 0.600 0.50
+</pre>
+
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_4b_1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 4B Section 1</title>
+<link href="./CS 1B Module 4B Section 1_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 1 - Deriving a FloatNode </h1>
+	<h2>4B.1.1 Building From a Base Class</h2>
+	<p align="left"> <img src="./CS 1B Module 4B Section 1_files/cs_B_common_30.JPG" alt="sst pic" width="300" height="200" border="0"></p>
+	<p>Let's say we wish to create an actual stack of <strong>floats</strong> from our generic   stack of "nothings".&nbsp; The first step will be to create a new <em><strong>node</strong></em> called <strong> FloatNode</strong>.&nbsp; <strong>FloatNode</strong> will be derived from <strong>StackNode</strong> and   therefore will not have to duplicate any data or linkage methods.&nbsp; It only  adds <strong>float</strong> <strong>data</strong> to it.&nbsp; That's what<em><strong> deriving classes</strong></em> is all about.</p>
+	<p>This process is beautifully simple.&nbsp; Here is the <strong>FloatNode</strong> <em><strong>class</strong></em> which I will place in the main <strong>Foothill.java</strong> file:</p>
+
+<pre>// imports go at the top of whatever .java file this appears.
+import java.util.*;
+import java.text.*;
+
+class FloatNode extends StackNode
+{
+   // additional data for subclass
+   private float data;
+   
+   // constructor
+   public FloatNode(float x)
+   {
+      super();  // constructor call to base class
+      data = x;
+   }
+   
+   // accessor
+   public float getData()
+   {
+      return data;
+   }
+
+   // overriding show()
+   public void show()
+   {
+      NumberFormat tidy = NumberFormat.getInstance(Locale.US);
+      tidy.setMaximumFractionDigits(4);
+      
+      System.out.print("[" + tidy.format(data) + "] ");
+   }
+}</pre>
+
+	<p>As you see, it is <em><strong>derived</strong></em> from <strong>StackNode</strong>.&nbsp; It has only one <em><strong>member</strong></em>, the <strong><em>float</em></strong> <span class="codeInLine">data</span>.&nbsp; It has one <em><strong>constructor</strong></em>, and it <em><strong>overrides</strong></em> the <span class="codeInLine">show()</span> <em><strong>method</strong></em> of the <em><strong>base class</strong></em>.&nbsp;I added some fancy number formatting just to make sure the <strong>floats</strong> are printed   out neatly, and that could be omitted to make the <em><strong>class</strong></em> even simpler.&nbsp; Notice   how you have to know very little<em> </em>about the <em><strong>base class</strong></em> <em><strong>nodes</strong></em>.&nbsp; You only   add the <strong>float <em>data</em></strong> and <strong><em>methods</em></strong> that manipulate that <em><strong>data</strong></em>. </p>
+	<h2>4B.1.2 Function Chaining</h2>
+	<p>One thing worth repeating is the <em><strong>constructor call</strong></em> to the <em><strong>base class</strong></em>:</p>
+
+<pre>   // constructor
+   public FloatNode(float x)
+   {
+      super();  // constructor call to base class
+      data = x;
+   }</pre>
+
+	<p>This is very common and advisable.&nbsp; It is called <em><strong>function chaining:</strong></em>&nbsp;   calling a <em><strong>base class</strong></em> version of the same <em><strong>method</strong></em> you are defining.&nbsp; It is often   used in <em><strong>constructors</strong></em> (where it is called <em><strong>constructor chaining)</strong></em> but   it can appear in any <em><strong>methods</strong></em> that <em><strong>override base class methods</strong></em> of the same name. </p>
+	<div class="parenthetical"> You should always <em><strong>invoke</strong></em> your <em><strong>base class constructor</strong></em> from your <em><strong>derived class constructor</strong></em>.&nbsp; That way you will know that the <em><strong>base class</strong></em> data is   properly initialized.&nbsp; </div>
+	<h2>4B.1.3 Working Directly with the FloatNode Class</h2>
+	<p>We  stop a moment to try out our new <strong>FloatNodes</strong>.&nbsp; This is not   something you would normally do in your ultimate <em><strong>client</strong></em>, but it helps to see how <strong> FloatNodes</strong> can be manipulated.</p>
+
+<pre>import java.util.*;
+import java.text.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      FloatNode flt1 = new FloatNode(3.33F), 
+         flt2 = new FloatNode(4.44F), flt3 = new FloatNode(5.55F), p;
+
+      // link up our three FloatNodes
+      flt1.next = flt2;
+      flt2.next = flt3; 
+
+      // show the stack
+      for ( p = flt1; p != null; p = (FloatNode)(p.next) )
+      {
+         p.show();
+      }
+      System.out.println();
+   }
+ }</pre>
+
+	<p>It is very simple.&nbsp; There is one phrase that confuses us, but we can   explain that:</p>
+
+<pre>   p = (FloatNode)(p.next)
+</pre>
+
+	<p>We would like this phrase to be </p>
+
+<pre>   p = p.next
+</pre>
+
+	<p>After all, this is the iteration step in our for loop, and we already saw   that this is how a <em><strong>node pointer</strong></em>, <span class="codeInLine">p</span>, takes a step to the next <em><strong>node</strong></em>.&nbsp; The problem   is that <span class="codeInLine">p.next </span>is a <strong>StackNode&nbsp; </strong>type and <span class="codeInLine">p</span> is a <strong>FloatNode &nbsp;</strong>type.&nbsp;   Remember the golden rule of <strong><em>assignments</em></strong> between <em><strong>base</strong></em> and <em><strong>subclass</strong></em> types?&nbsp; Therefore, we do a type <em><strong>cast</strong></em> (<em><strong>coercion</strong></em>) to force the types to   be compatible.&nbsp; Besides that, the linking up of the data is the same as if they were ordinary <strong>StackNodes</strong>.</p>
+	<p>Here is the run:</p>
+	<div class="picCenter"><img src="./CS 1B Module 4B Section 1_files/pic_1b4_10.jpg" alt="console showing [3.33] [4.44] [5.55]" width="452" height="161" border="0"></div>
+	<p>But we want to do better than this.&nbsp; We want a <strong>FloatStack</strong>, and we want   the <strong>main()</strong> to look much cleaner.&nbsp; Once you understand the above, you can turn   the page to see the next, exciting step.</p>
+</div>
+</div>
+
+
+</body></html>

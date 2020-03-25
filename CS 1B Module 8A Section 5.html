@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8a_5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8A Section 5</title>
+<link href="./CS 1B Module 8A Section 5_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 5 - FloatList Source Code and Run</h1>
+	<h2>8A.5.1 The Complete Listing</h2>
+	<p>Remember that this project is using multiple files.&nbsp; That means that the   base classes <strong>Node</strong> and <strong>List</strong> are declared and implemented in their own .java files.&nbsp; The following is the main<strong> .java</strong> file (which I am still calling <strong>Foothill.java</strong>).&nbsp; It contains the derived classes <strong>FloatNode</strong> and <strong>FloatList</strong> as   well as the  main <strong>Foothill</strong> class.</p>
+
+<pre>import java.util.*;
+import java.text.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+      FloatList myList = new FloatList();
+      int k;
+      double x;
+
+      // build list of 10 floats, 2 at a time (1 random and 1 k*100)
+      for (k = 0; k &lt; 5; k++)
+      {
+         x = 1000 * (double)Math.random(); // float bet 0 and 1000
+         myList.insert(x);
+         myList.insert(k*100);
+      }
+
+      // should be sorted
+      myList.showList();
+
+      // remove 5 nodes (and delete them!)
+      for (k = 0; k &lt; 5; k++)
+      {
+         x = k*100;
+         if (myList.remove(x))
+            System.out.println(x + " removed");
+         else 
+            System.out.println(x + " not found");
+     }
+      myList.showList();
+
+      if (!myList.remove (-10))  // should have no effect
+         System.out.println("-10 not in list as expected.");;
+      myList.showList();
+   }
+ }
+
+class FloatNode extends Node
+{
+   // additional data for subclass
+   private double data;
+   
+   // constructor
+   public FloatNode(double x)
+   {
+      super();  // constructor call to base class
+      data = x;
+   }
+   
+   // overriding show()
+   public void show()
+   {
+      NumberFormat tidy = NumberFormat.getInstance(Locale.US);
+      tidy.setMaximumFractionDigits(4);
+      
+      System.out.print("[" + tidy.format(data) + "] ");
+   }
+   
+   // accessor and mutator
+   public double getData()
+   {
+      return data;
+   }
+   public boolean setData(double usrData)
+   {
+      // if there were a viable limitation we would test and return false if bad
+      data = usrData;
+      return true;
+   }
+}
+
+class FloatList extends List
+{
+   // insert in increasing numerical order
+   public void insert(double x)
+   {
+      Node np;
+      FloatNode fp;
+      // create a new FloatNode
+      FloatNode newfp = new FloatNode(x);
+      
+      // always stay one node behind the node you are testing
+      for (resetCurrent(); (np = getCurrent()) != null ; iterate() )
+      {
+         if (np.getNext() == null)
+            break; // pointing to last node in list
+      
+         // if x &gt; current then we continue to search
+         fp = (FloatNode)(np.getNext());
+         if ( x &lt;= fp.getData() )
+            break;   // found the exact place for this float
+      }
+      np.insertAfter(newfp);
+   }
+   
+   // remove the first occurrence from list
+   boolean remove(double x)
+   {
+      Node np;
+      FloatNode fp;
+
+      // always stay one node behind the node you are testing
+      for (resetCurrent(); (np = getCurrent()) != null ; iterate() )
+      {
+         if (np.getNext() == null)
+            return false; // end of list and not found
+
+         // if f == current then we found match
+         fp = (FloatNode)(np.getNext());
+         if ( x == fp.getData() )
+         {
+            np.removeAfter();
+            return true;   // we found, we removed, we return
+         }
+      }
+      return false;
+   }
+}
+</pre>
+
+	<p>And, finally, the run:</p>
+
+<pre>_____Here's the List_______
+
+[0]  [79.3059]  [100]  [200]  [300]   ** LINE SHORTED TO FIT SCREEN ***
+***    [400]  [601.4567]  [624.8817]  [936.4668]  [992.7678]  
+
+_____That's all!_______
+
+0.0 removed
+100.0 removed
+200.0 removed
+300.0 removed
+400.0 removed
+
+
+_____Here's the List_______
+
+[79.3059]  [601.4567]  [624.8817]  [936.4668]  [992.7678]  
+
+_____That's all!_______
+
+-10 not in list as expected. 
+
+_____Here's the List_______
+
+[79.3059]  [601.4567]  [624.8817]  [936.4668]  [992.7678]  
+
+_____That's all!_______
+</pre>
+
+	<p>This line:</p>
+
+<pre>       x = 1000 * (double)Math.random(); // float bet 0 and 1000
+</pre>
+
+	<p>generates a pseudo random number between 0 and 1000.&nbsp; The method <strong> Math.random()</strong> generates a random <strong>double</strong> between <strong>0.0</strong> and <strong>1.0</strong>.&nbsp; We use simple arithmetic to convert this to a random number   between 0 and 1000.&nbsp; You can look up <strong>random() </strong>on the Web for more   information if you are interested.&nbsp; You may also find cousins of <strong> random()</strong> that will return <strong>ints</strong> in a certain range.</p>
+</div>
+</div>
+
+
+</body></html>

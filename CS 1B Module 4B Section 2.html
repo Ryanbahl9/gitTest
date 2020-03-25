@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_4b_2.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 4B Section 2</title>
+<link href="./CS 1B Module 4B Section 2_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 2 - Deriving a FloatStack Class</h1>
+	<h2>4B.2.1 Extending the Stack Class</h2>
+	<p>Next we derive a <strong>FloatStack</strong> <em><strong>class</strong></em> from the <strong>Stack</strong> <em><strong>class</strong></em>.&nbsp; This   has some medium-sized logic in it, but what we do here will be easy to duplicate for   other data types like<strong> ints, Strings, Cards,</strong> etc.</p>
+	<h2>4B.2.2 The FloatStack </h2>
+	<p>Here it is.&nbsp; </p>
+
+<pre>class FloatStack extends Stack
+{
+   public static final float STACK_EMPTY = Float.MIN_VALUE;
+
+   public void pushFloat(float x)
+   {
+      // don't allow pushing of STACK_EMPTY 
+      if (x == STACK_EMPTY)
+         return;    // could throw an exception when we learn how
+      // create a new FloatNode
+      FloatNode fp = new FloatNode(x);
+   
+      // push the StackNode onto the stack (base class call)
+      super.push(fp);
+   }
+
+   public float popFloat()
+   {
+      // pop a node
+      FloatNode fp = (FloatNode)pop();
+      if (fp == null)
+         return STACK_EMPTY;
+      else
+         return fp.getData();
+    }
+}</pre>
+
+	<p>As you see, there is no new private data, but I have added one class constant to help the   client determine if the <em><strong>stack</strong></em> is empty.&nbsp; We'll see how this works later.&nbsp; We did not <em><strong>override</strong></em> the <span class="codeInLine">push() </span> and<span class="codeInLine"> pop() </span><strong><em>methods</em></strong> of the <em><strong>base class</strong></em> but rather added new <span class="codeInLine">pushFloat()</span> and <span class="codeInLine">popFloat()</span> <em><strong>methods</strong></em>.&nbsp; This is because the <span class="codeInLine">push() </span>and <span class="codeInLine">pop()</span> <em><strong>methods</strong></em> of the <em><strong>derived class</strong></em>, require different <em><strong>signatures</strong></em> than that of the <em><strong>base class</strong></em> (which has no knowledge of <strong>floats</strong>).&nbsp; This kind of design can be improved as we learn more Java,   but it works fine for us here.</p>
+	<p><strong>Also look:</strong> In this higher level <em><strong>class</strong></em>, we are giving   our <em><strong>client</strong></em> simple <strong>floats</strong> to <em><strong>push</strong></em> and <em><strong>pop</strong></em><strong></strong>.<em> Of course</em>. Our <em><strong>client</strong></em> does not need   to know anything about <strong>StackNodes</strong> or <strong>FloatNodes</strong>.&nbsp; So they will <em><strong>push</strong></em> a <strong>float</strong> and   <em><strong>pop</strong></em> a <strong>float</strong>.&nbsp; Nice.</p>
+	<p>This means, however, that it will be our job  (as <strong>FloatStack</strong> designers) to create <strong>FloatNodes</strong> if we are going to make such tasks transparent to our <em><strong>client</strong></em>.&nbsp; It isn't that   hard.&nbsp; We  have everything we need to make this work.<br>
+	</p>
+	<p>Let's take the two method definitions separately.</p>
+	<h3>pushFloat()</h3>
+	<p>Because the <em><strong>signature</strong></em>  is different from that of the<em><strong> base class</strong></em> <span class="codeInLine">push()</span>, we have to give this <em><strong>method</strong></em> a new name; we can't employ an <em><strong>override</strong></em>.</p>
+	<p>We are accepting an ordinary <strong>float</strong> <em><strong>parameter</strong></em> from our <em><strong>client</strong></em>. First,   we disallow the <strong>float</strong> <span class="codeInLine">STACK_EMPTY</span>, so we are free to use that value to flag an <em><strong>empty stack error</strong></em>, later  in <span class="codeInLine">popFloat()</span>.&nbsp;&nbsp;If all is well,,  we have to build a new <strong>FloatNode</strong> around <span class="codeInLine">x</span>.&nbsp; That's the line <span class="codeInLine">FloatNode fp = new FloatNode(x)</span>.&nbsp; The  last line of that <em><strong>method</strong></em> is   where we push that <em><strong>node</strong></em> onto the <em><strong>stack</strong></em>.&nbsp; Our <em><strong>base class</strong></em> <strong>StackNode</strong> gives us a <span class="codeInLine"> push()</span> operation already, so we simply <em><strong>call</strong></em> that <em><strong>method</strong></em>.&nbsp; Since it is   not an <em><strong>overridden</strong></em> <em><strong>method</strong></em>, we don't <em>have</em> to use <span class="codeInLine">super.push(fp)</span> (even though it's fine if we do). We could have called it as if it   were a <em><strong>method</strong></em> of the same <em><strong>class</strong></em> (which, as I said before, it is).&nbsp;Then it would have been simply <span class="codeInLine">push(fp)</span>. </p>
+	<h3>popFloat()</h3>
+	<p>Because the <em><strong>signature</strong></em> is different from that of the<em><strong> base class</strong></em> <span class="codeInLine">pop()</span>, we have to give this <em><strong>method</strong></em> a new name; we can't employ an <em><strong>override</strong></em>.</p>
+	<p>We need to return a <strong>float</strong>.&nbsp; To do so, we <span class="codeInLine">pop()</span> a <strong>StackNode</strong> off the <strong>Stack</strong>.&nbsp; Again, we   just <em><strong>call</strong></em> <span class="codeInLine">pop()</span> of the <em><strong>base class</strong></em>, which will   produce a <strong>StackNode</strong> for us, then type <em><strong>coerce</strong></em> it to a <strong>FloatNode</strong> reference, so we can use the <em><strong>accessor</strong></em>, <span class="codeInLine">getData()</span> to retreive the <strong>float</strong> data.&nbsp; If the base call to  <span class="codeInLine">pop()</span> returned a non- <span class="codeInLine">null</span>,  we received a valid <strong>FloatNode</strong> from the <span class="codeInLine">pop() </span> operation which means we can read its value from its <span class="codeInLine">data</span> <em><strong>member</strong></em> and return it to the <em><strong>client</strong></em>. </p>
+	<p>However, if the <em><strong>base class</strong></em> <span class="codeInLine">pop()</span> returned a <span class="codeInLine">null</span>,  the <em><strong>stack</strong></em> was <em><strong>empty</strong></em>, so we return the highly unlikely <strong>float</strong>, <span class="codeInLine">STACK_EMPTY</span>, a <strong>public final</strong> that our <em><strong>client</strong></em> can test for.</p>
+	<h3>Summary</h3>
+	<p>This is how we derive a <strong>FloatStack</strong> from a generic <strong>Stack</strong>.&nbsp; This might seem   complicated, but the thing to focus on is that you do not have to think about   next pointers, linked lists or any details of the <span class="codeInLine">push()</span> and<span class="codeInLine"> pop() </span>operation   from the underlying <strong>Stack</strong> <em><strong>class</strong></em>.&nbsp; They will just "work" perfectly. That was the <strong>Stack</strong> designer's job. Our only job is to convert the <strong>float</strong> data to nodes and back for   our client.</p>
+	<p>Next, we see how the <em><strong>client</strong></em> uses this great new class of ours.</p>
+</div>
+</div>
+
+
+</body></html>

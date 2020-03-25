@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_2b_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 2B Section 4</title>
+<link href="./CS 1B Module 2B Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 4 - Complete Binary Search Program</h1>
+	<h2>2B.4.1 Student Search in Binary Form</h2>
+	<p>Here is the complete listing that uses an updated <strong>Student</strong> class which contains   only one <strong>name</strong>.&nbsp; Here are the points of interest:</p>
+	<ul>
+		<li>The sort algorithm and supporting methods are defined to be <em><strong>static</strong></em> methods in the <strong>Student</strong> class.&nbsp; That's because they require no   	object to call them, but they take a <strong>Student</strong> array as a parameter.&nbsp;   	This is common.&nbsp; It makes sense to place methods that deal with arrays   	of objects into the objects' class and declare them <em><strong>static</strong></em>.</li>
+		<li>The binary search algorithm is exactly the short method presented about   	two sections back.&nbsp; It, also, is declared <strong><em>static</em></strong> since there is no one <strong>Student</strong> object   	which calls it.&nbsp; It takes a <strong>String</strong> (the search key) and an array of <strong>Students</strong>.</li>
+	</ul>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      Student[] myClass = 
+      {
+         new Student("smith", 95), 
+         new Student("bauer", 123),
+         new Student("jacobs", 195), 
+         new Student("renquist", 148),
+         new Student("3ackson", 108), 
+         new Student("perry", 225),
+         new Student("loceff", 44), 
+         new Student("stollings", 452),
+         new Student("charters", 295), 
+         new Student("cassar", 321),
+      };
+  
+      Student.printArrayConsole("The Array to be Searched:", myClass);
+      Student.arraySort(myClass);
+      Student.printArrayConsole("The Array to be Searched:", myClass);
+ 
+      String last;
+      int found;
+ 
+      last = "stollings";
+      found = Student.binarySearch(myClass, last, 0, 
+         myClass.length - 1);
+      if ( found &gt;= 0 )
+         System.out.println(last + " IS in list at position " 
+            + found);
+      else
+         System.out.println(last + " is NOT in list.");
+ 
+      last = "Jacobs";
+      found = Student.binarySearch(myClass, last, 
+         0, myClass.length - 1);
+      if ( found &gt;= 0 )
+         System.out.println(last + " IS in list at position " + found);
+      else
+         System.out.println(last + " is NOT in list.");
+
+      last = "Smart";
+      found = Student.binarySearch(myClass, last, 
+         0, myClass.length - 1);
+      if ( found &gt;= 0 )
+         System.out.println(last + " IS in list at position " + found);
+      else
+         System.out.println(last + " is NOT in list.");
+    }
+}
+
+class Student
+{
+   private String lastName;
+   private long totalPoints;
+   
+   // constructor requires parameters - no default supplied
+   public Student( String lastNm,long pts)
+   {
+      lastName = "zz-error";
+      totalPoints = 0;
+      // at least require that it starts with a letter
+      if (lastNm != null &amp;&amp; Character.isLetter(lastNm.charAt(0)))
+         lastName = lastNm;
+      if (pts &gt;= 0 &amp;&amp; pts &lt;= 1000)
+         totalPoints = pts;    
+   }
+   
+   public String toString()
+   {
+      String strStudent = lastName + " Points: " + totalPoints;
+      return strStudent;
+   }
+ 
+   // print out array with string as a title for the message box
+   public static void printArrayConsole(String title, Student[] data)
+   {
+      
+      System.out.println("\n********** " + title + " **********\n");
+      for (int k = 0; k &lt; data.length; k++)
+         System.out.println( data[k].toString() );
+      System.out.println();
+  }
+
+   // returns true if a modification was made to the array
+   private static boolean floatLargestToTop(Student[] data, int top)
+   {
+      boolean changed = false;
+      Student temp;
+      
+      // notice we stop at length -2 because of expr. k+1 in loop
+      for (int k = 0; k &lt; top; k++)
+        if (data[k].lastName.compareToIgnoreCase(data[k + 1].lastName) &gt; 0)
+        {
+           temp = data[k];
+           data[k] = data[k + 1];
+           data[k + 1] = temp;
+           changed = true;
+        }
+      return changed;
+   }
+   
+    public static void arraySort(Student[] array)
+    {
+       for (int k = 0; k &lt; array.length; k++)
+          if ( !floatLargestToTop(array, array.length - 1 - k) )
+             return;
+    }
+    
+    public static int binarySearch(Student[] array, String keyLast,
+       int firstIndex, int lastIndex)
+    {
+       int middleIndex, result;
+       
+       if (firstIndex &gt; lastIndex)
+          return -1;
+       middleIndex = (firstIndex + lastIndex) / 2;
+       result = keyLast.compareToIgnoreCase(array[middleIndex].lastName);
+       
+       if (result == 0)
+          return middleIndex;   //found him!
+       else if (result &lt; 0)
+          return binarySearch(array, keyLast, firstIndex, middleIndex - 1);
+       else
+          return binarySearch(array, keyLast, middleIndex + 1, lastIndex); 
+    }
+}
+</pre>
+
+	<p>The output:</p>
+
+<pre>********** The Array to be Searched: **********
+
+smith Points: 95
+bauer Points: 123
+jacobs Points: 195
+renquist Points: 148
+zz-error Points: 108
+perry Points: 225
+loceff Points: 44
+stollings Points: 452
+charters Points: 295
+cassar Points: 321
+
+
+********** The Array to be Searched: **********
+
+bauer Points: 123
+cassar Points: 321
+charters Points: 295
+jacobs Points: 195
+loceff Points: 44
+perry Points: 225
+renquist Points: 148
+smith Points: 95
+stollings Points: 452
+zz-error Points: 108
+
+stollings IS in list at position 8
+Jacobs IS in list at position 3
+Smart is NOT in list.
+</pre>
+
+  </div>
+  </div>
+<!-- end .container -->
+
+
+</body></html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_9a_1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 9A Section 1</title>
+<link href="./CS 1B Module 9A Section 1_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 1 - Introduction to Java Generics</h1>
+	<h2>9A.1.1 Overview of Week 9</h2>
+	<h3>Java Generics</h3>
+	<p>This week we learn how to create re-usable classes in the sense that the data they contain will be of a non-committed type. In other words, if the <strong>Java collection classes in java.util</strong>  do not meet our needs, we can write <strong>generics</strong> of our own. We will use a symbolic <em><strong>type parameter</strong></em> to fill in for the data type we wish to embed in the <em><strong>class</strong></em>, and only when a<em><strong> client instantiates</strong></em> a <em><strong>class</strong></em> will the data type be specified. Classes which work with these flexible <em><strong>type parameters</strong></em> are called <em><strong>class generics</strong></em>, or just <strong><em>generics</em></strong>.</p>
+	<h3>Trees</h3>
+	<p>We also get a taste of a new <em><strong>ADT</strong></em>: the <em><strong>tree</strong></em>. <strong><em>Trees</em></strong> are widely used in computer science and they come in many flavors like <em><strong>general trees</strong></em>, <em><strong>binary search trees</strong></em>, and sub-varieties like <em><strong>red-black</strong></em>, <strong><em>top-down splay</em></strong>, and <em><strong>AVL</strong></em>. But we save these exotic sounding varieties for the<span class="sectionOrAssignmentTitle"> next course</span>, because <em><strong>general trees</strong></em> are a handful all by themselves. And it pays to master the many <em><strong>tree</strong></em> maneuvers on <em><strong>general trees</strong></em> before studying the more advanced ones.</p>
+	<h2>9A.1.2 A Plan for Generics</h2>
+	<p>Often we create a data structure, <em><strong>class</strong></em> or <em><strong>interface</strong></em> for one data type that   we would find useful for another type.&nbsp; Problem is, we have to duplicate   the code and do a global search and replace.&nbsp; For example, if I create a   nice&nbsp; interface or class that processes <strong>Cards</strong>, and find that I want to use   it to also process <strong>Strings</strong>, I have to change all <strong>Card</strong> references to <strong>String</strong> references.</p>
+	<p>Note that this is not a problem <em><strong>inheritance</strong></em> can solve.&nbsp; <em><strong>Inheritance</strong></em> allows   us to <em>add</em> data and methods to existing data and methods. It doesn't let us <em>replace</em> existing data with new data types.</p>
+	<p>So we start with a simple problem, solve it once for <strong>Cards</strong>, then learn how to   change it into a solution for all data types.</p>
+	<h2>9A.1.3 A Class Has Bi-Modal Output</h2>
+	<p>Authors usually use <em><strong>stacks</strong></em> or<em><strong> linked lists</strong></em> to demonstrate generics, but I'll   do something different.</p>
+	<p>I want to<em> </em>display to the console window with <strong> System.out.println()</strong> <em>sometimes</em>, but at <em>other times</em> I want to display to   a GUI with <strong>JOptionPane.ShowMessageDialog.</strong>&nbsp; I'd like to do this for   my <strong>Card</strong> class, so we'll start there.&nbsp;&nbsp;&nbsp; We create a simple class   called <strong>CardRevealer()</strong> that has two methods:&nbsp; <strong>displayConsole(Card c)</strong> and <strong>displayGUI(Card c)</strong>.&nbsp; It will quickly and easily send my <strong>Card</strong> to the right   place without requiring the client to write all the <strong>System.out.println()</strong> ugliness, or the<strong> JOptionPane.ShowMessageDialog()</strong> ugliness.</p>
+	<p>Here's my class:</p>
+
+<pre>class CardRevealer
+{
+   public void displayGUI(Card myThing)
+   {
+      String report = myThing.toString();
+      JOptionPane.showMessageDialog(null, report, 
+            "Loceff's Data Revealer", JOptionPane.PLAIN_MESSAGE);
+   }
+   
+   public   void displayConsole(Card myThing)
+   {
+      String report = myThing.toString();
+      System.out.println(" --- Loceff's Data Revealer ---");
+      System.out.println(report);
+      System.out.println(" ------------------------------\n\n");
+   }
+}
+</pre>
+
+	<p>Never mind that there's no data, that's okay.&nbsp; The important thing is   that this class works with <strong>Cards</strong>, and only <strong>Cards</strong>.&nbsp; </p>
+	<p>Here is a test <strong>main()</strong>:</p>
+
+<pre>import java.util.*;
+import javax.swing.*;
+
+public class Foothill
+{
+   public static void main(String[] args)
+   {
+      Card card1, card2, card3;
+     
+      CardRevealer rv = new CardRevealer();
+      
+      card1 = new Card();
+      card2 = new Card('5');
+      card3 = new Card('9', Card.Suit.hearts);
+        
+      rv.displayConsole(card1);
+      rv.displayConsole(card2);
+      rv.displayGUI(card3);
+   }
+}
+</pre>
+
+
+	<p>And a run: </p>
+	<div class="picCenter"><img src="./CS 1B Module 9A Section 1_files/pic_1b9_1.jpg" alt="console and gui shot" width="531" height="197" border="2"></div>
+	<p>Nice work.&nbsp; I create a <strong>CardRevealer</strong> object, <strong>rv</strong>, and use it to easily   display my <strong>Cards</strong> to whichever output type I wish.&nbsp; You can imagine that I   could beef up this class to allow entire decks of cards or individual hands of   5 or 13 cards to be displayed.&nbsp; In other words, I could provide special methods for dealing   with output of arrays of cards.&nbsp; </p>
+	<p>Now, how about <strong>Strings</strong>?&nbsp; I want to allow clients who use <strong> Strings</strong> to be able to call <strong>displayConsole()</strong> and <strong>displayGUI()</strong>.&nbsp; &nbsp; <strong>Employees</strong>? <strong>Dogs</strong>? You bet.&nbsp;&nbsp; Do I need a separate class for   each one?&nbsp; No.&nbsp; We will create a <em><strong>generic class</strong></em> that looks just like <strong>CardRevealer</strong> but can be used for all of these objects.</p>
+	
+</div>
+</div>
+
+
+</body></html>

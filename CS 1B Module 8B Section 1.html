@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_8b_1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 8B Section 1</title>
+<link href="./CS 1B Module 8B Section 1_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 1 - Introduction to ArrayLists and Other Containers</h1>
+	<h2>8B.1.1 Evaluating Arrays</h2>
+	<p>Let's consider some of the advantages and disadvantages of arrays.</p>
+	<h3>Why We Love Arrays</h3>
+	<p>Arrays are easy to use.&nbsp; You can define an array of any data type using   a simple declaration and then access their elements using simple bracket   notation:</p>
+
+<pre>   Card deck[52];
+
+   deck[5].set('2', clubs);
+</pre>
+
+	<p> Arrays are fast.&nbsp; They are as fast a method of accessing one of a   collection of objects as you will find.&nbsp; The difference between one   microsecond and five microseconds might seem meaningless on ordinary time scales,   but if you have to update two million pixels on the screen in 1/60 of a second,   this difference will be painfully evident.&nbsp; Speed is important in some   applications.</p>
+	<h3> Why We Hate Arrays</h3>
+	<p> In a phrase,&nbsp; "fixed size".</p>
+	<p> By fixed size, I mean that once you declare an array, that's it.&nbsp; No   changing.&nbsp; You might allocate way more than you end up using, or not   enough.&nbsp; </p>
+	<h2> 8B.1.2 ArrayLists (Vectors)</h2>
+	<img src="./CS 1B Module 8B Section 1_files/cs_C_common_12.JPG" alt="fruity v" width="300" height="200" border="0" align="right">
+	<p> Java gives us a set of <strong><em>collection</em></strong> classes that help us to   create collections of objects (like arrays).&nbsp; The <strong><em>collection</em></strong> that is most like an <em><strong>array</strong></em> -- but with major advantages over it --   is an <strong>ArrayList</strong>.&nbsp; In older versions of Java this used to be called a <strong>Vector</strong>, but <strong>Vectors</strong> have been deprecated and you should use <strong>ArrayLists</strong> in their   place.</p>
+	<p> In order to use <strong>ArrayLists</strong> you have to declare one in a   manner similar to an array declaration, but with different syntax.&nbsp; Let's   say you want an <strong>ArrayList</strong> of 100 <strong>doubles</strong>.&nbsp; You would declare:</p>
+
+<pre>   ArrayList&lt;Double&gt; myDoubles = new ArrayList&lt;Double&gt;();
+</pre>
+
+	<p>We are using a <strong>Double</strong> with a capital "<strong>D</strong>".&nbsp; This is   a different thing than an ordinary primitive <strong>double</strong> -- it is called a <strong><em> wrapper class </em></strong>because it "wraps" a primitive <strong>double</strong> into an object.&nbsp;   It's not worth studying wrapper classes in depth here.&nbsp; We just remark that   when&nbsp; working with <strong>Doubles</strong> (capital <strong>D</strong>),   some things can be done as if these were primitive <strong>doubles</strong>, others can't.&nbsp;   When you <em>can</em> use a primitive <strong>double</strong> in place of an object <strong>Double</strong>, then Java   is converting the primitive into an object automatically on your behalf.&nbsp;   This conversion is called <em><strong>auto-boxing</strong></em> or <strong><em>type</em></strong><em><strong> promotion</strong></em>.&nbsp; For instance, a   simple assignment usually makes use of auto-boxing:</p>
+
+<pre>   Float flt;
+   flt = 2.5F;   // 2.5F is auto-boxed or promoted
+</pre>
+
+	<p>You   cannot use <em><strong>collections</strong></em> like <strong>ArrayLists</strong> with <em><strong>primitive</strong></em> data types (another reason   you may often end up writing your own <em><strong>stacks</strong></em> and <em><strong>lists</strong></em>, as we have done in this   course).&nbsp; Still, <em><strong>auto-boxing</strong></em> usually allows you to do most of   what you need without much kerfuffle.</p>
+	<p>You should recognize the notation that uses the angled brackets, <strong>ArrayList&lt;Double&gt;</strong> as the application of a <em><strong>type parameter</strong></em>.&nbsp; This works similarly to   a phrase we have seen in this course,   namely <strong>"implements Comparable&lt;Card&gt;"</strong>, in that we are providing the <strong>ArrayList</strong> definition a   type parameter, <strong>Double</strong>, to tell it we are making a specific <strong>ArrayList</strong> of <em> <strong>Doubles</strong></em> (not <strong>Strings</strong> or <strong>Galaxies</strong>).&nbsp;   The idea, of course, is that we could have put any class name into the brackets   and the resultant list would be a list of objects of that class. For instance, to declare an <strong>ArrayList</strong> of <strong>Strings</strong>, do this:</p>
+
+<pre>   ArrayList&lt;String&gt; myStrings = new ArrayList<string>();
+</string></pre>
+
+	<p>Once declared, you use the various instance methods of the <strong>ArrayList</strong> class to   do things. One method, <strong>size(),</strong> returns the number of   elements currently in the array.&nbsp; Another method, <strong>add(),</strong> lets   you expand the array by adding a new element to the end of it (<em><strong>push</strong></em> a new element onto the <strong><em>end</em></strong> of the array - making this a natural <em><strong>stack</strong></em> candidate).&nbsp; <strong>set()</strong> lets you change an existing element in the array.</p>
+	<p>Here is a simple example of the use of <strong>ArrayLists</strong>.&nbsp; Notice that you have to <strong>import java.util.* </strong>at the top of your file to gain access to these tools.&nbsp;   This will be true of all the <em><strong>collections classes</strong></em> we discuss in this   lesson.</p>
+
+<pre>import java.util.*;
+
+public class Foothill
+{
+   public static void main (String[] args)
+   {
+       <span style="background-color: #00FFFF">ArrayList&lt;Double&gt; myDoubles = new ArrayList&lt;Double&gt;();</span>
+       int k;
+     
+       for ( k = 0; k &lt; 30; k++ )
+          <span style="background-color: #00FFFF">myDoubles.add( -.01 * k);</span>
+       <span style="background-color: #00FFFF">myDoubles.set(1, 999.);</span>
+      
+       for ( k = 0; k &lt; <span style="background-color: #00FFFF">myDoubles.size()</span>; k++ )
+       {
+          System.out.print(<span style="background-color: #00FFFF">myDoubles.get(k)</span> + " " );
+          if (k%10 == 9)
+             System.out.println();
+       }
+   }
+}
+</pre>
+
+	<p>The output is this:</p>
+	<div class="picCenter"><img src="./CS 1B Module 8B Section 1_files/pic_1b8_3.jpg" alt="console shot" width="745" height="157" border="0"></div>
+	<p>We have overcome our fixed-size problem.&nbsp; </p>
+	<h2> 8B.1.3 ArrayList Methods</h2>
+	<p> <strong>ArrayList</strong> is an example of a <em><strong>collection</strong></em> that <strong><em> extends</em></strong> the abstract <strong>Collection</strong> <em><strong>class</strong></em> which in turn <strong> <em>implements</em></strong> the even more abstract <strong> Collection</strong> <strong> <em>interface</em></strong>!!&nbsp; Some methods, like <strong>add(), </strong> are inherited from (implement) these base interfaces.&nbsp; Others are unique to the <strong> ArrayList</strong>. I won't try to separate out which are which, because this isn't   critical to using this collection.&nbsp; Here are some of useful methods that   can be applied to <strong>ArrayList</strong>:</p>
+	<ul>
+		<li><strong>remove(int k)</strong> removes a value from the specified position in the   	list.</li>
+		<li><strong>clear()</strong> clears the entire array</li>
+		<li><strong>indexOf( Object o)</strong> returns the index of the first occurrence of <strong>o</strong> in the list.</li>
+		<li><strong>isEmpty()</strong> returns a <strong>boolean true</strong> or <strong>false</strong>, depending on whether or not   	the list is empty.</li>
+	</ul>
+	<h2>8B.1.4 Collections Framework Interfaces and Classes</h2>
+	<p>When we use the phrase <em><strong>Java Collections Framework</strong></em>, we really   mean three&nbsp; related but different things.</p>
+	<ol>
+		<li><font color="#808000"><strong>Interfaces</strong> - These are Java <em><strong> interfaces</strong></em> in the pure sense of the word. They define behavior of   	potential classes without actually defining a class.&nbsp; In other words,   	each <em><strong>Frameworks Interface</strong></em> is a collection of abstract method   	headers.&nbsp; As you know, one cannot instantiate an <em><strong>interface</strong></em>.&nbsp;   	Instead, one <em><strong>implements</strong></em> an <em><strong>interface</strong></em> by   	declaring a class that defines all the methods declared in that <em><strong> interface</strong></em>.&nbsp; Many of the terms we will throw around in the next   	few pages will involve <em><strong>Frameworks interfaces</strong></em>:&nbsp; <strong>Queue</strong>, <strong>Deque</strong> and&nbsp; <strong>List</strong> are examples of such interfaces.&nbsp;   	You do not deal with them directly (unless you wish to do the work of   	implementing all the abstract methods they declare).&nbsp; Rather, you will   	work with <em><strong>implementations</strong></em> of these interfaces that are defined by   	the <em><strong>Collections Framework</strong></em>. These <em><strong>implementations</strong></em> are described in the next two items.</font></li>
+		<li><font color="#0000FF"><em><strong>Implementations (a.k.a. Classes)</strong></em> -&nbsp;   	These are actual classes that <em><strong>implement</strong></em> the <em><strong>Framework   	interfaces</strong></em> in ways that Java believes are useful to many   	programmers.&nbsp; In this category there are, for example, <strong>ArrayList</strong> and <strong>Array</strong> classes that you can <strong><em>instantiate</em></strong> in order to   	manipulate your own custom objects using the pre-defined <strong>ArrayList</strong> or <strong>Array</strong> methods (<strong>binarySearch()</strong>,<strong> sort()</strong>, <strong>fill()</strong>, <strong>contains()</strong>, etc.).&nbsp; The classes in this second category are of   	limited use because they tend to collect and manipulate objects from the   	grand-daddy of all classes <strong>Object</strong>.&nbsp; This makes their use a   	little awkward as one is constantly having to employ <em><strong>type coercion</strong></em> and the <strong>instanceof</strong> operator to bend these general classes to one's own   	means. Furthermore, these classes are not type-safe, meaning that errors are   	not caught until run-time.</font></li>
+		<li><font color="#990000"><em><strong>Generic Implementations</strong></em> - Here we   	have the most useful class of collections. These are type-safe generic   	classes - implementations of the Interfaces of part 1.&nbsp; They have a   	complete set of methods like <strong>add(), remove(), isEmpty()</strong>, etc.&nbsp;   	When instantiating an object of these generic classes, you supply a   	type-parameter telling the generic collection what kind of elements you   	intend it to manipulate.&nbsp; For example, there is an <strong>ArrayList&lt;&gt;</strong> generic class which you would declare using notation like <strong>ArrayList&lt;Double&gt;</strong> or <strong>ArrayList&lt;Card&gt;</strong>. As a result, you end up with an <strong>ArrayList</strong> of a particular type - more specific than the <strong>ArrayList</strong> of <strong>Objects</strong> of item 2. above.&nbsp; Some useful examples of <em><strong>Generic   	Implementations of Framework Collections </strong></em>are <strong>ArrayDeque</strong>, <strong> ArrayList</strong> and <strong>Stack</strong> (the last of which is deprecated but   	available).</font></li>
+	</ol>
+	<p>The <em><strong>Frameworks collections</strong></em> that we examine next will fall into   the third category:&nbsp; they are implementations of <em><strong>Frameworks   interfaces</strong></em> that admit a type-parameter that we provide. The <strong>ArrayList</strong> example in the previous section demonstrates this perfectly.</p>
+</div>
+</div>
+
+
+</body></html>

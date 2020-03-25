@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_9a_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 9A Section 3</title>
+<link href="./CS 1B Module 9A Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 3 - A Generic Stack</h1>
+	<h2>9A.3.1 Creating a Generic Node</h2>
+	<p>Let's go with tradition now and create a <em><strong>generic stack</strong></em> that we can use on all   of our <em><strong>classes</strong></em>.&nbsp; Of course, you know how to use <strong><em>Java Frameworks Collections </em>ArrayDeque</strong> to do this without building your own <em><strong>generic</strong></em>, but there will be a   time when you won't have a ready-to-go generic data structure and you'll have to   build your own.&nbsp; </p>
+	<p>Our previous technique of extending <strong>StackNodes</strong> should start to feel   inadequate.&nbsp; After we built our original <strong>Node</strong> type, why should we have to build   more types (even derived class types) like&nbsp; <strong>FloatNode</strong> or <strong>StringNode</strong> whenever we want&nbsp; a <strong>Stack</strong> of <em><strong>floats</strong></em> or <em><strong>Strings</strong></em>?&nbsp; It seems like we now   have the ingredients to build our own generic <strong>Stack</strong> without having to do   more work every time we want to have a <strong>Stack</strong> of some new type.&nbsp; </p>
+	<p>You can smell a <strong><em>generic</em></strong> definition coming on.&nbsp; We will build a <strong>Node</strong> that we never have to extend using generics.&nbsp; Check it out:</p>
+
+<pre>//Class Node  ----------------------------------
+class Node&lt;E&gt;
+{
+   protected Node&lt;E&gt; next;
+   private E data;
+    
+   // constructor
+   public Node()
+   {
+      next = null;
+   }
+   public Node(E data)
+   {
+      setData(data);
+   }
+  
+   public boolean setData(E data)
+   {
+      if (data == null)
+         return false;
+      this.data = data;
+      return true;
+   }
+   
+   public E getData()
+   {
+      return data;
+   }
+   
+   // console display
+   public String toString()
+   {
+      return data.toString();
+   }
+}</pre>
+
+	<p>So, what have we done differently?</p>
+	<ol>
+		<li>Our <strong>Node</strong> has both the <strong>next</strong> (link) field and the <em><strong>data</strong></em>.&nbsp; We   	couldn't add the data this early before because we would have had to say   	what kind of data. With <em><strong>generics</strong></em>, we can use a <strong><em>type parameter</em>, E</strong>, and remove   	the necessity of subclassing <strong>FloatNodes</strong> or <strong>StringNodes</strong>.&nbsp; This is going   	to be good.</li>
+		<li>We provide <em><strong>mutators</strong></em> and <em><strong>accessors</strong></em> for the <strong>data</strong>.</li>
+		<li>We have replaced the <strong>Show()</strong> method of times past with the more   	flexible<strong> toString()</strong> method that overrides the ubiquitous&nbsp; <strong> Object.toString()</strong>.&nbsp; This is a good thing to do for most classes.</li>
+	</ol>
+	<h2>9A.3.2 Now for the Stack</h2>
+	<p>We are going to make our <strong>Stack</strong> class correspondingly more useful.&nbsp;   Instead of forcing a <strong><em>client</em></strong> — even a technical "tinkerer" client that is   building custom stacks  — to build <em><strong>nodes</strong></em> and place them into the <em><strong>stack</strong></em>, we can   provide the end-user<strong> push()</strong> and <strong>pop()</strong> <em><strong>methods</strong></em> that use our   <em><strong>client's</strong></em> data immediately.&nbsp; No more messing with <strong>Nodes</strong> (after this class).&nbsp;   Have a look.</p>
+
+<pre>//Class Stack ---------------------------------------
+class Stack&lt;E&gt;
+{
+   // pointer to first node in stack
+   private Node&lt;E&gt; top;
+   
+   // constructor
+   public Stack()
+   {
+      top = null;
+   }
+   
+   public boolean isEmpty()
+   {
+      return top == null;
+   }
+   
+   public void push(E data)
+   {   
+      if (data == null) 
+         return;
+      // build a node and place it on the stack
+      Node&lt;E&gt; newNode = new Node&lt;E&gt;(data);
+      newNode.next = top;
+      top = newNode;
+   }  
+   
+   public E pop()
+   {
+      Node&lt;E&gt; temp;
+      
+      temp = top;
+      if (isEmpty())
+         return null;
+
+      top = top.next; 
+      return temp.getData();     
+   }
+
+   // console display
+   public String toString()
+   {
+      Node p;
+      
+      String showAll = "";
+      // Display all the nodes in the stack
+      for( p = top; p != null; p = p.next )
+         showAll += p.toString() + "\n";
+      return showAll;  
+   }
+}</pre>
+
+	<p> Again, we are making the class output-independent (to a degree) by replacing the   old <strong>ShowStack()</strong> with <strong>toString()</strong>.&nbsp; This is all going to result in a   beautifully easy-to-use class.&nbsp; Here is a simple client.</p>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      float x;
+      Stack&lt;Float&gt; fStk = new Stack&lt;Float&gt;();
+
+      // build the stack
+      for (x = 0; x &lt; 5; x++)
+         fStk.push(x);
+
+      System.out.println("Entire stack without popping:");
+      System.out.println(fStk);
+      
+      System.out.println("\nNow pop and show:");
+      while ( !fStk.isEmpty() )
+         System.out.println(fStk.pop());
+         
+      System.out.println();
+   }
+ }
+ 
+ /* -------------------- RUN -------------------------
+Entire stack without popping:
+4.0
+3.0
+2.0
+1.0
+0.0
+
+
+Now pop and show:
+4.0
+3.0
+2.0
+1.0
+0.0
+ --------------------------------------------- */</pre>
+
+	<p> On top of everything else, can you see how we no longer have to play games with   formatting our <em><strong>objects</strong></em> for console output?&nbsp; Because they have <strong>toString()</strong> <em><strong>methods</strong></em> the console output uses them implicitly.&nbsp; Note that we used the   wrapper class <strong>Float</strong> rather than the <strong><em>primitive</em> float</strong>, when   instantiating a <strong>float</strong> stack.&nbsp; This is necessary and discussed in   further detail in the next module.</p>
+	<p> And what if we want a <strong>Stack</strong> of <strong>Strings</strong>?&nbsp; Unlike our old way of doing   things, we can do it with a few keystrokes:</p>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      String x;
+      Stack&lt;String&gt; sStk = new Stack&lt;String&gt;();
+
+      // build the stack
+      for (x = "HI"; x.length() &lt; 15; x += " !")
+         sStk.push(x);
+      
+      System.out.println("\nPop and show:");
+      while ( !sStk.isEmpty() )
+         System.out.println(sStk.pop());
+         
+      System.out.println();
+   }
+ }
+ 
+ /* ------------------------ RUN ----------------------
+ 
+Pop and show:
+HI ! ! ! ! ! !
+HI ! ! ! ! !
+HI ! ! ! !
+HI ! ! !
+HI ! !
+HI !
+HI
+
+----------------------------------------------------- */</pre>
+
+	<p> Now,<em> that's</em> useful.&nbsp; And easy-to-use.</p>
+</div>
+</div>
+
+
+</body></html>

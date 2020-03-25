@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_7a_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 7A Section 3</title>
+<link href="./CS 1B Module 7A Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 3 - More on Comparable</h1>
+	<h2>7A.3.1 Type Parameters</h2>
+	<p>There is one idea we can introduce now that would have made the <strong>Card</strong> <strong>compareTo()</strong> implementation shorter.&nbsp; My presentation implied that   the&nbsp; parameter of the <strong>compareTo()</strong> method had to be an <strong>Object</strong>,   i.e., the "basest" of classes.&nbsp; I used <em><font color="#FF0000">type coercion</font></em> and <font color="#FF0000"><strong>instanceof</strong></font> to force things to work for us in the case of <strong>Cards</strong>.&nbsp; In fact, you can use any class in this position <em>without</em> type   coercion if you   declare this up front as in</p>
+<pre>     class Card implements Comparable&lt;Card&gt;</pre>
+	
+	<p> The word <strong>Card</strong> inside the angled brackets tells Java that we intend to   	use an object of type <strong>Card</strong> as the parameter of our <strong>compareTo()</strong> method.&nbsp; That enables us to write that method like so:</p>
+<pre>public int compareTo(Card otherCard)
+{  	
+   // remove the first few lines of the old method definition
+   ...
+   
+</pre>
+	
+	<p>This is an example of a <em><strong>type parameter</strong></em>.&nbsp; We are inserting the <strong>Card</strong> in the angled brackets, &lt; ... &gt;,&nbsp; at the top of the class in   the <em>implements</em> clause (in the phrase <strong>Comparable&lt;Card&gt;</strong>) and we   might have placed <em>any</em> type in that position.&nbsp; We declare that we   will be comparing <strong>Cards</strong> to ... <font color="#FF00FF"><em>drum roll please</em></font> ... <strong>Cards</strong>.&nbsp; It usually makes sense to use the same type as the class   itself, in this case, <strong>Card</strong>, because our intent is to compare one <strong>Card</strong> to another <strong>Card</strong>.&nbsp; However, in some universe we might want to compare <strong>Dogs</strong> to <strong>Cats</strong>, so the <strong>Dog</strong> class might implement <strong> Comparable&lt;Cat&gt;</strong>.&nbsp;&nbsp;&nbsp; Strange, perhaps, but it is not as   strange as you might guess.&nbsp;&nbsp; </p>
+	<p>Why is this called a type <em>parameter</em>?&nbsp;&nbsp;   In a manner of speaking, we are "passing" the <strong>Card</strong> type down into the <strong> Comparable</strong> interface definition, just as we pass an argument to a function.&nbsp;&nbsp;   When can we use <em><strong>type parameters</strong></em>?&nbsp; Whenever an interface&nbsp;   was created with one.&nbsp; This means that <strong>Comparable</strong> was defined using   a type parameter.&nbsp; If you were to look at the definition of the Java   interface, you would find this to be true.&nbsp; But when we get to <em><strong> generics</strong></em> we will see how it looks when one creates an interface   definition using type parameters.</p>
+	<p>As an illustration of using a <em><strong>type parameter</strong></em>, and a second   example of implementing <strong>Comparable</strong>, think of a class called <strong>LcdTV</strong> which is defined by the <strong>model name</strong> (a <strong>String</strong>) and two <strong>ints</strong> giving the <strong>width</strong> and <strong>height</strong> of the viewing area.&nbsp; In most   cases, when we decide whether one <strong>LcdTV</strong> is larger than another (and by   how much) we care about the diagonal length, which is neither the <strong>width</strong> nor the <strong>height</strong>, but rather, <strong>SQRT( width*width + height*height)</strong> as   I'm sure you all recall from the <font color="#008000">Pythagorean Theorem</font>.&nbsp; Ahem.&nbsp; As you see, the idea of one object being compared to another in a   non-obvious way turns up much more common that you might think.</p>
+	<p>Here is a class <strong>LcdTV</strong> that implements <strong>Comparable</strong> in a way that   uses a type parameter.<br>
+	</p>
+ 
+<pre>class LcdTV implements Comparable&lt;LcdTV&gt;
+{   
+   // private data
+   private String model;
+   private int width;  // in inches
+   private int height; // in inches
+   
+   // class constants
+   public final int MAX_LENGTH = 20;
+   public final int MAX_DIM = 500;
+   public final int DEFAULT_DIM = 10;
+   
+   // constructors
+   public LcdTV(String model, int w, int h)
+   {
+      setModel(model);
+      setSize( w, h );
+   }
+   
+   // mutators
+   public boolean setModel(String model  )
+   {
+      if (model==null) 
+      {
+         this.model = "undefined";
+         return false;
+      }
+      this.model = (model.length() &lt;= MAX_LENGTH)? 
+         model : model.substring(0, MAX_LENGTH);
+      return true;
+   }
+   public boolean setSize(int w, int h)
+   {
+      if (w &lt; 1 || h &lt; 1 || w &gt; MAX_DIM || h &gt; MAX_DIM   )
+      {
+         width = DEFAULT_DIM;
+         height = DEFAULT_DIM;
+         return false;
+      }
+      width = w;
+      height = h;
+      return true;
+   }
+   
+   // accessors
+   public int getHeight()
+   {
+      return height;
+   }
+   public int getWidth()
+   {
+      return width;
+   }
+   public int getSize()
+   {
+      return (int)Math.sqrt(height*height + width*width);
+   }
+      
+   // stringizer
+   public String toString()
+   {
+      String retVal;
+      
+      // convert from char to String
+      retVal =  model + " (size = "
+         + Integer.toString(getSize()) + ") ";
+      return retVal;
+   }
+   
+   // compareTo - the main attraction
+   public int compareTo(LcdTV other) 
+   {
+      return this.getSize() - other.getSize();
+   }
+} 
+
+public class Foothill
+{
+   public static void main(String[] args)
+   {
+      LcdTV tv1 = new LcdTV( "Matsashtiku M7", 18, 13);
+      LcdTV tv2 = new LcdTV( "GQ S-91", 21, 12);
+      LcdTV tv3 = new LcdTV( "Matsashtiku M44", 25, 55);
+      LcdTV tv4 = new LcdTV( "Stony VoyVey", 24, 51);
+
+      System.out.println("Comparing " + tv1.toString() + " and "
+            + tv2.toString() + ": " 
+            + Integer.toString(tv1.compareTo(tv2)));
+ 
+      System.out.println("Comparing " + tv4.toString() + " and "
+            + tv3.toString() + ": " 
+            + Integer.toString(tv4.compareTo(tv3)));
+   }
+}
+
+/* --------------------- The Run ------------------------
+
+Comparing Matsashtiku M7 (size = 22)  and GQ S-91 (size = 24) : -2
+Comparing Stony VoyVey (size = 56)  and Matsashtiku M44 (size = 60) : -4
+
+-------------------------------------------------------- */
+</pre>
+
+	<h2>7A.3.2 Comparable and Algorithms</h2>
+	<p>Not&nbsp; only is it useful to implement <strong>Comparable</strong> but in some   situations it is required.&nbsp; As we learn about <strong>generics</strong> and <strong>collections</strong>,   we will also see that there are some built-in algorithms in the <em>Java   Collections Framework</em>.&nbsp; Some of these algorithms are applicable   if and only if the class to which they are going to be applied <em><strong>implements</strong></em> <strong> Comparable</strong>.&nbsp; As a quick way to understand this, imagine a method   called <strong>sort()</strong> that sorts a list of objects in any class or one called <strong> add()</strong> that inserts an object in its "correct" place in a sorted list.&nbsp;   Such methods exist but can only be   applied to classes that implement <strong>Comparable </strong>(or <strong>Comparator</strong>, a   similar interface about which we will learn more later).&nbsp; This makes it   important for certain classes to implement <strong>Comparable </strong>for potential   future use with these algorithms..</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_2b_5.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 2B Section 5</title>
+<link href="./CS 1B Module 2B Section 5_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 5 - A Puzzle</h1>
+	<h2>2B.5.1 Mathematical Induction</h2>
+	<p>Before ending this topic, I want to give you   something entertaining to think about.&nbsp; First, we return to the concept of <em><strong>recursion</strong></em>.</p>
+	<p><em><strong>Recursion</strong></em> is a computational algorithm   that is based on the more abstract concept of <em><strong>mathematical induction</strong></em>.&nbsp; <em><strong>Mathematical induction</strong></em> is a technique for proving an assertion   about all positive integers, <em>n</em>, which involves two steps.</p>
+	<div class="question"> <strong>Mathematical Induction
+		</strong>
+		<ol>
+			<li> Prove that the assertion is true for <em>n</em> = 1.			</li>
+			<li> Assume, without proof, that the assertion is   	true for all integers up to and including some integer <em>k</em> (but not   	necessarily for any integer greater than <em>k</em>).&nbsp; Under this&nbsp; assumption, prove   	that the assertion is true for the integer <em>k</em>+1. </li>
+	</ol>
+	</div>
+		<p>If you can accomplish both steps, then the assertion   must be valid for all positive integers <em>n</em>.</p>
+	
+	<p>For example, let's prove that the alleged equality</p>
+	<div class="picCenter"><img src="./CS 1B Module 2B Section 5_files/cs_B_common_13.jpg" width="413" height="74" alt="equ 1"></div>
+	<p>holds true for all positive integers <em>n</em>, no matter how large.</p>
+	<h4>We prove that this holds when <em>n</em> = 1.&nbsp; </h4>
+	<p>By   checking both sides of the assertion, we can see that they each evaluate to 1,   therefore we have proved step 1.</p>
+	<h4>Assume that the assertion holds for k and we will   show that this implies it must hold for k+1.&nbsp; </h4>
+	<p>Start with the assumed truth   for <em>k</em>, namely,</p>
+	<div class="picCenter"><img src="./CS 1B Module 2B Section 5_files/cs_B_common_14.jpg" width="424" height="74" alt="equ 2"></div>
+	<p>Now, we know that we can take any equation and add   the same number to both side, and this will result in another true equation.&nbsp;   So we add <em>k</em>+1 to both sides of the last equality to get</p>
+	<div class="picCenter"><img src="./CS 1B Module 2B Section 5_files/cs_B_common_15.jpg" width="654" height="70" alt="equ 3"></div>
+<p>Re-arrange the <strong>right side</strong> using elementary algebra and we find</p>
+<div class="picCenter"><span class="picCenter"><img src="./CS 1B Module 2B Section 5_files/cs_B_common_16.JPG" width="491" height="191" alt="equ 4"></span></div>
+<p>Together, the last two equations yield&nbsp; </p>
+<div class="picCenter"><img src="./CS 1B Module 2B Section 5_files/cs_B_common_17.JPG" width="575" height="90" alt="equ 5"></div>
+<p>But look at this carefully: it is just our assertion when stated in terms of (k+1) rather than <em>k</em>. So this proves that the assertion is true for the integer <em>k</em>+1.</p>
+	<p>Since we have proved <em><strong> <span style="background-color:#00FFFF; ">it to be true for k = 1</span></strong></em>, and we have   also shown that <em><strong>if it is true for n = k, then it is also true for n = k+1</strong></em>, we   have completed our proof in general. The equation must hold for all positive   integers <em>n</em>.</p>
+	<p>Many mathematical truths that we know today are   based on this kind of proof.
+</p>
+    
+	<h2>2B.5.2 A Famous Puzzle</h2>
+    
+<img src="./CS 1B Module 2B Section 5_files/cs_B_common_12.jpg" alt="scenic island" border="2">
+	<h2>2B.5.2 A Famous Puzzle</h2>
+    
+<img src="./CS 1B Module 2B Section 5_files/cs_B_common_12.jpg" alt="scenic island" border="2">
+
+    <h4>The   Isle of&nbsp; Blue and Brown Eyed Monks</h4>
+    
+	<p>This is a famous puzzle which has an answer (i.e.,   proof) that anyone can find on the Web.&nbsp; I encourage you to think about it   on your own for at least a day or two before searching for the solution on-line.</p>
+	<p>There once was an island of 300 monks, some of whom   had blue eyes, and those that didn't had brown eyes (and the monks knew this). They were also aware that there was no assurance that at any given time  both or either color had to be expressed in the population: they could all be blue-eyed, all brown-eyed, or some of each, and this could change as the population changed due to births and deaths.</p>
+    <div class="parenthetical"> The number <strong>300</strong> doesn't matter its  only significance being that is a <em><strong>constant</strong></em> for the purpose of this problem, and it <em><strong>less that 365</strong></em>, the number of days in a year, alluded to in the story, later.    </div>
+	<p>There were no reflective   surfaces on the island, so no monk could see what he or she looked like,   although they could each see <em>all</em> the others, and in fact did so on a   daily basis.&nbsp; Furthermore, these monks were highly   intelligent, capable of solving any mathematical or logical puzzle instantly if   there was enough information at their disposal.&nbsp; </p>
+	<p>They considered the island a paradise, with ample food, natural flora and fauna, beautiful waterfalls and mountains, and a climate conducive to work, academic study and play. They lived in harmony and needed nothing from outside their perfect world.</p>
+	<p>Lastly, they had a strange   cultural rule: if any one of them was to learn the color of his or her own eyes   on any given day, that monk was to self-banish: he or she had to <em>leave the island, permanantly,</em> at exactly midnight at the end   of that day (using canoes built for that purpose, which they paddled away, presumabily to one of the nearby islands, none of which were nearly as desirable as their native home.) Needless to say, it was forbidden for the residents to speak about eye color,   and no monk ever violated this rule.</p>
+	<p>For years, this population lived in peace and   harmony with no suicides.&nbsp; One day, a shipwrecked victim was washed ashore onto   the island and the monks cared for the visitor for some weeks until she was   healthy enough to return to the mainland.&nbsp; A helicopter was summoned and the   visitor made a short farewell speech.&nbsp; She said. "I am forever indebted to you   all for saving my life.&nbsp; You have shown me great hospitality.&nbsp; With your   permission I will return in a year to see you all once more."&nbsp; The group nodded,   happily, in agreement.&nbsp; As the visitor stepped into the chopper, she turned back   at the smiling group and waved, adding, "I look forward to seeing some of your   beautiful blue and brown eyes upon my return."&nbsp; As the helicopter flew off, the monks,   pondering her words, became extremely distraught.&nbsp; </p>
+	<p>When the visitor returned in a year, she found that   all the monks had left the island.</p>
+	<p>Explain why, and prove (using mathematical   induction) that there was no other possible outcome once the visitor had uttered   her words.&nbsp; Also, explain exactly when the suicides occurred, measured from the   day that the visitor departed which you can call day 1.</p>
+	<p>For the purposes of explanation and class   discussion, we will assume that, from the start, 100 of the monks had blue eyes   and 200 had brown eyes, although there is nothing special about these numbers.&nbsp;   The same logic will apply to any breakdown of blue and brown eyes, except, of   course, that, at the time the visitor left, at least one monk must had blue eyes and at least one other, brown eyes, otherwise the visitor would   not have mentioned blue and brown eyes in her farewell speech.</p>
+	<p>There are no tricks or hidden variables.&nbsp; This is a   completely solvable (and provable) puzzle.&nbsp; On-line, you will find many   frustrated people who don't believe or understand the answer, but that's because   those people simply do not comprehend mathematical induction.&nbsp; You, on the   other hand, are about to join the well-educated who can see the solution   clearly.&nbsp; We will discuss it over the next few days in the public forums.</p>
+    
+    
+	<p><span><img src="./CS 1B Module 2B Section 5_files/cs_A_common_2.gif" alt="guy with blackboard" width="149" height="91" border="0" align="right"></span></p>
+	<h4>Prevent Point Loss</h4>
+	<ul>
+		<li><strong>Do not use ASCII or UNICODE.</strong>&nbsp; When you need a <strong>char</strong> constant in your program, do not use numbers,   	such as <strong>65</strong> or <strong>57</strong> which are meaningless to programmers.&nbsp; Instead use   	understandable chars like <strong>'A'</strong> or<strong> '9'</strong> instead.&nbsp; In addition to being   	more readable and less error-prone, this rule makes your job easier.   	(1 - 2 point penalty)</li>
+		<li><strong>Write to spec.</strong> Don't change the names or   	purpose of program variables, methods or output.&nbsp; Write your program so   	that it does exactly what is asked, not<em> sort-of</em> or <em>an enhanced   	version of</em> the assignment.&nbsp;   	(4 - 12 point penalty)</li>
+		<li> <strong>Don't duplicate logic.</strong> If you have one method (function), such as <strong>set()</strong> or <strong>checkVal()</strong>,   	that does error checking, call that method from others that need the error   	checking, don't rewrite the error checking code in two places.&nbsp; If you have   	the same code in two places, consider making a separate method (function)   	out of that code and calling that method from those two places.&nbsp;   	(1 - 2 point penalty) </li>
+		<li> <strong>Use member names   	directly</strong> from instance or static methods   	(like <strong>socSecNum</strong>) - do not use accessors from inside those methods   	(like <strong>getSocSecNum()</strong>) as it is unnecessary.&nbsp;   	(1 - 2 point penalty) </li>
+		<li> <strong>Use loops on arrays</strong>.&nbsp;   	Do not have a sequence of practically identical statements, like <strong>somArray[0] = ...xyz, somArray[1] =   	...xyz, somArray[2] = xyz. ...</strong>,   	that involve literal (constant) indexes.&nbsp; Use one statement, with a variable   	index, like <strong>somArray[k] = xyz</strong> inside a loop. (2 - 3 point penalty) </li>
+		<li><strong>Console and GUI don't mix.</strong>&nbsp;  	If and when we have a GUI option, decide which kind of I/O style you are going to   	use, and stick with that throughout your program.   	(1-3 point penalty) </li>
+	</ul>
+
+  </div>
+  </div>
+<!-- end .container -->
+
+
+</body></html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5a_6.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5A Section 6</title>
+<link href="./CS 1B Module 5A Section 6_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+    <h1>Section 6&nbsp; - Visibility</h1>
+    <h2>5A.6.1 Adding the Controls to the JFrame<img src="./CS 1B Module 5A Section 6_files/pic_1a10_17.jpg" alt="screen shot" width="300" height="200" hspace="9" border="0" align="right"></h2>
+    <p>You might think that the statements in the previous group would have been enough to   place the controls into the <strong>JFrame</strong>, but they are not.&nbsp; Just creating controls   like <strong>JTextAreas</strong> and <strong>JButtons</strong> don't give them a home.&nbsp; For example, there   may be more than one <strong>JFrame</strong> in our program, and we have to tell Java on   which <strong>JFrame</strong> to place the controls. We also have to say in what order we want the   controls to be placed (they don't have to be in the same order in which we   declared them, in the last section).</p>
+    <p>Here is the group that does what we want:</p>
+<pre>   // place your 3 controls into frame
+   frmMyWindow.add(lblMyLabel);
+   frmMyWindow.add(txtMyTextArea);
+   frmMyWindow.add(btnMyButton);
+</pre>
+
+    <p>These lines are self-explanatory.</p>
+    <h2>5A.6.2 Showing the JFrame</h2>
+    <p>Just as we had to do something extra to make our controls appear on the <strong>JFrame</strong>, we must also tell Java that we want to see the <strong>JFrame</strong>.&nbsp; This might   seem ridiculous.&nbsp; After all, why <em>wouldn't</em> we want to see the <strong>JFrame</strong>.&nbsp;   Well, there are lots of times in which we want frames to be built, but stay   invisible until we are ready for them.&nbsp; We are ready for this one as soon   as we build it, so we issue the statement:</p>
+<pre>   // show everything to the user
+   frmMyWindow.setVisible(true);
+</pre>
+
+    <p>This is that last statement for the GUI of this application.</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

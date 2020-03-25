@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_6b_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 6B Section 4</title>
+<link href="./CS 1B Module 6B Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 4 - Rationals Without Exceptions </h1>
+  	<h2>6B.4.1 RationalNumber.Java</h2>
+	<p>This class is pretty simple if you break it down:</p>
+	<ul>
+		<li>There are two <strong>int</strong> (<strong>long</strong>) private data, the numerator and denominator (<strong>num</strong> and <strong>den</strong>).</li>
+		<li>There is a <em>constructor</em> and several <em>accessor</em> and <em>mutator</em> methods.</li>
+		<li>There is a method <strong>reduce() </strong>and its helper <strong>gcd()</strong> which   	reduces any fraction into its lowest common form (<strong>gcd() </strong>uses a two   	thousand year old algorithm knows as the <em>Euclidean Algorithm</em>.&nbsp; I   	wonder if Euclid ever imagined it would end up in a Java class.)</li>
+	</ul>
+
+<pre>// RationalNumber class ---------------------------
+class RationalNumber
+{
+   private long num;
+   private long den;
+ 
+   // constructor method ----
+   RationalNumber(long n, long d)
+   {
+      num = n;  // can't do setNum yet - no den defined!
+      setDen(d);
+   }
+    
+   //  reduce method ----
+   public void reduce()
+   {
+      long gcd = gcd();
+      if (gcd != 0)
+      {
+         num /= gcd;
+         den /= gcd;
+      }
+      if (den&lt;0)
+      {
+         den = -den;
+         num = -num;
+      }
+   }
+    
+   private long gcd() // returns the gcd of num and den
+   {
+      long temp, n, d;
+      for ( n = num,  d = den; d != 0;  )
+      {
+         temp = n % d;
+         n = d;
+         d = temp;
+      }
+      return n;
+   }
+    
+   public long  getNum() // returns the numerator
+   {
+      return num;
+   }
+    
+   public long  getDen() // returns the denominator
+   {
+      return den;
+   }
+    
+   public void  setNum(long n) // sets the numerator
+   {
+      num = n;
+      reduce();
+   }
+    
+   public void  setDen(long d) // sets the denominator
+   {
+      if (d == 0)
+         d = 1; // for now just avoid division by 0
+      den = d;
+      reduce();
+   } 
+}
+</pre>
+
+	<h2>6B.4.2 The MyCanvas Class</h2>
+	<p>Remember I said that the state variable concept would be one of the most   important tools you will learn as a programmer?&nbsp; We're about to use it   here.&nbsp; The <strong>JPanel</strong> class that we want to derive, needs to draw the current <strong>RationalNumber</strong>, and in order for it to know what is "current", it must have a   private <strong>RationalNumber</strong> member, and expose a <strong>set()</strong> mutator method for that   member.</p>
+	<p>Besides that, you will easily understand the logic it contains by remembering   the examples that   we have already done in our lesson on <strong>JPanels</strong> (and the <strong>FontMetrics</strong> example in the last section).</p>
+
+<pre>import javax.swing.*;
+import java.awt.*;
+
+// MyCanvas class -------------------------------------
+class MyCanvas extends JPanel
+{
+   private RationalNumber rationalNum;
+ 
+   public void set(RationalNumber num)
+   {
+      // impossible to get bad data so no filter needed
+      rationalNum = num; 
+   }
+   
+   public void paintComponent( Graphics g )
+   {
+      super.paintComponent(g);
+      Dimension d;
+      FontMetrics metrics;
+      int mid, left, right, numWidth, pixelsFromMid, ht;
+      String numStr, denStr;
+      
+      // set up metrics for drawing a large fraction
+      g.setColor(Color.white);
+      g.setFont( new Font("SansSerif", Font.BOLD, 25) );
+      d = getSize();
+      mid = d.height/2;
+      left = (int)(d.width * .2);
+      right = d.width-left;
+      
+      // draw the division line
+      g.fillRect(left,mid-3, right-left, 6);
+      
+      // draw the numerator
+      numStr = String.valueOf(rationalNum.getNum());
+      metrics = g.getFontMetrics();
+      numWidth = metrics.charWidth('4');
+      pixelsFromMid = (int)( (numStr.length()/2.) * numWidth );
+      g.drawString(numStr, d.width/2 - pixelsFromMid, mid - 12);
+      
+      // draw the denominator
+      denStr = String.valueOf(rationalNum.getDen());
+      pixelsFromMid = (int)( (denStr.length()/2.) * numWidth );
+      ht = metrics.getHeight();
+      g.drawString(denStr, d.width/2 - pixelsFromMid, mid + 1 + ht);
+   }
+} 
+</pre>
+
+	<h2>6B.4.3 The Foothill&nbsp; and JFrame Classes</h2>
+	<p>This goes into your main file, Foothill.java.&nbsp; It contains the familiar   short Foothill driver class, and the longer, but still familiar JFrame subclass,   which I called RationalFrame.</p>
+
+<pre>import java.awt.*;
+import java.awt.event.*;
+import java.math.*;
+import javax.swing.*;
+ 
+public class Foothill
+{
+   public static void main(String[] args)
+   {
+      // establish main frame in which program will run
+      RationalFrame myFrame = new RationalFrame("Rationalizer");
+      myFrame.setSize(300, 200);
+      myFrame.setLocationRelativeTo(null);
+      myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      
+      // show everything to the user
+      myFrame.setVisible(true);
+   }
+}
+
+class RationalFrame extends JFrame
+{
+   // ---- class and instance objects ----
+   private JPanel inputPanel;
+   private MyCanvas drawingCanvas;
+   private JTextField numeratorIn, denominatorIn;
+   private JLabel slash;
+   RationalNumber theNumber;
+ 
+   // RationalFrame constructor
+   public RationalFrame(String title)
+   {
+      super(title);
+    
+      // switch to border layout 
+      setLayout( new BorderLayout());  
+
+      // create the input components
+      numeratorIn = new JTextField(5);
+      denominatorIn = new JTextField(5);
+      slash = new JLabel("/");
+ 
+      // create output canvas
+      drawingCanvas = new MyCanvas();
+      drawingCanvas.setBackground(new Color(15, 10, 70));
+   
+      // place input fields into input panel
+      inputPanel = new JPanel();
+      inputPanel.add( numeratorIn );
+      inputPanel.add( slash );
+      inputPanel.add( denominatorIn );
+    
+ 
+      // add inputPanel and  canvas to applet
+      add( drawingCanvas, BorderLayout.CENTER );
+      add( inputPanel, BorderLayout.SOUTH );
+   
+      theNumber = new RationalNumber(0, 1);
+      drawingCanvas.set(theNumber);
+
+      numeratorIn.setText("0");
+      denominatorIn.setText("1");
+   
+      // prepare to respond to text entry
+      EnterListener myHandler = new EnterListener();
+      numeratorIn.addActionListener( myHandler );
+      denominatorIn.addActionListener( myHandler );
+   
+      drawingCanvas.repaint();
+   }
+ 
+   public void setRationalNumber()
+   {
+      long num, den;
+   
+      num = Integer.parseInt(numeratorIn.getText());
+      den = Integer.parseInt(denominatorIn.getText());
+      theNumber = new RationalNumber(num, den);
+      drawingCanvas.set(theNumber);
+   }
+ 
+   public RationalNumber getRationalNumber()
+   {
+      return theNumber;
+   }
+ 
+   // inner listener class
+   class EnterListener implements ActionListener
+   {
+      public void actionPerformed( ActionEvent e )
+      {
+          setRationalNumber();
+          drawingCanvas.repaint();
+      }
+   }
+} 
+</pre>
+
+	<p>As long as this program is, there are no new concepts beyond the <strong>FontMetrics</strong> and the rational arithmetic.&nbsp; Make sure you can run this program and   understand it (except, possibly, for the Euclidean algorithm in the <strong>gcd()</strong> and <strong>reduce()</strong> methods).</p>
+  </div>
+<!-- end .container --></div>
+
+
+</body></html>

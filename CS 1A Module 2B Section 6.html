@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1a/cs_1A_2b_6.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1A Module 2B Section 6</title>
+<link href="./CS 1A Module 2B Section 6_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1>Section 6 - String Concatenation</h1>
+	<h2>2B.6.1 The Concatenation Operator</h2>
+	<p>We've seen the <strong><em>concatenation operator, +,</em></strong> in action before:</p>
+
+<pre>   System.out.println( "someNumber is " + someNumber );</pre>
+
+
+	<p>The <em><strong>concatenation operator</strong></em> is used to   join together two or more <strong>Strings</strong>.&nbsp; We can <em><strong>concatenate</strong></em> either <strong>String   variables </strong><em>or</em><strong> String literals</strong>.&nbsp; </p>
+	<p>The next program will help you if you ever receive&nbsp;an Oscar at the   Academy Awards.&nbsp; It will demonstrate use of the <em><strong>concatenation   operator, +</strong></em>, as well as the new <strong>String</strong> data type that we just   presented.&nbsp; We will create a speech by piecing together certain phrases.&nbsp;</p>
+	<p>Notice how we first declare the <strong>String</strong> <strong><em>references</em></strong>, then   later use them to <em><strong>instantiate</strong></em> specific <strong>String</strong> <em><strong>objects</strong></em> with phrases in them.&nbsp; Also, there is one new item that you'll see:&nbsp;   an example where we combine the <strong>String</strong> declaration with the object instantiation   into one statement.&nbsp; </p>
+	<p>Have a look:</p>
+
+<pre>
+
+public class Foothill 
+{
+   public static void main(String[] args)
+   {             
+      // declare some string references (variables)
+      String thxMom, thxAgent, thxFox;
+      String outputString;
+      
+      // for fun, create the String object directly in the declaration
+      String acceptanceSpeech = new String("I'd like to thank ");
+     
+      // create the rest of the  string objects to use 
+      // in your speech.
+      thxMom = new String("my Mother, Reva, and wife Coleen.");
+      thxFox = new String("everyone at Fox and FBC.");
+      thxAgent = new String("my agent and everyone at Paradigm.");
+ 
+      // stand up at the podium and get settled ...
+      // for this use String Literals directly in the
+      // output statements.
+      System.out.println( 
+         "I didn't really expect to win ...");
+      System.out.println( 
+         "I don't even have a speech prepared!");
+      System.out.println( "Anyway ...");
+ 
+      // now finally start to thank people.
+      outputString = "First of all " + acceptanceSpeech + thxFox;
+      System.out.println( outputString);
+  
+      outputString = "Next, " + acceptanceSpeech + thxAgent;
+      System.out.println( outputString);
+ 
+      outputString = "But mostly, " + acceptanceSpeech + thxMom;
+      System.out.println( outputString); 
+   }
+}
+</pre>
+	
+	<p>This program has a few variations of what we learned:</p>
+	<ul>
+		<li>There are several instances of the <em><strong>concatenation operator</strong></em> being used to glue together <strong>String <em>literals</em></strong> and<strong> String <em> variables</em>.</strong></li>
+		<li>We have a short-cut statement that <em><strong>declares</strong></em> and <em><strong> instantiates</strong></em> a <strong>String</strong> <em><strong>object</strong></em> in one line.&nbsp;   	Can you find it?</li>
+		<li>We used a <strong>String <em>reference</em></strong>, <strong>outputString</strong>, to hold   	the result of some <strong>String</strong> <em><strong>concatenations</strong></em>. Do you see   	this?</li>
+	</ul>
+	<p>Paste this into your compiler IDE and run it.&nbsp; It's a fun little program   and you can use it as a basis for doing homework assignments.</p>
+	<div class="picCenter"><img src="./CS 1A Module 2B Section 6_files/cs_A_common_46.JPG" alt="decorative basket of flowers" width="240" height="360" border="0"></div>
+	</div>
+<!-- end .container --></div>
+
+
+</body></html>

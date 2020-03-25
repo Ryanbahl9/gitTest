@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_4b_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 4B Section 4</title>
+<link href="./CS 1B Module 4B Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 4 - Inner Classes</h1>
+	<h2>4B.4.1 Inner Classes</h2>
+	<p>In most applications our <em><strong>classes</strong></em> are siblings of one another.&nbsp; That is,   we complete the definition of one <strong>class</strong>, before we begin the definition of   another.&nbsp; On occasion, we may want to create a new <em><strong>class inside another   class,</strong></em> that is, start the <strong>new <em>class definition</em></strong> before we have reached the   closing brace of the <em><strong>previous class definition</strong></em>.&nbsp; If one <em><strong>class</strong></em> is defined   completely within another <em><strong>class</strong></em>, it is called an<em><strong> inner class</strong></em>.&nbsp;   The <em><strong>inner class</strong></em> can be used in the&nbsp;<strong><em>methods</em></strong> of the <em><strong>outer</strong></em> (i.e. containing)   <em><strong>class</strong></em>, but nowhere else.</p>
+	<p><strong><em>Inner classes</em></strong> are of  limited use, and their main application arises in <em><strong>GUI</strong></em> programming when writing <em><strong>event listeners</strong></em>.&nbsp;   They also may show up when creating some <em><strong>generic</strong></em> data structures: a <strong>TreeNode</strong> may be "inner" to a <strong>Tree</strong> generic class. We will come to<em><strong> event driven GUI</strong></em> programming and<em><strong> inner listener classes</strong></em> later in this course, and we'll study <em><strong>generic tree classes</strong></em> in the next course, <span class="sectionOrAssignmentTitle">CS 1C</span>. For now,  let's see an example of an <em><strong>inner class</strong></em> in a simple, console   program.</p>
+	<h2>4B.4.2 A Contact List with an Inner Phone Class</h2>
+	<p>Our example uses a <em><strong>class</strong></em> called <strong>Contact</strong> which is used to<em><strong> instantiate   client </strong></em><strong>Contact</strong><em><strong> objects </strong></em>consisting of:</p>
+	<ul>
+		<li>a name</li>
+		<li>a phone number</li>
+	</ul>
+	<p>The <strong>Contact</strong> <strong><em>class</em></strong> serves as an <em><strong>outer class</strong></em> for an <strong><em> inner class</em></strong> called <strong>Phone</strong>. <strong>Phone</strong>&nbsp; is used by the <strong> Contact</strong> class to sanitize and format the phone number <strong>Strings</strong> for the   outer <strong>Contact</strong> <em><strong>class</strong></em>.</p>
+	<p>In this example we use <em><strong>constructors that take parameters</strong></em>.&nbsp;   We also make use of the <strong>Character</strong> <strong><em>class</em></strong> <em><strong>method</strong></em> <span class="codeInLine">isDigit()</span>.&nbsp;   The <em><strong>inner class</strong></em> <strong>Phone</strong> constructs new sanitized <strong>Strings</strong> from the   messy <strong>Strings</strong> that are passed into the <em><strong>constructors</strong></em> by the   <em><strong>client</strong></em>.&nbsp;&nbsp; The new, properly formatted, <strong>Strings</strong> are built up   inside the <strong>Phone</strong> <em><strong>constructor</strong></em> using <em><strong>for loops</strong></em> and <em><strong>concatenation</strong></em>.&nbsp; In other words, while the <em><strong>client</strong></em> may   supply a sloppy <strong>String</strong> such as <span class="codeInLine">"650 - 915-3 06-1"</span>, the <strong>Phone <em>constructor</em></strong>&nbsp;   will convert and store this number internally as <span class="codeInLine">"6509153061"</span>.&nbsp; Then, when   asked to convert this <strong>String</strong> to a human-readable phone number for output,   the <em><strong>class</strong></em> enlists an <em><strong>instance method</strong></em> called <span class="codeInLine">toString()</span>, which we define   below.&nbsp; The format of phone numbers, after preparation by <span class="codeInLine">toString()</span> is   <span class="codeInLine">"(650)916-3061"</span>.&nbsp; The <em><strong>class</strong></em> also handles numbers without area codes and   badly formed numbers.</p>
+	<p>Please read this example not only for its demonstration of <strong><em>inner classes</em></strong>, but   also as a study in <span class="codeInLine">String</span> processing, <em><strong>constructors</strong></em>, <em><strong>for loop</strong></em> logic, and use of   <em><strong>local variables</strong></em>.&nbsp; The more you read this example the more you'll learn.&nbsp;   I promise.</p>
+
+<pre>public class Sample
+{
+   public static void main (String[] args) throws Exception
+   {
+      Contact client1 = new Contact("Evariste Galois", "650-949-7000");
+      Contact client2 = new Contact("Michael Faraday", "949-1234");
+      Contact client3 = new Contact("Clerk Maxwell", "(213)555123");
+     
+      System.out.println("Dial " + client1.getPhone() 
+            + " to reach " + client1.getName());
+      System.out.println("Dial " + client2.getPhone() 
+            + " to reach " + client2.getName());
+      System.out.println("Dial " + client3.getPhone() 
+            + " to reach " + client3.getName());
+   } 
+}
+
+// class Contact
+class Contact
+{
+   private String name;
+   private Phone phone;
+   
+   public Contact(String inName, String inPhone)
+   {
+      name = new String(inName);
+      phone = new Phone(inPhone);
+   }
+   
+   public String getName()
+   {
+      return name;
+   }
+  
+   public String getPhone()
+   {
+      return phone.toString();
+   }
+
+   // inner class Phone used by class Contact only
+   private class Phone
+   {
+      String number;
+      
+      Phone(String inNum)
+      {
+         char nextDigit;
+         int k;
+ 
+         // store only digits "213-555-1212" becomes "2135551212"       
+         for (k = 0, number = ""; k &lt; inNum.length(); k++)
+         {
+            nextDigit = inNum.charAt(k);
+            if (Character.isDigit(nextDigit))
+               number = number + nextDigit;
+         } 
+      }
+      
+      // returns properly formed number (AAA)PPP-FFFF or PPP-FFFF
+      public String toString()
+      {
+         int nextDigit, j;
+         String retStr;
+         
+         if (number.length() != 7 &amp;&amp; number.length() != 10)
+            return "(invalid phone number)";
+         
+         retStr = "";
+         // if full 10 digit number, use parens for area code
+         nextDigit = 0;
+         if ( number.length() == 10)
+         {
+            retStr += "(";
+            for ( j = 0; j &lt; 3; j++, nextDigit++)
+               retStr += number.charAt(nextDigit);
+            retStr += ")";
+         }
+         // either way, hyphenate 7 digit number (don't reset nextDigit)
+         for ( j = 0; j &lt; 3; j++, nextDigit++)
+            retStr += number.charAt(nextDigit);
+         retStr += "-";
+         for (j = 0; j &lt; 4; j++, nextDigit++)
+            retStr += number.charAt(nextDigit);
+         
+         return retStr;
+      }
+   }
+}</pre>
+
+	<p>The run is as follows:</p>
+
+<pre>Dial (650)949-7000 to reach Evariste Galois
+Dial 949-1234 to reach Michael Faraday
+Dial (invalid phone number) to reach Clerk Maxwell</pre>
+
+	<p>If you understood this lecture, you probably read it and studied it more than once (<em>good for you</em>) and you've  made it past the hardest part of   this course.&nbsp; </p>
+	<p>But don't drop just yet.&nbsp; The fun is about to begin.</p>
+	<p>See you next week.</p>
+	<hr>
+	
+	<p><span style="text-align: left"><img src="./CS 1B Module 4B Section 4_files/cs_A_common_2.gif" alt="guy with blackboard" width="149" height="91" border="0" align="right"></span></p>
+	
+	<h4>Prevent Point Loss</h4>
+	<ul>
+		<li><font color="#CC0066"><strong>Use super() to chain.</strong>&nbsp; </font>Instead   	of duplicating code from your<em><strong> base class</strong></em>, or worse, omitting important code,   	use<span class="codeInLine"> super()</span> in any <em><strong>derived class method</strong></em> that needs to initialize or operate   	on <em><strong>base class</strong></em> data.&nbsp; This should always be done in <em><strong>constructors</strong></em>, and is&nbsp;   	also usually needed in <em><strong>derived class methods</strong></em> that<em><strong> override base class   	methods</strong></em>. <font color="#FF0000">(1 - 2 point penalty)</font></li>
+		<li><font color="#CC0066"><strong>Do not duplicate data or methods in derived   	classes.</strong>&nbsp; </font>If you have a <em><strong>member</strong></em> in a <em><strong>base class</strong></em>, there is no   	reason to duplicate that <em><strong>member</strong></em> in the <em><strong>derived class</strong></em>.&nbsp; The same goes   	for <em><strong>methods</strong></em> (except you may have <em><strong>overriding methods</strong></em> in your <em><strong>derived class</strong></em>). <font color="#FF0000">(3 - 4 point penalty)</font></li>
+	</ul>
+    
+</div>
+</div>
+
+
+</body></html>

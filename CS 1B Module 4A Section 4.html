@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_4a_4.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 4A Section 4</title>
+<link href="./CS 1B Module 4A Section 4_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+	<h1>Section 4 - The Stack Class</h1>
+	<h2>4A.4.1 The Picture of a List-Based Stack</h2>
+	<p>Now that we've defined the basic <strong>StackNode</strong> class, I can show you a   picture of the plan.&nbsp; Our stack will consist of a list of nodes linked   together.&nbsp;The <em><strong>top</strong></em> of the <em><strong>list</strong></em> will be the first <strong>StackNode</strong> in the <em><strong>list</strong></em>.&nbsp;   Say we have <strong><em>StackNodes</em></strong> <span class="codeInLine">sn1</span>, <span class="codeInLine">sn2</span>, etc.&nbsp; Here is the picture if we   have <span class="codeInLine">push()</span>ed <span class="codeInLine">sn1, sn2, sn3 </span>and<span class="codeInLine"> sn4</span>, in that order:</p>
+
+<pre>top → sn4  →  sn3 →  sn2  → sn1 → null
+</pre>
+
+	<p>The last node in the <strong>list</strong> has a <span class="codeInLine">null</span> in its <span class="codeInLine">next</span> field, which   is how we know it is the end of the list.&nbsp; The <span class="codeInLine">top</span> is simply a   reference to   a <strong>StackNode</strong> and is not itself a full <strong><em>node</em></strong>.&nbsp; Each of the other items in   the <em><strong>list</strong></em> is a <strong>StackNode</strong>.</p>
+	<p>If we <em><strong>instantiate</strong></em> a new <em><strong>node</strong></em>, <span class="codeInLine">snNew</span>, and <span class="codeInLine">push()</span> it onto the <em><strong>stack</strong></em>, it   would go at the <em><strong>top</strong></em>.&nbsp; Here is the <em><strong>stack</strong></em> after a <span class="codeInLine">stk.push(snNew)</span>:</p>
+
+<pre>top → snNew → sn4  →  sn3 →  sn2  → sn1 → null
+</pre>
+
+	<p>Now if we <span class="codeInLine">pop()</span>ped two items off the <strong><em>stack</em></strong>, they would be <span class="codeInLine">snNew</span> and <span class="codeInLine">sn4</span>,   leaving us with:</p>
+<pre>top → sn3 →  sn2  → sn1 → null
+</pre>
+	
+	<p>This is the picture you should keep in your head as you follow the current   discussion.</p>
+	<h2>4A.4.2 A Stack of Generic Data-less StackNodes</h2>
+	<p>We complete the current phase by creating a second <em><strong>class</strong></em> (not <em><strong>base</strong></em> or   <em><strong>derived</strong></em>, just a second <em><strong>class</strong></em>) called <strong>Stack</strong> that uses the <strong>StackNodes</strong>.&nbsp;&nbsp;   Here is the <em><strong>class</strong></em>:</p>
+
+<pre>// Class Stack ---------------------------------------
+class Stack
+{
+   // pointer to first node in stack
+   private StackNode top;
+
+   // constructor
+   public Stack()
+   {
+      top = null;
+   }
+
+   public void push(StackNode newNode)
+   {   
+      if (newNode == null) 
+         return;   // emergency return
+      newNode.next = top;
+      top = newNode;
+   }  
+
+   public StackNode pop()
+   {
+      StackNode temp;
+
+      temp = top;
+      if (top != null)
+      {
+         top = top.next; 
+         temp.next = null; // don't give client access to stack!
+      }
+      return temp;      
+   }
+
+   // console display
+   public void showStack()
+   {
+      StackNode p;
+
+      // Display all the nodes in the stack
+      for( p = top; p != null; p = p.next )
+         p.show();
+   }
+}</pre>
+<h3>About <strong>push()</strong></h3>
+
+	<p>We immediately   notice something interesting.&nbsp; A <strong>Stack</strong> contains nothing more than a   single   <strong>StackNode</strong> <em>reference</em>  (set to <span class="codeInLine">null</span> initially).&nbsp; How can any <em><strong>class</strong></em> that contains only   one reference potentially hold the hundreds or thousands of <strong>StackNodes</strong> that   we are going to <span class="codeInLine">push() </span>onto it?&nbsp; Simple.&nbsp; As we <span class="codeInLine">push() </span>items onto the <strong>Stack</strong>, we will allocate new <strong>StackNodes</strong>.&nbsp; That pointer, <span class="codeInLine">top</span>, is going to   point to the first item on the <strong>Stack</strong>, and from there, each item will   point to the next.&nbsp; It is like a railroad train: the engine pulls only one car   directly.&nbsp; But that car pulls the next which pulls the next, etc. </p>
+	<p>Also, we see that this <strong>Stack</strong> takes references to pre-built <strong>StackNodes</strong> for its<span class="codeInLine"> push()</span> operation (we are testing for non-<span class="codeInLine">null</span>, that's how we know   it wants a pre-built <em><strong>object</strong></em>). The <em><strong>client</strong></em> must <strong>new</strong> the node and pass   its pointer to <span class="codeInLine">push()</span>. </p>
+	<h3>About <strong>pop()</strong></h3>
+	<p>Similarly, <span class="codeInLine">pop()</span> returns a reference to a <strong>StackNode</strong>. Then the   <em><strong>client</strong></em> can process the <strong>StackNode</strong> itself. You   will see how this gets used next. </p>
+	<p>What about statements like these?</p>
+<pre>   top =  top.next;
+
+   p = p.next;
+</pre>
+	
+	<p>These are the essence of <em><strong>linked-list</strong></em> programming. <span class="codeInLine">top</span> and <span class="codeInLine">p</span> are<strong> StackNode <em>references</em></strong>, and this is the way in which a <strong>StackNode</strong> <em><strong>reference</strong></em> moves ahead one <em><strong>node</strong></em> in the <em><strong>list</strong></em>.&nbsp; It's the<em><strong> linked-list</strong></em> equivalent of <span class="codeInLine">k++</span><strong>,</strong> for an <strong>int</strong>, <span class="codeInLine">k</span><strong>.</strong></p>
+	<p>Whatever <strong><em>node</em></strong> <span class="codeInLine"> top (or p) </span>was pointing to, <em>after</em> this&nbsp;statement it will be   pointing to the <em><strong>successor</strong></em> of that <em><strong>node</strong></em>.&nbsp; Why?&nbsp; Because <span class="codeInLine">top.next</span> points to   the next <em><strong>node</strong> after </em>the <em><strong>node</strong></em> pointed to by <span class="codeInLine">top</span>. We are copying the <em><strong>reference</strong></em> from   the <span class="codeInLine">next</span> <em><strong>member</strong></em> of  <strong><em>node</em></strong><span class="codeInLine"> top</span>  into the <em><strong>reference</strong></em> <span class="codeInLine">top</span>,   itself, replacing the old <em><strong>reference</strong></em> with the new, updated <em><strong>reference</strong></em>.</p>
+	<p>Here is a <strong>main() </strong>that utilizes the above classes.</p>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      Stack stk = new Stack();
+      StackNode p;
+
+      // build the stack
+      for (int k = 0; k &lt; 5; k++)
+      {
+         p = new StackNode();
+         stk.push(p);
+      }
+
+      // show the stack
+      while ( (p = stk.pop()) != null)
+         p.show();
+      System.out.println();
+   }
+ }</pre>
+
+	<p>Here is the output:</p>
+	<div class="picCenter"><img src="./CS 1B Module 4A Section 4_files/pic_1b4_5.jpg" alt="console showing 5 &quot;(generic node)&quot; strings all on the same line." width="641" height="161" border="0"></div>
+	<p>I know this is a dizzying example because all of the nodes look exactly   alike.&nbsp; We don't have any real data in our <strong>StackNodes</strong>. This example is   just to show you how the base classes get used so that when we derive   sub-classes from them, you will already be familiar with the fundamentals.</p>
+	<p>I did not try to use the <span class="codeInLine">Stack.showStack()</span> method in this example   because I'm saving that for a future lecture.&nbsp; In the above example, I am just   using the individual <span class="codeInLine">StackNode's show()</span> method to show each node as we   pop it off the stack in a <em><strong>loop</strong></em>.</p>
+	<p>As usual, I want you to copy/paste the code into your compiler, run the   program and make changes to the <strong>main() </strong>so you can experiment with your own   manipulation of this elegant <em><strong>class</strong></em>.&nbsp; I will put the entire listing in the next   section so it is easy for you to access.</p>
+	<h2>4A.4.3 Security Considerations</h2>
+	<p>The very astute among you might have noticed that the line in <strong>Stack's</strong> <span class="codeInLine">pop()</span> <em><strong>method</strong></em> that reads</p>
+
+<pre>   temp.next = null;   // don't give client access to stack
+</pre>
+
+	<p>does not really remove all the security hazards in this <strong>Stack</strong> <em><strong>class</strong></em>.&nbsp;   The purpose of this line is to zero-out the <span class="codeInLine">next</span> pointer of the popped   node prior to giving it to the client.&nbsp; In that way, the <em><strong>client</strong></em> can't use   that node to poke into the list and change links, destroying its integrity   (think about&nbsp; <span class="codeInLine"><font color="#CC3300">naughtyNode = stk.pop();</font></span>&nbsp;followed   by <font color="#CC3300" class="codeInLine">naughtyNode.next.next = null;</font>).&nbsp;   The above statement disallows this, so that hole is plugged.</p>
+	<p>Fine, but the fact is the client <em>already</em> has a way into the <em><strong>stack</strong></em>. It   can use <em>any</em> <em><strong>node</strong></em> that it pushes then access the list of nodes through   that pushed-node.&nbsp; Play with this and you'll find a way in.&nbsp; So, we   really do have an insecure class after all, and the well-meaning measures inside <span class="codeInLine">pop()</span> don't solve these other problems.&nbsp; These don't present a real concern, however, for the following reasons.</p>
+	<ol>
+		<li>This class is not for public consumption  — we will wrap it in secure   	derived <strong>Stack</strong> <em><strong>classes</strong></em> that the <em><strong>client</strong></em> will use.&nbsp; It will be the   	job of these other, <em><strong>derived</strong></em>, <strong>Stack</strong> <em><strong>classes</strong></em> to protect themselves, and   	no amount of client shenanigans will be able to penetrate their veil.</li>
+		<li>This <em><strong>class</strong></em> is a demonstration of re-usability through <em><strong>inheritance</strong></em>.&nbsp;   	It is not about security.&nbsp; We have other means of making the classes   	secure, and when I present linked lists later on, I will talk about them.</li>
+		<li>You can fix these problems here-and-now by providing enough <strong>private</strong> modifiers and other <em><strong>methods</strong></em> in the appropriate places, but it isn't worth   	the hassle given, 1. and 2., above.</li>
+	</ol>
+	<h2>4A.4.4 The Entire Listing</h2>
+	<p>For copy/pasting, here's the entire program in  single file mode.</p>
+	<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      Stack stk = new Stack();
+      StackNode p;
+
+      // build the stack
+      for (int k = 0; k &lt; 5; k++)
+      {
+         p = new StackNode();
+         stk.push(p);
+      }
+
+      // show the stack
+      while ( (p = stk.pop()) != null)
+         p.show();
+      System.out.println();
+   }
+ }
+
+//Class StackNode  ----------------------------------
+class StackNode
+{
+   // data (protected allows only certain other classes to access "next" directly)
+   protected StackNode next;
+
+   // constructor
+   public StackNode()
+   {
+      next = null;
+   }
+
+   // console display
+   public void show()
+   {
+      System.out.print( "(generic node) ");
+   }
+}
+
+// Class Stack ---------------------------------------
+class Stack
+{
+   // pointer to first node in stack
+   private StackNode top;
+
+   // constructor
+   public Stack()
+   {
+      top = null;
+   }
+
+   public void push(StackNode newNode)
+   {   
+      if (newNode == null) 
+         return;   // emergency return
+      newNode.next = top;
+      top = newNode;
+   }  
+
+   public StackNode pop()
+   {
+      StackNode temp;
+
+      temp = top;
+      if (top != null)
+      {
+         top = top.next; 
+         temp.next = null; // don't give client access to stack!
+      }
+      return temp;      
+   }
+
+   // console display
+   public void showStack()
+   {
+      StackNode p;
+
+      // Display all the nodes in the stack
+      for( p = top; p != null; p = p.next )
+         p.show();
+   }
+}
+
+/* -------------------------- RUN ------------------- 
+
+(generic node) (generic node) (generic node) (generic node) (generic node) 
+
+
+----------------------------------------------------- */</pre>
+	</div>
+</div>
+
+
+</body></html>

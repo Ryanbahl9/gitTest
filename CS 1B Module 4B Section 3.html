@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_4b_3.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 4B Section 3</title>
+<link href="./CS 1B Module 4B Section 3_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+<div class="content">
+
+	<h1>Section 3 - Using the FloatStack Class</h1>
+	<h2>4B.3.1 Our Client</h2>
+	<p>Our <em><strong>client</strong></em> is very simple because we have provided it with a beautiful <strong>FloatStack</strong> <em><strong>class</strong></em>.&nbsp; Have a look:</p>
+
+<pre>public class Foothill
+{
+   public static void main (String[] args)
+   {
+      FloatStack fstk = new FloatStack();
+      float f;
+
+      fstk.pushFloat(1.1F);
+      fstk.pushFloat(2.2F);
+      fstk.pushFloat(3.3F);
+      fstk.pushFloat(4.4F);
+      
+      for (int k = 0; k &lt; 5; k++)
+         if ( (f = fstk.popFloat()) != FloatStack.STACK_EMPTY)
+            System.out.print( f + " ");
+         else
+            System.out.print("(empty stack) ");
+      System.out.println();
+   }
+ }</pre>
+
+	<p>And here is the output:</p>
+
+<pre>4.4 3.3 2.2 1.1 (empty stack)
+</pre>
+
+	<h2>4B.3.2 Other Types of Stacks</h2>
+	<p>Now that we've done this with a <strong>float</strong> type, can you do the same thing with   some other type?&nbsp;&nbsp; How about a stack of <strong>Strings</strong>?&nbsp; Or <strong>Cards</strong>?</p>
+	<p>Here are some hints to help you:</p>
+	<ul>
+		<li>You don't really need a <span class="codeInLine">show()</span> <em><strong>method</strong></em> in your <em><strong>derived</strong></em> <strong>Node</strong> <em><strong>class</strong></em> (<strong>StringNode,   	GalaxyNode</strong>, etc.), because that was only needed for demonstration of the <strong>Node</strong> <em><strong>class</strong></em>.&nbsp; We only demonstrate the <strong>Node</strong> <strong>class</strong> at the <em><strong>client</strong></em> level as   	an intermediate step.&nbsp; Note that we never used the <span class="codeInLine">show()</span> <em><strong>method</strong></em> in the   	final <strong>Stack</strong> application.<br>
+		</li>
+		<li>When you <em><strong>derive</strong></em> your <strong>CardNode</strong> or <strong>StringNode</strong> from <strong> StackNode</strong>, you only need to add a <strong>Card</strong> or <strong>String</strong> data   	item to the <em><strong>class</strong></em> and then supply a trivial <em><strong>constructor</strong></em>.&nbsp; The <strong>FloatNode</strong> example was a perfect template.&nbsp;   	You also might want to declare some constant for <span class="codeInLine">EMTPY_STACK</span> as I did, to   	help signal the <em><strong>client</strong></em> of that situation.<br>
+		</li>
+		<li>When you derive your <strong>CardStack </strong>or<strong> StringStack</strong> from the <strong>Stack</strong>, you only   	have to add new the <strong>pushCard/String() </strong>and<strong> popCard/String() methods</strong>.&nbsp; No extra data is used.<br>
+		</li>
+		<li>The<span class="codeInLine"> pushNNN() </span>and<span class="codeInLine"> popNNN()</span> <em><strong>methods</strong></em> you write will take or   	return a <strong>String</strong>, <strong>Card</strong> or whatever your data type of interest is as a parameter.&nbsp; You   	have to <strong>new</strong> (in <span class="codeInLine">push()</span>)&nbsp;the <strong>Node</strong> to hold   	your data.&nbsp; Again, the template I gave you for <strong>FloatStack</strong> works   	with practically no change for any data type.</li>
+	</ul>
+	<p>This was a more challenging example of <em><strong>inheritance</strong></em> than the first one with <strong>Phones</strong> and <strong>Extensions</strong>, I will admit.&nbsp; It had two <em><strong>base classes</strong></em> and two <em><strong>classes</strong></em> that were <em><strong>derived</strong></em> from them.&nbsp;&nbsp; However, this is not over your head.&nbsp;   Furthermore, it represents the kind of logic and thinking that goes into real   Java programs at the most technical level.&nbsp; (I won't even discuss the fact   that Java has a built-in class we can use for <strong>Stacks</strong> — that's okay, we have to   learn to create our own data structures for custom applications, anyhow, so this   is a great example.)</p>
+
+</div>
+</div>
+
+
+</body></html>

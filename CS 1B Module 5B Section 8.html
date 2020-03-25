@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)https://www.fgamedia.org/faculty/loceff/cs_courses/cs_1b/cs_1B_5b_8.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CS 1B Module 5B Section 8</title>
+<link href="./CS 1B Module 5B Section 8_files/programming_styles_1.css" rel="stylesheet" type="text/css">
+</head>
+
+<body bgcolor="FFFFFF" data-gr-c-s-loaded="true">
+
+<div class="container">
+  <div class="content">
+  	<h1 style="TEXT-ALIGN: left">Section 8 - The Listing</h1>
+	<h2 style="TEXT-ALIGN: left">5B.8.1 The RPN Listing</h2>
+	<p>This is the program minus:</p>
+	<ul>
+		<li>The <strong>MyStack</strong> class which you should have already copied and added to your   	project in a separate <strong>MyStack.java</strong> file.</li>
+		<li>The code for the -, * and / operators.</li>
+	</ul>
+	<p>Try it out:</p>
+
+<pre>import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.util.*;
+import java.text.*;
+
+
+public class RPN
+{
+   public static void main(String[] args)
+   {
+      // establish main frame in which program will run
+      Calculator myCalculator 
+            = new Calculator("CS 1B RPN Calculator");
+      myCalculator.setSize(250, 300);
+      myCalculator.setLocationRelativeTo(null);
+      myCalculator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      
+      // show everything to the user
+      myCalculator.setVisible(true);
+   }
+}
+
+//Calculator class is derived from JFrame class
+class Calculator  extends JFrame
+{
+   private JButton btnPlus, btnMinus, btnMult, btnDiv, btnEnter;
+   private JTextField txtNumber;
+   private JLabel lblInstructions;
+   private JPanel pnlButtons, pnlTextEnter;
+   private MyStack stk;
+   
+   // Calculator constructor
+   public Calculator(String title)
+   {
+      // pass the title up to the JFrame constructor
+      super(title);
+      
+      // set up main components for the JFrame
+      lblInstructions = new JLabel("Use Reverse Polish Noatation");
+      pnlTextEnter = new JPanel( new GridLayout(1, 2, 10, 10));
+      pnlButtons = new JPanel( new GridLayout(2, 2, 20, 20));
+
+      // use border layout and put three above components in frame
+      setLayout (new BorderLayout(20, 10));
+      add(pnlTextEnter, BorderLayout.NORTH );
+      add(pnlButtons, BorderLayout.CENTER);
+      add(lblInstructions, BorderLayout.SOUTH);
+
+      // set up the components for the pnlTextEnter Panel
+      btnEnter = new JButton("Enter");
+      txtNumber = new JTextField("0.0", 15);
+      
+      // add components to pnlTextEnter Panel
+      pnlTextEnter.add(txtNumber);
+      pnlTextEnter.add(btnEnter);
+      
+      // set up the components for the pnlButtons Panel
+      btnPlus = new JButton("+");
+      btnMinus = new JButton("-");
+      btnMult = new JButton("*");
+      btnDiv = new JButton("/");
+     
+      // add components to pnlTextEnter Panel
+      pnlButtons.add(btnPlus);
+      pnlButtons.add(btnMinus);
+      pnlButtons.add(btnMult);
+      pnlButtons.add(btnDiv);
+      
+      // place borders around three sub-panels
+      pnlTextEnter.setBorder(new TitledBorder("Entry and Result"));
+      pnlButtons.setBorder(new TitledBorder("Operator Buttons"));
+      
+      // register Enter listeners (for pushing numbers)
+      ActionListener enterListener = new EnterListener();
+      btnEnter.addActionListener( enterListener );
+      txtNumber.addActionListener( enterListener );
+ 
+      // register Operation listeners (for doing the math)
+      ActionListener opListener = new OpListener();
+      btnPlus.addActionListener( opListener );
+      btnMinus.addActionListener( opListener );
+      btnMult.addActionListener( opListener );
+      btnDiv.addActionListener( opListener );
+      
+      // create a stack
+      stk = new MyStack();    
+   }
+
+   // inner class for btnEnter and txtNumber Listener
+   class EnterListener implements ActionListener
+   {
+      // event handler for JButton or Enter Key
+      public void actionPerformed(ActionEvent e)
+      {
+         double dblA = 0;
+         String strA;
+
+         // read value from text fields into local variables
+         strA = txtNumber.getText();
+         txtNumber.setText("");  // clear
+         txtNumber.requestFocus();
+
+         // try to convert from String to double, return if fail
+         try
+         {
+            dblA = Double.parseDouble(strA);
+         }
+         catch (NumberFormatException error)
+         {
+            return;
+         }
+     
+         if ( !stk.push(dblA) )
+            txtNumber.setText( "Stack Overflow");
+      }
+   } // end inner class EnterListener
+ 
+   // inner class for OpListener
+   class OpListener implements ActionListener
+   {
+      // event handler for JButton or Enter Key
+      public void actionPerformed(ActionEvent e)
+      {
+         String strResult;
+         Double dbl1, dbl2, dblResult;
+
+         // pop two items
+         if (!stk.testStack(2))
+            return;
+         dbl2 = stk.pop();
+         dbl1 = stk.pop();
+
+         // do the math
+         // if (e.getSource()== btnPlus)  // add "if"  for other ops
+            dblResult = dbl1 + dbl2;
+
+         // convert from double to  String
+         NumberFormat tidy = NumberFormat.getInstance(Locale.US);
+         tidy.setMaximumFractionDigits(10);
+         strResult = tidy.format(dblResult);
+
+
+         // write result back to TextA and push
+         txtNumber.setText(strResult);
+         stk.push(dblResult);
+      }
+   } // end inner class OpListener
+
+} // end class Calculator
+</pre>
+
+	<p>As you can see, it is not that complicated.&nbsp; It uses only the concepts   we learned and does so very cleanly.</p>
+	<p>Now of course, I'm going to want you to turn it into a fully functional RPN   Calculator, which means you have to do two things:</p>
+	<ul>
+		<li>Implement the missing code for the other operators in an if/else block</li>
+		<li>Avoid division by zero.&nbsp; How do you do that?</li>
+		</ul>
+	<p>We had a good review of Java GUI programming and have also extended our knowledge of stack data structures and mutli-file projects. See you next week.</p>
+	</div>
+<!-- end .container --></div>
+
+
+</body></html>
